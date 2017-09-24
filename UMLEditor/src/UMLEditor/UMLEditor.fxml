@@ -47,7 +47,7 @@
       </MenuBar>
    </top>
    <center>
-      <Canvas height="1000" width="1000" BorderPane.alignment="CENTER" onMouseClicked="#canvasClick" />
+      <Canvas height="400" width="1000" BorderPane.alignment="CENTER" onMouseClicked="#canvasClick" />
    </center>
    <left>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Object Builder" BorderPane.alignment="TOP_CENTER">

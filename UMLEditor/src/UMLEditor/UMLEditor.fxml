@@ -34,7 +34,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" text="Copy" onAction="#menuCopyClicked"/>
                   <MenuItem mnemonicParsing="false" text="Paste" onAction="#menuPasteClicked"/>
-              <MenuItem mnemonicParsing="false" text="Delete" onAction="#menuDeleteClicked"/>
+                  <MenuItem mnemonicParsing="false" text="Delete" onAction="#menuDeleteClicked"/>
                   <MenuItem mnemonicParsing="false" text="SelectAll" onAction="#menuSelectAllClicked"/>
             </items>
           </Menu>
@@ -47,15 +47,15 @@
       </MenuBar>
    </top>
    <center>
-      <Canvas height="-Infinity" width="-Infinity" BorderPane.alignment="CENTER" />
+      <Canvas height="1000" width="1000" BorderPane.alignment="CENTER" onMouseClicked="#canvasClick" />
    </center>
    <left>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Object Builder" BorderPane.alignment="TOP_CENTER">
         <content>
           <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="394.0" prefWidth="140.0">
                <children>
-                  <Button layoutY="2.0" mnemonicParsing="false" prefHeight="11.0" prefWidth="140.0" text="Line" />
-                  <Button layoutY="27.0" mnemonicParsing="false" prefHeight="11.0" prefWidth="140.0" text="Point" />
+                  <Button fx:id="lineMode" layoutY="2.0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11.0" prefWidth="140.0" text="Line" />
+                  <Button fx:id="pointMode" layoutY="27.0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11.0" prefWidth="140.0" text="Point" />
                </children>
             </AnchorPane>
         </content>

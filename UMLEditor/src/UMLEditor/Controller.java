@@ -4,13 +4,16 @@ import java.awt.geom.Point2D.Double;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -28,17 +31,20 @@ public class Controller{
       LINE, POINT, SELECT
     }
 
-    Mode MODE = Mode.SELECT;
-    ArrayList<Double> POINTS = new ArrayList<Double>();
+    @FXML private Canvas canvas;
 
+    Mode MODE = Mode.SELECT;
+    Deque<Double> POINTS = new LinkedList<Double>();
     FileChooser fileChooser = new FileChooser();
     static Stage window;
 
-    //Gets the Primary Stage
-    public static void getPrimaryStage(Stage primaryStage) {
-
+    //Sets the Primary Stage
+    public static void setPrimaryStage(Stage primaryStage) {
         window = primaryStage;
+    }
 
+    public Canvas getCanvas () {
+      return canvas;
     }
 
     public void modeClick (ActionEvent event) {
@@ -50,24 +56,29 @@ public class Controller{
 
     public void canvasClick (MouseEvent event) {
       Double point = new Double(event.getX(), event.getY());
-      POINTS.add(point);
+      POINTS.addLast(point);
       System.out.println ("Canvas clicked at " + point.getX() + " " + point.getY());
 
       switch (MODE) {
         case POINT:
-          // drawPoint(POINTS.get(0));
+          // if (getModel(POINTS.getLast()) == null) {
+          //   drawPoint(POINTS.getLast();
+          // }
           POINTS.clear();
           break;
 
         case LINE:
-          if (!POINTS.isEmpty()) {
-            // drawLine(POINTS);
+          // if (getModel(POINTS.getLast()) != null) {
+          //   POINTS.removeLast();
+          // }
+          // else if (!POINTS.isEmpty()) {
+          //   drawLine(POINTS);
             POINTS.clear();
-          }
+          // }
           break;
 
         case SELECT:
-          // inspect(POINTS.get(0));
+          // inspect(POINTS.getLast());
           POINTS.clear();
           break;
 

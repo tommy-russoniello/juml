@@ -34,7 +34,7 @@ public class Main extends Application {
         window.show();
 
         //gives
-        Controller.getPrimaryStage(window);
+        Controller.setPrimaryStage(window);
     }
 
 

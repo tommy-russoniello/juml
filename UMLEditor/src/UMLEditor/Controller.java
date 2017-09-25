@@ -1,34 +1,90 @@
 package UMLEditor;
 
-import javafx.scene.control.Button;
+import java.awt.geom.Point2D.Double;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.HostServices;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.HostServices;
-
 import javax.naming.spi.InitialContextFactory;
 
 //Logic
 public class Controller{
+    public enum Mode {
+      LINE, POINT, SELECT
+    }
+
+    @FXML private Canvas canvas;
+
+    Mode MODE = Mode.SELECT;
+    Deque<Double> POINTS = new LinkedList<Double>();
     FileChooser fileChooser = new FileChooser();
     static Stage window;
 
-    //Gets the Primary Stage
-    public static void getPrimaryStage(Stage primaryStage) {
-
+    //Sets the Primary Stage
+    public static void setPrimaryStage(Stage primaryStage) {
         window = primaryStage;
+    }
 
+    public Canvas getCanvas () {
+      return canvas;
+    }
+
+    public void modeClick (ActionEvent event) {
+      String newMode = ((Button)event.getSource()).getId();
+      newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
+      MODE = Mode.valueOf(newMode);
+      System.out.println ("Draw mode changed to \"" + MODE + "\"");
+    }
+
+    public void canvasClick (MouseEvent event) {
+      Double point = new Double(event.getX(), event.getY());
+      POINTS.addLast(point);
+      System.out.println ("Canvas clicked at " + point.getX() + " " + point.getY());
+
+      switch (MODE) {
+        case POINT:
+          // if (getModel(POINTS.getLast()) == null) {
+          //   drawPoint(POINTS.getLast();
+          // }
+          POINTS.clear();
+          break;
+
+        case LINE:
+          // if (getModel(POINTS.getLast()) != null) {
+          //   POINTS.removeLast();
+          // }
+          // else if (!POINTS.isEmpty()) {
+          //   drawLine(POINTS);
+            POINTS.clear();
+          // }
+          break;
+
+        case SELECT:
+          // inspect(POINTS.getLast());
+          POINTS.clear();
+          break;
+
+        default:
+          break;
+      }
     }
 
 
@@ -75,5 +131,5 @@ public class Controller{
         //HostServices hostServices = Main.getHostServices();
         //hostServices.showDocument(file.getAbsolutePath());
     }
-	
+
 }//---------------------------------------------------------------------------------------------------------------------

@@ -24,17 +24,17 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("UMLEditor.fxml"));
         //variable will update based on current file name, new file will be called untitled
         String fileName = new String ("Untitled");
-        
+
         window = primaryStage;
         window.setTitle("Team Rocket UML Editor: " + fileName);
 
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 750, 500);
         window.getIcons().add(new Image("https://github.com/tommy-russoniello/juml/tree/master/UMLEditor/images/Team_Rocket_Logo.jpg"));
         window.setScene(scene);
         window.show();
 
         //gives
-        Controller.getPrimaryStage(window);
+        Controller.setPrimaryStage(window);
     }
 
 

@@ -25,10 +25,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.naming.spi.InitialContextFactory;
 import javafx.scene.layout.Pane;
-import javafx.event.EventHandler;
+import javafx.event.*;
 
+
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import object.*;
+import umlnode.*;
 
 //Logic
 public class Controller{
@@ -62,29 +65,24 @@ public class Controller{
     public void paneClick (MouseEvent event) {
       Point point = new Point(event.getX(), event.getY());
       POINTS.addLast(point);
-      System.out.println ("Pane clicked at " + point.getX() + " " + point.getY());
+      System.out.println ("Pane clicked at " + point.getOriginX() + " " + point.getOriginY());
+      System.out.println(POINTS.size());
 
       switch (MODE) {
         case POINT:
-          POINTS.getLast().setOnMouseClicked(new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent arg0) {
-            //c.setFill(Color.BLUE);
-            }
-          });
-
-          pane.getChildren().add(POINTS.getLast().point);
-
+          pane.getChildren().add(POINTS.getLast().getModel());
           POINTS.clear();
+
           break;
 
         case LINE:
-          pane.getChildren().setOnMouseClicked((click) -> {
+          if (event.getTarget() instanceof Circle) {
             if (POINTS.size() > 1) {
-              pane.getChildren().add(new Line(POINTS.getFirst(), POINTS.getLast()));
+              pane.getChildren().add(new Connector(POINTS.getFirst(), POINTS.getLast()).getModel());
               POINTS.clear();
             }
-          });
+          }
+
           break;
 
         case SELECT:
@@ -93,6 +91,7 @@ public class Controller{
           break;
 
         default:
+        
           break;
       }
     }

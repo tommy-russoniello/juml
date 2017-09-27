@@ -10,6 +10,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.application.HostServices;
 
+import javafx.event.*;
+import javafx.scene.input.MouseEvent;
+
 public class Main extends Application {
 
     Stage window;
@@ -21,7 +24,7 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("UMLEditor.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("juml.fxml"));
         //variable will update based on current file name, new file will be called untitled
         String fileName = new String ("Untitled");
 

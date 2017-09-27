@@ -24,6 +24,11 @@ import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.naming.spi.InitialContextFactory;
+import javafx.scene.layout.Pane;
+import javafx.event.EventHandler;
+
+import javafx.scene.shape.Circle;
+import object.*;
 
 //Logic
 public class Controller{
@@ -31,10 +36,10 @@ public class Controller{
       LINE, POINT, SELECT
     }
 
-    @FXML private Canvas canvas;
+    @FXML private Pane pane;
 
     Mode MODE = Mode.SELECT;
-    Deque<Double> POINTS = new LinkedList<Double>();
+    Deque<Point> POINTS = new LinkedList<Point>();
     FileChooser fileChooser = new FileChooser();
     static Stage window;
 
@@ -43,8 +48,8 @@ public class Controller{
         window = primaryStage;
     }
 
-    public Canvas getCanvas () {
-      return canvas;
+    public Pane getPane () {
+      return pane;
     }
 
     public void modeClick (ActionEvent event) {
@@ -54,27 +59,32 @@ public class Controller{
       System.out.println ("Draw mode changed to \"" + MODE + "\"");
     }
 
-    public void canvasClick (MouseEvent event) {
-      Double point = new Double(event.getX(), event.getY());
+    public void paneClick (MouseEvent event) {
+      Point point = new Point(event.getX(), event.getY());
       POINTS.addLast(point);
-      System.out.println ("Canvas clicked at " + point.getX() + " " + point.getY());
+      System.out.println ("Pane clicked at " + point.getX() + " " + point.getY());
 
       switch (MODE) {
         case POINT:
-          // if (getModel(POINTS.getLast()) == null) {
-          //   drawPoint(POINTS.getLast();
-          // }
+          POINTS.getLast().setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent arg0) {
+            //c.setFill(Color.BLUE);
+            }
+          });
+
+          pane.getChildren().add(POINTS.getLast().point);
+
           POINTS.clear();
           break;
 
         case LINE:
-          // if (getModel(POINTS.getLast()) != null) {
-          //   POINTS.removeLast();
-          // }
-          // else if (!POINTS.isEmpty()) {
-          //   drawLine(POINTS);
-            POINTS.clear();
-          // }
+          pane.getChildren().setOnMouseClicked((click) -> {
+            if (POINTS.size() > 1) {
+              pane.getChildren().add(new Line(POINTS.getFirst(), POINTS.getLast()));
+              POINTS.clear();
+            }
+          });
           break;
 
         case SELECT:

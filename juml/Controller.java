@@ -1,4 +1,4 @@
-package UMLEditor;
+package juml;
 
 import java.awt.geom.Point2D.Double;
 import java.io.File;

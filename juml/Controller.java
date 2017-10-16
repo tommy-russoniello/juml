@@ -75,13 +75,7 @@ public class Controller{
 
           break;
 
-        case LINE:
-          if (event.getTarget() instanceof Circle) {
-            if (POINTS.size() > 1) {
-              pane.getChildren().add(new Connector(POINTS.getFirst(), POINTS.getLast()).getModel());
-              POINTS.clear();
-            }
-          }
+
 
           break;
 
@@ -91,7 +85,7 @@ public class Controller{
           break;
 
         default:
-        
+
           break;
       }
     }

@@ -32,8 +32,7 @@ public class Main extends Application {
         window.setTitle("Team Rocket UML Editor: " + fileName);
 
         Scene scene = new Scene(root, 750, 500);
-        window.getIcons().add(new Image(Main.class.getResourceAsStream(
-          "/images/Team_Rocket_Logo.jpg")));
+        window.getIcons().add(new Image("https://github.com/tommy-russoniello/juml/tree/master/images/Team_Rocket_Logo.jpg"));
         window.setScene(scene);
         window.show();
 

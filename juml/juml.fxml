@@ -55,6 +55,7 @@
                   <Button fx:id="selectMode" layoutY="0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Select" />
                   <Button fx:id="lineMode" layoutY="25" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Line" />
                   <Button fx:id="pointMode" layoutY="50" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Point" />
+                  <Button fx:id="classBoxMode" layoutY="75" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Class Box" />
                </children>
             </AnchorPane>
         </content>

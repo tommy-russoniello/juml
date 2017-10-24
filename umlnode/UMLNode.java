@@ -1,21 +1,36 @@
 package umlnode;
 
+import java.util.Vector;
 import javafx.scene.layout.Region;
+import javafx.scene.Node;
 
 public class UMLNode extends Region {
 
-  public int originX;
-  public int originY;
+  public Vector<Connector> connections = new Vector<Connector>();
+  public double originX;
+  public double originY;
 
-/*
- * All UMLNodes must implement a `getModel()` method which returns the underlying JavaFX structure
- */
+  public Vector<Connector> getConnections() {
+    return connections;
+  }
 
-  public int getOriginX() {
+ // All UMLNodes must implement this method, returning the underlying JavaFX structure
+  public Node getModel() {
+    return null;
+  }
+
+  public double getOriginX() {
     return originX;
   }
 
-  public int getOriginY() {
+  public double getOriginY() {
     return originY;
   }
+
+  public void move(double newX, double newY) {
+    originX = newX;
+    originY = newY;
+  }
+
+  public void update() {}
 }

@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Map;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
@@ -16,9 +18,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
@@ -31,6 +35,7 @@ import javafx.event.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import umlnode.*;
 
 //Logic
@@ -39,10 +44,12 @@ public class Controller{
       LINE, POINT, SELECT
     }
 
+    Map<Node, UMLNode> NODES = new HashMap<>();
+
     @FXML private Pane pane;
 
     Mode MODE = Mode.SELECT;
-    Deque<Point> POINTS = new LinkedList<Point>();
+    Deque<UMLNode> SELECTED = new LinkedList<>();
     FileChooser fileChooser = new FileChooser();
     static Stage window;
 
@@ -55,45 +62,108 @@ public class Controller{
       return pane;
     }
 
+
     public void modeClick (ActionEvent event) {
       String newMode = ((Button)event.getSource()).getId();
       newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
       MODE = Mode.valueOf(newMode);
+      SELECTED.clear();
       System.out.println ("Draw mode changed to \"" + MODE + "\"");
     }
 
     public void paneClick (MouseEvent event) {
-      Point point = new Point(event.getX(), event.getY());
-      POINTS.addLast(point);
-      System.out.println ("Pane clicked at " + point.getOriginX() + " " + point.getOriginY());
-      System.out.println(POINTS.size());
+      System.out.println ("Pane clicked at " + event.getX() + " " + event.getY());
 
       switch (MODE) {
         case POINT:
-          pane.getChildren().add(POINTS.getLast().getModel());
-          POINTS.clear();
+          addNode(new Point(event.getX(), event.getY()));
 
           break;
 
         case LINE:
-          if (event.getTarget() instanceof Circle) {
-            if (POINTS.size() > 1) {
-              pane.getChildren().add(new Connector(POINTS.getFirst(), POINTS.getLast()).getModel());
-              POINTS.clear();
+          if (pane.getChildren().contains(event.getTarget()) &&
+            !(event.getTarget() instanceof Line)) {
+            if (SELECTED.isEmpty()) {
+              SELECTED.addLast(NODES.get(event.getTarget()));
+            }
+            else if (event.getTarget() != SELECTED.getLast().getModel()) {
+              Connector newConnector =
+                new Connector(SELECTED.getLast(), NODES.get(event.getTarget()));
+              pane.getChildren().add(newConnector.getModel());
+              NODES.put(newConnector.getModel(), newConnector);
+              SELECTED.clear();
             }
           }
 
           break;
 
         case SELECT:
-          // inspect(POINTS.getLast());
-          POINTS.clear();
+          // inspect(event.getTarget());
           break;
 
         default:
-        
+
           break;
       }
+    }
+
+    public void addNode (UMLNode node) {
+      Node model = node.getModel();
+      pane.getChildren().add(model);
+      NODES.put(model, node);
+
+      class Delta { double x, y; }
+      final Delta dragDelta = new Delta();
+
+      model.setOnMousePressed(new EventHandler<MouseEvent>() {
+       @Override public void handle(MouseEvent mouseEvent) {
+         if (MODE == Mode.SELECT) {
+           // record a delta distance for the drag and drop operation.
+           dragDelta.x = node.getOriginX() - mouseEvent.getX();
+           dragDelta.y = node.getOriginY() - mouseEvent.getY();
+           model.getScene().setCursor(Cursor.MOVE);
+           System.out.println("begin moving Node");
+         }
+       }
+      });
+
+      model.setOnMouseDragged(new EventHandler<MouseEvent>() {
+       @Override public void handle(MouseEvent mouseEvent) {
+         if (MODE == Mode.SELECT) {
+           node.move(mouseEvent.getX() + dragDelta.x, mouseEvent.getY() + dragDelta.y);
+           System.out.println("moved Node");
+           node.update();
+         }
+       }
+      });
+
+      model.setOnMouseReleased(new EventHandler<MouseEvent>() {
+        @Override public void handle(MouseEvent mouseEvent) {
+          if (MODE == Mode.SELECT) {
+            model.getScene().setCursor(Cursor.HAND);
+          }
+        }
+      });
+
+      model.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        @Override public void handle(MouseEvent mouseEvent) {
+          if (MODE == Mode.SELECT) {
+            if (!mouseEvent.isPrimaryButtonDown()) {
+              model.getScene().setCursor(Cursor.HAND);
+            }
+          }
+        }
+      });
+
+      model.setOnMouseExited(new EventHandler<MouseEvent>() {
+        @Override public void handle(MouseEvent mouseEvent) {
+          if (MODE == Mode.SELECT) {
+            if (!mouseEvent.isPrimaryButtonDown()) {
+              model.getScene().setCursor(Cursor.DEFAULT);
+            }
+          }
+        }
+      });
     }
 
 

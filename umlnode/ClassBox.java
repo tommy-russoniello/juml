@@ -16,10 +16,10 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.*;
 import umlnode.Connector;
-import umlnode.Point.Delta;
+//import umlnode.Point.Delta;
 import javafx.scene.paint.*;
 
-public class ClassBox implements UMLNode{
+public class ClassBox extends UMLNode{
 
 	 Group group;
 		Circle c1;
@@ -118,15 +118,7 @@ public class ClassBox implements UMLNode{
 			return 0;
 		}
 
-		@Override
-		public void addConnnector(Connector c) {
-			// TODO Auto-generated method stub
 			
-		}
-
-
-
-		
 		
 
 }

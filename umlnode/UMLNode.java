@@ -1,43 +1,42 @@
 package umlnode;
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.jmx.MXNodeAlgorithm;
-import com.sun.javafx.jmx.MXNodeAlgorithmContext;
-import com.sun.javafx.sg.prism.NGNode;
 
+import java.util.Vector;
+import javafx.scene.layout.Region;
 import javafx.scene.Node;
 
-import javafx.scene.layout.Region;
-//import umlnode.Connector;
-
-
-public interface UMLNode {
-  public double getOriginX();
-  public double getOriginY();
- public void addConnnector(Connector c);
-}
-
-
-/*
 public class UMLNode extends Region {
 
-  public Node node;
-  public int originX;
-  public int originY;
+  public Vector<Connector> connections = new Vector<Connector>();
+  public double originX;
+  public double originY;
 
-/*
- * All UMLNodes must implement a `getModel()` method which returns the underlying JavaFX structure
- */
+  public Vector<Connector> getConnections() {
+    return connections;
+  }
 
-/*
-  public int getOriginX() {
+
+ // All UMLNodes must implement this method, returning the underlying JavaFX structure
+  public Node getModel() {
+    return null;
+  }
+
+  public double getOriginX() {
     return originX;
   }
 
-  public int getOriginY() {
+  public double getOriginY() {
     return originY;
   }
 
+  public void move(double newX, double newY) {
+    originX = newX;
+    originY = newY;
+  }
 
+  public void update() {}
+  
+  // this will get called by the controller right before the object is deleted
+  // this method should remove all connections that controller does not directly
+  // know about
+  public void delete() {}
 }
-*/

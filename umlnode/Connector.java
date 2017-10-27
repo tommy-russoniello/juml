@@ -1,6 +1,9 @@
 package umlnode;
 
 import javafx.scene.shape.Line;
+
+import java.util.Vector;
+
 import javafx.scene.Node;
 
 public class Connector extends UMLNode {
@@ -37,4 +40,24 @@ public class Connector extends UMLNode {
 	  line.setEndX(stop.getOriginX());
 	  line.setEndY(stop.getOriginY());
   }
+  
+  // if either end point is deleted, the line deletes itself
+  public void delete() {
+	  removeSelf(start);
+	  removeSelf(stop);
+	  System.out.println("connector has removed self from endpoints");
+  }
+  
+  private void removeSelf(UMLNode target) {
+	  Vector<Connector> connections =  target.getConnections();
+	  for (int i=0; i<connections.size(); ++i) {
+		  if (connections.get(i)==this) {
+			  connections.remove(i);
+			  return;
+		  }
+	  }
+	  System.out.println("Error! connector could not remove itself from end ponts");
+  } 
+  
+  
 }

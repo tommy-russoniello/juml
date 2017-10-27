@@ -3,6 +3,8 @@ package umlnode;
 import javafx.scene.shape.Circle;
 import javafx.scene.Node;
 
+import java.util.Vector;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -44,4 +46,15 @@ public class Point extends UMLNode {
   		c.update();
   	}
   }
+  
+  public void delete() {
+	  Vector<Connector> conectionCopy = (Vector<Connector>)connections.clone();
+	  for (int i=0; i<conectionCopy.size(); ++i) {
+		  conectionCopy.get(i).delete();
+		  System.out.println("Point has removed self from a conection");
+		  //because the current connection was deleted out from under us
+	  }
+  }
+  
+  
 }

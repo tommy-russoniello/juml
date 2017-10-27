@@ -10,8 +10,11 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Map;
+import java.util.Vector;
+
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +44,7 @@ import umlnode.*;
 //Logic
 public class Controller{
     public enum Mode {
-      LINE, POINT, SELECT
+      LINE, POINT, SELECT, DELETE
     }
 
     Map<Node, UMLNode> NODES = new HashMap<>();
@@ -100,13 +103,40 @@ public class Controller{
         case SELECT:
           // inspect(event.getTarget());
           break;
-
+          
+        case DELETE:
+			if (pane.getChildren().contains(event.getTarget())) {
+				UMLNode target = NODES.get(event.getTarget());
+				Vector<Connector> conections = target.getConnections();
+				for (int i = 0; i < conections.size(); i++) {
+					deleteNode(conections.get(i).getModel());
+				}
+				if (target == null || target.getModel() == null) {
+					System.out.println("target not found in map");
+					return;
+				}
+				target.delete();
+				deleteNode(target.getModel());
+			}
+			break;
         default:
 
           break;
       }
     }
 
+    public void deleteNode(Node target) {
+		ObservableList<Node> children = pane.getChildren();
+		for (int i = 0; i < children.size(); ++i) {
+			if (children.get(i) == target) {
+				children.remove(i);
+				System.out.println("Node deleted from Pane");
+				return;
+			}
+		}
+		System.out.println("Error! connector could not remove itself from end ponts");
+	}
+    
     public void addNode (UMLNode node) {
       Node model = node.getModel();
       pane.getChildren().add(model);
@@ -115,6 +145,10 @@ public class Controller{
       class Delta { double x, y; }
       final Delta dragDelta = new Delta();
 
+      
+      // The code for making an object draggable was originally written by jewelsea and copied from
+      // https://stackoverflow.com/questions/17312734/how-to-make-a-draggable-node-in-javafx-2-0
+      // have since modified parts of it to use in out project
       model.setOnMousePressed(new EventHandler<MouseEvent>() {
        @Override public void handle(MouseEvent mouseEvent) {
          if (MODE == Mode.SELECT) {

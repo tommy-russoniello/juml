@@ -33,4 +33,11 @@ public class UMLNode extends Region {
   }
 
   public void update() {}
+  
+  // this will get called by the controller right before the object is deleted
+  // this method should remove all connections that controller does not directly
+  // know about
+  public void delete() {}
 }
+
+

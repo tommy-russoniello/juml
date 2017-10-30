@@ -1,0 +1,11 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane>
+	<Label layoutY="29.0" prefHeight="32.0" prefWidth="111.0" text="  Origin Y" />
+	<TextField layoutX="111.0" layoutY="-1.0" />
+	<Label prefHeight="29.0" prefWidth="111.0" text="  Origin X" />
+	<TextField layoutX="111.0" layoutY="30.0" />
+	<Label layoutY="61.0" prefHeight="32.0" prefWidth="111.0" text="  Radius" />
+	<TextField layoutX="111.0" layoutY="61.0" />
+</Pane>

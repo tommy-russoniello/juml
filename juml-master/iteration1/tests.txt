@@ -1,0 +1,46 @@
+Suggested Tests:
+
+
+Test 1:
+Procedure: User goes to point mode, then to select mode, then clicks on canvas
+Expected Result: Nothing should happen
+Actual Result:
+
+Test 2:
+Procedure: User goes to point mode, then clicks on canvas
+Expected Result: A small circle should appear at the location of the click
+Actual Result:
+
+Test 3:
+Procedure: User creates two points anywhere on the screen, goes to line mode, clicks on one point,
+  then clicks on another point
+Expected Result: A line should appear connecting the points
+Actual Result:
+
+Test 4:
+Procedure: User creates two points anywhere on the screen, goes to line mode, clicks anywhere there
+  is not a point, then clicks on a point
+Expected Result: Nothing should happen
+Actual Result: A line appears from the location of the first click to the location of the clicked
+  point
+Fixed:
+
+Test 5:
+Procedure: User creates three points anywhere on the screen, goes to line mode, and clicks on each
+  point exactly once, one after another
+Expected Result: do we expect two lines to be drawn, or just the first?
+Actual Result:
+
+Test 6:
+Procedure: User creates two points anywhere on the screen, goes to select mode, clicks on one point,
+  goes to line mode, clicks on other point.
+Expected Result: Do we expect a line to appear?
+Actual Result:
+Fixed:
+
+Test 7:
+Procedure: User collapses inspector, goes to point mode, and creates a point where the inspector
+  used to be.
+Expected Result:  A point should appear where clicked.
+Actual Result: Nothing happens
+Fixed:

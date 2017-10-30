@@ -41,5 +41,4 @@ public class Main extends Application {
         Controller.setPrimaryStage(window);
     }
 
-
 }

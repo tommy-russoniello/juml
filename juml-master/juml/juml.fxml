@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<!-- Style Sheet -->
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.Controller" fx:id="test">
+    <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuNewClicked" text="New" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuOpenClicked" text="Open" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuSaveClicked" text="Save" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuExitClicked" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuCopyClicked" text="Copy" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuPasteClicked" text="Paste" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuDeleteClicked" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuSelectAllClicked" text="SelectAll" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#menuSpecificationsClicked" text="Specifications" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <Pane fx:id="pane" onMouseClicked="#paneClick" BorderPane.alignment="CENTER">
+     	<children>
+     	
+     	</children>
+      </Pane>
+   </center>
+   <left>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Object Builder" BorderPane.alignment="TOP_CENTER">
+        <content>
+          <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="836.0" prefWidth="300.0">
+               <children>
+                  <Button fx:id="selectMode" layoutY="0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="298.0" text="Select" />
+                  <Button fx:id="lineMode" layoutY="25.0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="298.0" text="Line" />
+                  <Button fx:id="pointMode" layoutY="50.0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="298.0" text="Point" />
+                  <Button fx:id="deleteMode" layoutY="75.0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="298.0" text="Delete" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+   </left>
+   <right>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Inspector" BorderPane.alignment="TOP_CENTER">
+        <content>
+          <AnchorPane fx:id="inspectorObject" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="349.0" prefWidth="300.0">
+          	<children>
+          		
+            </children>
+          </AnchorPane>
+        </content>
+      </TitledPane>
+   </right>
+</BorderPane>

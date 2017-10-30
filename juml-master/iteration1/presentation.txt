@@ -1,0 +1,11 @@
+Presentation stuff (in this order)
+
+1) Sam -> Storming (name, meeting times)
+
+2) Quinn -> Adapting other team members work for the project while they’re not there, struggling with technology (git, eclipse)
+
+3) Tommy -> Object oriented nodes, controller stuff, attempting teaching git
+
+4) Torrance -> MenuBar, GUI, jar file stuff
+
+5) Sam -> testing (design issues that came up)

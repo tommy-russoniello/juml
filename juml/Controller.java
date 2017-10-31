@@ -42,28 +42,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import umlnode.*;
+import umlobject.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-//Logic
 public class Controller {
-	/**
-	 * 
-	 */
 
 	public enum Mode {
-		LINE, POINT, SELECT, DELETE
+		LINE, POINT, SELECT, DELETE, CLASSBOX
 	}
 
 	Map<Node, UMLNode> NODES = new HashMap<>();
+	Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
-	@FXML
-	private Pane pane;
-	@FXML
-	private AnchorPane inspectorObject;
+	@FXML private Pane pane;
+	@FXML private AnchorPane inspectorObject;
 
 	Mode MODE = Mode.SELECT;
 	Deque<UMLNode> SELECTED = new LinkedList<>();
@@ -89,40 +84,46 @@ public class Controller {
 
 	public void paneClick(MouseEvent event) throws IOException {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
+
 		switch (MODE) {
 		case POINT:
-			addNode(new Point(event.getX(), event.getY()));
+			addObject(new Point(event.getX(), event.getY()));
 
 			break;
 
 		case LINE:
-			if (pane.getChildren().contains(event.getTarget()) && !(event.getTarget() instanceof Line)) {
-				if (SELECTED.isEmpty()) {
-					SELECTED.addLast(NODES.get(event.getTarget()));
-				} else if (event.getTarget() != SELECTED.getLast().getModel()) {
-					Connector newConnector = new Connector(SELECTED.getLast(), NODES.get(event.getTarget()));
-					pane.getChildren().add(newConnector.getModel());
-					NODES.put(newConnector.getModel(), newConnector);
-					SELECTED.clear();
+		UMLNode node = (UMLNode) getObject(event.getTarget());
+				if (node != null) {
+					if (SELECTED.isEmpty()) {
+						SELECTED.addLast(node);
+					}
+					else if (node != SELECTED.getLast()) {
+						addObject(new UMLConnector(SELECTED.getLast(), node));
+						SELECTED.clear();
+					}
 				}
-			}
 
 			break;
+
+			case CLASSBOX:
+        addObject(new ClassBox(event.getX(), event.getY()));
+
+      break;
 
 		case SELECT:
 			if (pane.getChildren().contains(event.getTarget())) {
 				if (event.getTarget() instanceof Line) { // updates inspector to display properties of Line
-					inspectorObject.getChildren().clear(); // Clears current inspectorObject children
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml"))); // Pushes Line properties to InspectorObject
+					// inspectorObject.getChildren().clear(); // Clears current inspectorObject children
+					// inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml"))); // Pushes Line properties to InspectorObject
 				} else if (event.getTarget() instanceof Circle) { // updates inspector to display properties of Point
-					inspectorObject.getChildren().clear(); // Clear current inspectorObject children
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml"))); // Pushes Circle properties to InspectorObect
+					// inspectorObject.getChildren().clear(); // Clear current inspectorObject children
+					// inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml"))); // Pushes Circle properties to InspectorObect
 
 				}
 			}
 
 			else {
-				inspectorObject.getChildren().clear();
+				// inspectorObject.getChildren().clear();
 			}
 			// code for later: line.getStrokeDashArray().addAll(25d, 10d);
 			/*
@@ -130,25 +131,16 @@ public class Controller {
 			 * statements never triggered when they should have still need to
 			 * look up why this is happening. Using the first word of the string
 			 * as workaround for now. (event.getTarget() instanceof Line)
-			 * 
+			 *
 			 */
 			break;
 
 		case DELETE:
-			if (pane.getChildren().contains(event.getTarget())) {
-				UMLNode target = NODES.get(event.getTarget());
-				Vector<Connector> conections = target.getConnections();
-				for (int i = 0; i < conections.size(); i++) {
-					deleteNode(conections.get(i).getModel());
-				}
-				if (target == null || target.getModel() == null) {
-					System.out.println("target not found in map");
-					return;
-				}
-				target.delete();
-				deleteNode(target.getModel());
-				inspectorObject.getChildren().clear();
+			UMLObject target = getObject(event.getTarget());
+			if (target != null) {
+				deleteObject(target);
 			}
+
 			break;
 
 		default:
@@ -157,87 +149,121 @@ public class Controller {
 		}
 	}
 
-	public void deleteNode(Node target) {
-		ObservableList<Node> children = pane.getChildren();
-		for (int i = 0; i < children.size(); ++i) {
-			if (children.get(i) == target) {
-				children.remove(i);
-				System.out.println("Node deleted from Pane");
-				return;
-			}
+	public void deleteObject(UMLObject target) {
+		if (target instanceof UMLConnector) {
+			UMLConnector connector = (UMLConnector) target;
+			CONNECTORS.remove(connector.getModel());
+			connector.disconnect();
+			pane.getChildren().remove(connector.getModel());
 		}
-		System.out.println("Error! connector could not remove itself from end ponts");
+		else {
+			UMLNode node = (UMLNode) target;
+			while (!node.getConnections().isEmpty()) {
+				UMLConnector connector = node.getConnections().lastElement();
+				CONNECTORS.remove(connector.getModel());
+				pane.getChildren().remove(connector.getModel());
+				connector.disconnect();
+			}
+			NODES.remove(node.getModel());
+			pane.getChildren().remove(node.getModel());
+		}
 	}
 
-	public void addNode(UMLNode node) {
-		Node model = node.getModel();
+	public void addObject(UMLObject obj) {
+		Node model = obj.getModel();
 		pane.getChildren().add(model);
-		NODES.put(model, node);
 
-		class Delta {
-			double x, y;
+		if (obj instanceof UMLConnector) {
+			UMLConnector connector = (UMLConnector) obj;
+			CONNECTORS.put(model, connector);
 		}
-		final Delta dragDelta = new Delta();
+		else {
+			UMLNode node = (UMLNode) obj;
+      NODES.put(model, node);
 
-		model.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					// record a delta distance for the drag and drop operation.
-					dragDelta.x = node.getOriginX() - mouseEvent.getX();
-					dragDelta.y = node.getOriginY() - mouseEvent.getY();
-					model.getScene().setCursor(Cursor.MOVE);
-					System.out.println("begin moving Node");
-				}
-			}
-		});
-		
-		// The code for making an object draggable was originally written by jewelsea
-		// and copied from
-		// https://stackoverflow.com/questions/17312734/how-to-make-a-draggable-node-in-javafx-2-0
-		// have since modified parts of it to use in out project
-		model.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					node.move(mouseEvent.getX() + dragDelta.x, mouseEvent.getY() + dragDelta.y);
-					System.out.println("moved Node");
-					node.update();
-				}
-			}
-		});
+        class DragSource { double x, y; }
+        final DragSource dragSource = new DragSource();
 
-		model.setOnMouseReleased(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					model.getScene().setCursor(Cursor.HAND);
-				}
-			}
-		});
+        model.setOnMousePressed(new EventHandler<MouseEvent>() {
+         @Override public void handle(MouseEvent mouseEvent) {
+           if (MODE == Mode.SELECT) {
+             // record a delta distance for the drag and drop operation.
+             if (model instanceof Parent) {
+               dragSource.x = mouseEvent.getX();
+               dragSource.y = mouseEvent.getY();
+             }
+             else {
+               dragSource.x = node.getOriginX() - mouseEvent.getX();
+               dragSource.y = node.getOriginY() - mouseEvent.getY();
+             }
+            model.getScene().setCursor(Cursor.MOVE);
+            System.out.println("begin moving Node");
+           }
+         }
+        });
 
-		model.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					if (!mouseEvent.isPrimaryButtonDown()) {
-						model.getScene().setCursor(Cursor.HAND);
-					}
-				}
-			}
-		});
+        model.setOnMouseDragged(new EventHandler<MouseEvent>() {
+         @Override public void handle(MouseEvent mouseEvent) {
+           if (MODE == Mode.SELECT) {
+             if (model instanceof Parent) {
+               node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x), node.getOriginY() + (mouseEvent.getY() - dragSource.y));
+             } else {
+               node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
+             }
+             node.update();
+             System.out.println("moved Node");
+           }
+         }
+        });
 
-		model.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					if (!mouseEvent.isPrimaryButtonDown()) {
-						model.getScene().setCursor(Cursor.DEFAULT);
-					}
-				}
+        model.setOnMouseReleased(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            if (MODE == Mode.SELECT) {
+              model.getScene().setCursor(Cursor.HAND);
+            }
+          }
+        });
+
+        model.setOnMouseEntered(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            if (MODE == Mode.SELECT) {
+              if (!mouseEvent.isPrimaryButtonDown()) {
+                model.getScene().setCursor(Cursor.HAND);
+              }
+            }
+          }
+        });
+
+        model.setOnMouseExited(new EventHandler<MouseEvent>() {
+          @Override public void handle(MouseEvent mouseEvent) {
+            if (MODE == Mode.SELECT) {
+              if (!mouseEvent.isPrimaryButtonDown()) {
+                model.getScene().setCursor(Cursor.DEFAULT);
+              }
+            }
+          }
+        });
 			}
-		});
-	}
+    }
+
+		public UMLObject getObject (Object inModel) {
+      Node model = (Node) inModel;
+      UMLObject returnNode = NODES.get(model);
+      if (returnNode == null) {
+        returnNode = CONNECTORS.get(model);
+      }
+      while (returnNode == null) {
+        if (model == pane || model == null) {
+          break;
+        }
+        model = model.getParent();
+        returnNode = NODES.get(model);
+        if (returnNode == null) {
+          returnNode = CONNECTORS.get(model);
+        }
+      }
+      return returnNode;
+    }
 
 	// MenuBar Action Controller
 	// --------------------------------------------------------------------------------------------

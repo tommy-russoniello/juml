@@ -15,4 +15,13 @@ public class UMLNode extends UMLObject {
   		c.update();
   	}
   }
+
+  public void delete() {
+		Vector<UMLConnector> connectionCopy = (Vector<UMLConnector>) connections.clone();
+		for (int i = 0; i < connectionCopy.size(); ++i) {
+			connectionCopy.remove(i);
+			System.out.println("Point has removed self from a connection");
+			// because the current connection was deleted out from under us
+		}
+	}
 }

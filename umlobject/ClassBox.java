@@ -48,7 +48,7 @@ public class ClassBox extends UMLNode {
 
     box.getChildren().addAll(name, separator1, attributes, separator2, methods);
     originX = x + (width / 2);
-    originY = y + (getBoxHeight() / 2);
+    originY = y + (getHeight() / 2);
   }
 
   public Node getModel() {
@@ -57,11 +57,11 @@ public class ClassBox extends UMLNode {
 
   public void move(double newX, double newY) {
     box.setLayoutX(newX - (width / 2));
-    box.setLayoutY(newY - (getBoxHeight() / 2));
+    box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }
 
-  public double getBoxHeight() {
+  public double getHeight() {
     double height = 0;
     for (Node n: box.getChildren()) {
       height += n.getBoundsInParent().getHeight();
@@ -69,7 +69,7 @@ public class ClassBox extends UMLNode {
     return height;
   }
 
-  public double getBoxWidth() {
+  public double getWidth() {
     return width;
   }
 

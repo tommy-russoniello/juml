@@ -2,6 +2,7 @@ package umlobject;
 
 import javafx.scene.shape.Line;
 import javafx.scene.Node;
+import java.util.Vector;
 
 public class UMLConnector extends UMLObject {
   private UMLNode start, stop;
@@ -35,5 +36,12 @@ public class UMLConnector extends UMLObject {
 	  line.setStartY(start.getOriginY());
 	  line.setEndX(stop.getOriginX());
 	  line.setEndY(stop.getOriginY());
+  }
+
+  // if either end point is deleted, the line deletes itself
+  public void disconnect() {
+    start.connections.remove(this);
+    stop.connections.remove(this);
+    System.out.println("connector has removed self from endpoints");
   }
 }

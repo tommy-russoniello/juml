@@ -2,6 +2,7 @@ package umlobject;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.Node;
+import java.util.Vector;
 
 public class Point extends UMLNode {
   public Circle circle;

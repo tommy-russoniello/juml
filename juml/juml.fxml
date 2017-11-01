@@ -18,34 +18,34 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="New" onAction="#menuNewClicked"/>
-                  <MenuItem mnemonicParsing="false" text="Open" onAction="#menuOpenClicked"/>
+                  <MenuItem mnemonicParsing="false" onAction="#menuNewClicked" text="New" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuOpenClicked" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Save" onAction="#menuSaveClicked"/>
+                  <MenuItem mnemonicParsing="false" onAction="#menuSaveClicked" text="Save" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" text="Close" onAction="#menuCloseClicked"/>
+              <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit" onAction="#menuExitClicked"/>
+                  <MenuItem mnemonicParsing="false" onAction="#menuExitClicked" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Copy" onAction="#menuCopyClicked"/>
-                  <MenuItem mnemonicParsing="false" text="Paste" onAction="#menuPasteClicked"/>
-                  <MenuItem mnemonicParsing="false" text="Delete" onAction="#menuDeleteClicked"/>
-                  <MenuItem mnemonicParsing="false" text="SelectAll" onAction="#menuSelectAllClicked"/>
+                  <MenuItem mnemonicParsing="false" onAction="#menuCopyClicked" text="Copy" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuPasteClicked" text="Paste" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuDeleteClicked" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuSelectAllClicked" text="SelectAll" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="Specifications" onAction="#menuSpecificationsClicked"/>
+              <MenuItem mnemonicParsing="false" onAction="#menuSpecificationsClicked" text="Specifications" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
    </top>
    <center>
-      <Pane fx:id="pane" BorderPane.alignment="CENTER" onMouseClicked="#paneClick" />
+      <Pane fx:id="pane" onMouseClicked="#paneClick" BorderPane.alignment="CENTER" />
    </center>
    <left>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Object Builder" BorderPane.alignment="TOP_CENTER">
@@ -65,8 +65,10 @@
    <right>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Inspector" BorderPane.alignment="TOP_CENTER">
         <content>
-          <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="349.0" prefWidth="140.0" />
+          <AnchorPane fx:id="inspectorObject" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="349.0" prefWidth="250.0">
+          </AnchorPane>
         </content>
       </TitledPane>
    </right>
 </BorderPane>
+

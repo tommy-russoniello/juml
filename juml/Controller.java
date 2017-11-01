@@ -1,6 +1,5 @@
 package juml;
 
-import java.awt.geom.Point2D.Double;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,52 +7,42 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Map;
-import javafx.application.Application;
-import javafx.application.HostServices;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.Cursor;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javax.naming.spi.InitialContextFactory;
-import javafx.scene.layout.*;
 
-import javafx.event.*;
-
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import umlobject.*;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Vector;
+// ---------------------------------------------------------------------------------------------- \\
 
 public class Controller {
 
 	// Draw modes
 	public enum Mode {
-		LINE, POINT, SELECT, DELETE, CLASSBOX
+		SELECT,
+		LINE,
+		POINT,
+		CLASSBOX,
+		DELETE
 	}
+	
 	// All UMLNodes currently on the pane
 	Map<Node, UMLNode> NODES = new HashMap<>();
 	// All UMLConnectors currently on the pane
@@ -133,21 +122,25 @@ public class Controller {
 			case SELECT:
 				UMLObject test = getObject(event.getTarget());
 
-				if (test instanceof UMLConnector) { // updates inspector to display properties of Line
-					inspectorObject.getChildren().clear(); // Clears current inspectorObject children
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml"))); // Pushes Line properties to InspectorObject
-				} else if (test instanceof Point) { // updates inspector to display properties of Point
-					inspectorObject.getChildren().clear(); // Clear current inspectorObject children
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml"))); // Pushes Circle properties to InspectorObect
+				if (test instanceof UMLConnector) {
+					inspectorObject.getChildren().clear();
+					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml")));
+				} else if (test instanceof Point) {
+					inspectorObject.getChildren().clear();
+					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml")));
 					//circleOriginX(getObject(event.getTarget()));
 
-				} else if (test instanceof ClassBox) { // updates inspector to display properties of the ClassBox
-					inspectorObject.getChildren().clear(); // Clear current inspectorObject children
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("ClassBox.fxml"))); // Pushes ClassBox properties to InspectorObect
+				} else if (test instanceof ClassBox) {
+					inspectorObject.getChildren().clear();
+					inspectorObject.getChildren().add(
+						FXMLLoader.load(getClass().getResource("ClassBox.fxml")));
 				} else {
 					inspectorObject.getChildren().clear();
 				}
-				// code for later: line.getStrokeDashArray().addAll(25d, 10d);  event.getTarget().toString().startsWith("T") || event.getTarget().toString().startsWith("R")
+				// TODO:
+				// line.getStrokeDashArray().addAll(25d, 10d);
+				// event.getTarget().toString().startsWith("T") ||
+				//   event.getTarget().toString().startsWith("R")
 				break;
 
 			// Remove any UMLObject clicked on.

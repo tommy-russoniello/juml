@@ -2,7 +2,6 @@ package umlobject;
 
 import javafx.scene.shape.Line;
 import javafx.scene.Node;
-import java.util.Vector;
 
 // UML relationship representation.
 public class UMLConnector extends UMLObject {

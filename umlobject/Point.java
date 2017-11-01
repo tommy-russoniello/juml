@@ -2,7 +2,6 @@ package umlobject;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.Node;
-import java.util.Vector;
 
 // Simple point class.
 public class Point extends UMLNode {

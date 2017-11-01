@@ -59,7 +59,8 @@ public class Controller {
 
 	@FXML private Pane pane;
 	@FXML private AnchorPane inspectorObject;
-
+	@FXML private TextField circleOriginX;
+	
 	Mode MODE = Mode.SELECT;
 	Deque<UMLNode> SELECTED = new LinkedList<>();
 	FileChooser fileChooser = new FileChooser();
@@ -108,31 +109,26 @@ public class Controller {
 			case CLASSBOX:
         addObject(new ClassBox(event.getX(), event.getY()));
 
-      break;
+        break;
 
 		case SELECT:
-			if (pane.getChildren().contains(event.getTarget())) {
-				if (event.getTarget() instanceof Line) { // updates inspector to display properties of Line
-					// inspectorObject.getChildren().clear(); // Clears current inspectorObject children
-					// inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml"))); // Pushes Line properties to InspectorObject
-				} else if (event.getTarget() instanceof Circle) { // updates inspector to display properties of Point
-					// inspectorObject.getChildren().clear(); // Clear current inspectorObject children
-					// inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml"))); // Pushes Circle properties to InspectorObect
+			UMLObject test = getObject(event.getTarget());
+				
+			if (test instanceof UMLConnector) { // updates inspector to display properties of Line
+				inspectorObject.getChildren().clear(); // Clears current inspectorObject children
+				inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml"))); // Pushes Line properties to InspectorObject
+			} else if (test instanceof Point) { // updates inspector to display properties of Point
+				inspectorObject.getChildren().clear(); // Clear current inspectorObject children
+				inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml"))); // Pushes Circle properties to InspectorObect
+				//circleOriginX(getObject(event.getTarget()));
 
-				}
+			} else if (test instanceof ClassBox) { // updates inspector to display properties of the ClassBox
+				inspectorObject.getChildren().clear(); // Clear current inspectorObject children
+				inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("ClassBox.fxml"))); // Pushes ClassBox properties to InspectorObect
+			} else {
+				inspectorObject.getChildren().clear();
 			}
-
-			else {
-				// inspectorObject.getChildren().clear();
-			}
-			// code for later: line.getStrokeDashArray().addAll(25d, 10d);
-			/*
-			 * Note to group: tried using instanceof Object but the if
-			 * statements never triggered when they should have still need to
-			 * look up why this is happening. Using the first word of the string
-			 * as workaround for now. (event.getTarget() instanceof Line)
-			 *
-			 */
+			// code for later: line.getStrokeDashArray().addAll(25d, 10d);  event.getTarget().toString().startsWith("T") || event.getTarget().toString().startsWith("R")
 			break;
 
 		case DELETE:
@@ -345,6 +341,11 @@ public class Controller {
 				new FileOutputStream("C:/Users/xTmil_000/Desktop/eclipse/Workspace/juml-master/Hashmap.txt"));
 		outputStream.writeObject(NODES);
 		outputStream.close();
+	}
+	
+	//Inspector Properties WIP
+	public void circleOriginX(UMLObject target){
+		circleOriginX.setText(String.valueOf(target.originX));
 	}
 
 }// ---------------------------------------------------------------------------------------------------------------------

@@ -8,15 +8,30 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 
+/*
+ * Main class for Application.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.2
+ * @since 0.1
+ */
 public class Main extends Application {
 
     Stage window;
     BorderPane layout;
 
+    /*
+     * Launches application.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /*
+     * Sets up initial state of application
+     */
     @Override
     public void start(final Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("juml.fxml"));

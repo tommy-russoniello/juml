@@ -32,6 +32,15 @@ import umlobject.*;
 
 // ---------------------------------------------------------------------------------------------- \\
 
+/*
+ * MVC styled controller between model and view.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.2
+ * @since 0.1
+ */
 public class Controller {
 
 	// Draw modes
@@ -42,10 +51,14 @@ public class Controller {
 		CLASSBOX,
 		DELETE
 	}
-	
-	// All UMLNodes currently on the pane
+
+	/*
+	 * All UMLNodes currently on the pane.
+	 */
 	Map<Node, UMLNode> NODES = new HashMap<>();
-	// All UMLConnectors currently on the pane
+	/*
+	 * All UMLConnectors currently on the pane
+	 */
 	Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
 	// Main node that contains all drawn nodes as children.
@@ -53,27 +66,41 @@ public class Controller {
 	@FXML private AnchorPane inspectorObject;
 	@FXML private TextField circleOriginX;
 
-	// Current mode. Defaulted to SELECT.
+	/*
+	 * Current mode. Defaulted to SELECT.
+	 */
 	Mode MODE = Mode.SELECT;
-	// Collection of all "selected" UMLNodes
+	/*
+	 * Collection of all "selected" UMLNodes
+	 */
 	Deque<UMLNode> SELECTED = new LinkedList<>();
 	FileChooser fileChooser = new FileChooser();
 	static Stage window;
 
 // ---------------------------------------------------------------------------------------------- \\
 
-	// Sets the Primary Stage. Called from Main.
+	/*
+	 * Sets the Primary Stage. Called from Main.
+	 * @param primaryStage Primary stage of application instance.
+	 */
 	public static void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
 	}
 
-	// Returns pane.
+	/*
+	 * Returns pane.
+	 * @return Main pane being used for application instance.
+	 */
 	public Pane getPane() {
 		return pane;
 	}
 
-	// Changes mode according to event source.
-	// Triggered by object builder buttons.
+	/*
+	 * Changes mode according to event source.
+	 * @precondition Called by event on object builder button.
+	 * @param event Event triggering this method.
+	 * @postcondition MODE is updated according to button that received event triggering this method.
+	 */
 	public void modeClick(ActionEvent event) {
 		String newMode = ((Button) event.getSource()).getId();
 		newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
@@ -82,8 +109,12 @@ public class Controller {
 		System.out.println("Draw mode changed to \"" + MODE + "\"");
 	}
 
-	// Performs draw action relative to current draw mode.
-	// Triggered by pane.
+	/*
+	 * Performs draw action relative to current draw mode.
+	 * @precondition Called by a MouseEvent on the pane.
+	 * @param event Event triggering this method.
+	 * @postcondition Mode-defined operation is performed on coordinate of event.
+	 */
 	public void paneClick(MouseEvent event) throws IOException {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
@@ -160,10 +191,15 @@ public class Controller {
 
 // ---------------------------------------------------------------------------------------------- \\
 
-	// Removes given UMLObject from pane.
-	// Disconnects any present connections (UMLConnectors).
-	// * If a UMLNode is given, removes any UMLConnectors connected to it.
-	// Remove relevant map entry for the given UMLObject
+	/*
+	 * Removes given UMLObject from pane.
+	 * @precondition target is recognized UMLObject that is a child of the pane.
+	 * @param target UMLObject to be removed.
+	 * @postcondition target is removed from pane and relevant map.
+	 * @postcondition If target is a UMLNode, any UMLConnectors connected to it are also removed.
+	 * @postcondition If target is a UMLConnector, it is removed from the list of connectors for the
+	 * * UMLNodes that it connects.
+	 */
 	public void deleteObject(UMLObject target) {
 		// If UMLConnector is given, disconnect it on both ends and remove it.
 		if (target instanceof UMLConnector) {
@@ -186,8 +222,13 @@ public class Controller {
 		}
 	}
 
-	// Adds already instantiated UMLObject to pane.
-	// Defines any relevant handlers on UMLObject.
+	/*
+	 * Adds already instantiated UMLObject to pane.
+	 * @precondition obj is instantiated UMLObject.
+	 * @param obj UMLObject to be added.
+	 * @postcondition obj is added to pane and relevant map.
+	 * @postcondition Any relevant handlers are defined on obj.
+	 */
 	public void addObject(UMLObject obj) {
 		Node model = obj.getModel();
 		pane.getChildren().add(model);
@@ -276,9 +317,12 @@ public class Controller {
 			}
     }
 
-		// Returns recognzed UMLObject for given Object (typically one's underlying structure).
-		// If given Object is not recognized, but has an ancestor that is, finds that
-		// ancestor and returns it.
+		/*
+		 * Returns recognized UMLObject for given Object (typically one's underlying model).
+		 * @param inModel Object that will have its UMLObject (if it has one) searched for.
+		 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
+		 * * not recognized, but has an ancestor that is, that ancestor is the return.
+		 */
 		public UMLObject getObject (Object inModel) {
       Node model = (Node) inModel;
       UMLObject returnNode = NODES.get(model);
@@ -305,18 +349,27 @@ public class Controller {
 // ---------------------------------------------------------------------------------------------- \\
 	// MenuBar Action Controller
 
-	// Action used to Close the program: assigned to Exit
+	/*
+	 *  Action used to Close the program: assigned to Exit.
+	 * @postcondition Application is exited.
+	 */
 	public void menuExitClicked() {
 		window.close();
 	}
 
+	/*
+	 * Opens new window with blank file.
+	 * @postcondition all maintained variables are reset.
+	 */
 	public void menuNewClicked() {
 		pane.getChildren().clear();
 		inspectorObject.getChildren().clear();
 		NODES = new HashMap<>();
 	}
 
-	// Action to Open file WIP:
+	/*
+	 * Action to Open file WIP.
+	 */
 	public void menuOpenClicked() {
 		fileChooser.getExtensionFilters().add(
 			new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
@@ -338,7 +391,9 @@ public class Controller {
 
 	}
 
-	// Action to Save File WIP:
+	/*
+	 * Action to Save File WIP.
+	 */
 	public void menuSaveClicked() throws IOException {
 		String hashMap = NODES.toString();
 		String fxmlContent = pane.getChildren().toString();
@@ -378,7 +433,9 @@ public class Controller {
 		// hostServices.showDocument(file.getAbsolutePath());
 	}
 
-	// Function to Save a Hashmap to a txt file WIP:
+	/*
+	 * Function to Save a Hashmap to a txt file WIP.
+	 */
 	public void saveFile(Map<Node, UMLNode> NODES) throws IOException {
 		ObjectOutputStream outputStream = new ObjectOutputStream(
 			new FileOutputStream("C:/Users/xTmil_000/Desktop/eclipse/Workspace/juml-master/Hashmap.txt"));
@@ -386,7 +443,9 @@ public class Controller {
 		outputStream.close();
 	}
 
-	//Inspector Properties WIP
+	/*
+	 * Inspector Properties WIP.
+	 */
 	public void circleOriginX(UMLObject target){
 		circleOriginX.setText(String.valueOf(target.originX));
 	}

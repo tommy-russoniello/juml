@@ -1,7 +1,0 @@
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<Pane>
-	Circle[centerX=18.0, centerY=117.0, radius=5.0, fill=0x000000ff]
-	Circle[centerX=101.0, centerY=151.0, radius=5.0, fill=0x000000ff]
-</Pane>	

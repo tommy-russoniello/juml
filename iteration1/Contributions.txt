@@ -1,0 +1,44 @@
+Iteration 1
+=========================================================================================
+Quinn Minnich
+2.5 hr - discussing ideas and specifications with group
+3.0 hr - programming and experimenting with Java FX
+0.5 hr - writing and editing specifications and testing propositions
+3.0 hr - learning to use Git
+--------------
+9 hrs
+
+Torrance Graham
+2.5 hr - discussing ideas and specifications with group
+3.0 hr - learning javaFX and watching tutorials
+2.0 hr - learning to use Git and Slack
+2.0 hr - implementing MenuBar and MenuItems/adding group icon to page 
+3.0 hr - learning how save and open works in javaFX and incorperating that into Main.java 
+2.5 hr - implementing .fxml style sheet, and editing inspector/object panels
+2.0 hr - learning how to export a project to an executable .jar file and doing it
+1.5 hr - troubleshooting why jar file wouldn't execute correctly, fixed issue
+--------------
+18 hrs
+
+Samuel Carroll
+2.5 hr - Group meeting #1: Discussing ideas and specifications with group
+3.0 hr - Group meeting #2: Learning how to use Git
+3.5 hr - Implementing model and drawing functionality
+1.5 hr - Writing and editing tests
+2.0 hr - Learning and experimenting with JavaFX
+0.5 hr - Learning how to use Slack
+--------------
+13 hrs
+
+Thomas Rusoniello
+2.5 hr - Group meeting #1: Discussing ideas and specifications with group
+3.0 hr - Group meeting #2: Teaching others how to use git
+3.5 hr - Implementing model and drawing functionality
+3.0 hr - Made model system object oriented
+0.5 hr - Setting up git repo and slack workspace
+4.0 hr - Learning and experimenting with JavaFX
+2.0 hr - implementing controller functionality
+--------------
+18.5 hrs
+
+

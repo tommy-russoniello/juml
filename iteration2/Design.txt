@@ -1,0 +1,19 @@
+juml (or Java UML), uses the Model View Controller design pattern.
+
+The view is implemented in the fxml file “juml.fxml.” The view specifies the style of the scene for
+the program and then builds it. On relevant nodes, the view passes off received actions to
+corresponding handlers within the controller.
+
+The controller is implemented in the file “controller.java.” The controller handles actions passed
+in from the view and interacts with the model accordingly. The controller keeps track of the draw
+mode (currently either “SELECT”, “DELETE”, “POINT”, “CONNECTOR”, or “CLASSBOX”). When handlers
+receive events, the controller determines the correct course of action depending on the current
+draw mode. This may include the movement, creation, deletion, or selection of nodes.
+
+The model is implemented in the file “UMLObject.java” and its subclasses. “UMLObject.java” contains
+the basic instance variables and methods common to all objects that will be added to the scene. The
+file “UMLNode.java” inherits from “UMLObject.java” and adds some extra functionality specific to
+“connectable” nodes (i.e. ClassBoxes and Points). Both files “Point.java” and “ClassBox.java”
+inherit from this class. The file “Connector.java” only inherits from “UMLObject.java”, and
+interacts solely with the “UMLNode.java” class, thereby making it unnecessary for it to know whether
+it is connected to Points or ClassBoxes.

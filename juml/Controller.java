@@ -96,6 +96,14 @@ public class Controller {
 	}
 
 	/*
+	 * Sets pane.
+	 * @return Main pane being used for application instance.
+	 */
+	public void setPane(Pane p) {
+		pane = p;
+	}
+
+	/*
 	 * Changes mode according to event source.
 	 * @precondition Called by event on object builder button.
 	 * @param event Event triggering this method.
@@ -121,7 +129,7 @@ public class Controller {
 		switch (MODE) {
 			// Adds Point UMLNode to pane coordinates that were clicked on.
 			case POINT:
-				addObject(new Point(event.getX(), event.getY()));
+				addObjects(new Point(event.getX(), event.getY()));
 
 				break;
 
@@ -136,7 +144,7 @@ public class Controller {
 						}
 						// If selected node wasn't just clicked on again.
 						else if (node != SELECTED.getLast()) {
-							addObject(new UMLConnector(SELECTED.getLast(), node));
+							addObjects(new UMLConnector(SELECTED.getLast(), node));
 							SELECTED.clear();
 						}
 					}
@@ -145,7 +153,8 @@ public class Controller {
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-	        addObject(new ClassBox(event.getX(), event.getY()));
+	        addObjects(new ClassBox(event.getX(), event.getY()));
+	        System.out.println("this is x "+ event.getX() + "this is y "+ event.getY());
 
         break;
 
@@ -163,8 +172,7 @@ public class Controller {
 
 				} else if (test instanceof ClassBox) {
 					inspectorObject.getChildren().clear();
-					inspectorObject.getChildren().add(
-						FXMLLoader.load(getClass().getResource("ClassBox.fxml")));
+					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("ClassBox.fxml")));
 				} else {
 					inspectorObject.getChildren().clear();
 				}
@@ -229,91 +237,91 @@ public class Controller {
 	 * @postcondition obj is added to pane and relevant map.
 	 * @postcondition Any relevant handlers are defined on obj.
 	 */
-	public void addObject(UMLObject obj) {
-		Node model = obj.getModel();
-		pane.getChildren().add(model);
+	public void addObjects(UMLObject... objects) {
+		for (UMLObject object : objects) {
+			Node model = object.getModel();
+			pane.getChildren().add(model);
+			// If UMLConnector is being added, add it to CONNECTOR map.
+			if (object instanceof UMLConnector) {
+				UMLConnector connector = (UMLConnector) object;
+				CONNECTORS.put(model, connector);
+			}
 
-		// If UMLConnector is being added, add it to CONNECTOR map.
-		if (obj instanceof UMLConnector) {
-			UMLConnector connector = (UMLConnector) obj;
-			CONNECTORS.put(model, connector);
-		}
-		// If UMLNode is being added, add it to NODES map and define relevant handlers.
-		else {
-			UMLNode node = (UMLNode) obj;
-      NODES.put(model, node);
+			// If UMLNode is being added, add it to NODES map and define relevant handlers.
+			else {
+				UMLNode node = (UMLNode) object;
+	      NODES.put(model, node);
+					// Records mouse drag source coordinates accross handlers.
+	        class DragSource { double x, y; }
+	        final DragSource dragSource = new DragSource();
+					// Records dragging coordinate information
+	        model.setOnMousePressed(new EventHandler<MouseEvent>() {
+	         @Override public void handle(MouseEvent mouseEvent) {
+						 // Record mouse click coordinates if UMLObject is a Parent.
+	           if (MODE == Mode.SELECT) {
+	             if (model instanceof Parent) {
+	               dragSource.x = mouseEvent.getX();
+	               dragSource.y = mouseEvent.getY();
+	             }
+							 // Records delta of mouse click coordinates and UMLObject's origin if UMLObject is not
+							 // * a Parent.
+	             else {
+	               dragSource.x = node.getOriginX() - mouseEvent.getX();
+	               dragSource.y = node.getOriginY() - mouseEvent.getY();
+	             }
+	            model.getScene().setCursor(Cursor.MOVE);
+	            System.out.println("begin moving Node");
+	           }
+	         }
+	        });
 
-				// Records mouse drag source coordinates accross handlers.
-        class DragSource { double x, y; }
-        final DragSource dragSource = new DragSource();
+					// Moves UMLObject to new position it was dragged to.
+	        model.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	         @Override public void handle(MouseEvent mouseEvent) {
+	           if (MODE == Mode.SELECT) {
+	             if (model instanceof Parent) {
+	               node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x),
+								 	node.getOriginY() + (mouseEvent.getY() - dragSource.y));
+	             } else {
+	               node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
+	             }
+	             node.update();
+	             System.out.println("moved Node");
+	           }
+	         }
+	        });
 
-				// Records dragging coordinate information
-        model.setOnMousePressed(new EventHandler<MouseEvent>() {
-         @Override public void handle(MouseEvent mouseEvent) {
-					 // Record mouse click coordinates if UMLObject is a Parent.
-           if (MODE == Mode.SELECT) {
-             if (model instanceof Parent) {
-               dragSource.x = mouseEvent.getX();
-               dragSource.y = mouseEvent.getY();
-             }
-						 // Records delta of mouse click coordinates and UMLObject's origin if UMLObject is not
-						 // * a Parent.
-             else {
-               dragSource.x = node.getOriginX() - mouseEvent.getX();
-               dragSource.y = node.getOriginY() - mouseEvent.getY();
-             }
-            model.getScene().setCursor(Cursor.MOVE);
-            System.out.println("begin moving Node");
-           }
-         }
-        });
+					// Sets cursor back to default when mouse is released on the UMLObject.
+	        model.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	          @Override public void handle(MouseEvent mouseEvent) {
+	            if (MODE == Mode.SELECT) {
+	              model.getScene().setCursor(Cursor.HAND);
+	            }
+	          }
+	        });
 
-				// Moves UMLObject to new position it was dragged to.
-        model.setOnMouseDragged(new EventHandler<MouseEvent>() {
-         @Override public void handle(MouseEvent mouseEvent) {
-           if (MODE == Mode.SELECT) {
-             if (model instanceof Parent) {
-               node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x),
-							 	node.getOriginY() + (mouseEvent.getY() - dragSource.y));
-             } else {
-               node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
-             }
-             node.update();
-             System.out.println("moved Node");
-           }
-         }
-        });
+					// Sets cursor to HAND when mouse enters the UMLObject.
+	        model.setOnMouseEntered(new EventHandler<MouseEvent>() {
+	          @Override public void handle(MouseEvent mouseEvent) {
+	            if (MODE == Mode.SELECT) {
+	              if (!mouseEvent.isPrimaryButtonDown()) {
+	                model.getScene().setCursor(Cursor.HAND);
+	              }
+	            }
+	          }
+	        });
 
-				// Sets cursor back to default when mouse is released on the UMLObject.
-        model.setOnMouseReleased(new EventHandler<MouseEvent>() {
-          @Override public void handle(MouseEvent mouseEvent) {
-            if (MODE == Mode.SELECT) {
-              model.getScene().setCursor(Cursor.HAND);
-            }
-          }
-        });
-
-				// Sets cursor to HAND when mouse enters the UMLObject.
-        model.setOnMouseEntered(new EventHandler<MouseEvent>() {
-          @Override public void handle(MouseEvent mouseEvent) {
-            if (MODE == Mode.SELECT) {
-              if (!mouseEvent.isPrimaryButtonDown()) {
-                model.getScene().setCursor(Cursor.HAND);
-              }
-            }
-          }
-        });
-
-				// Sets cursor back to default when mouse exits the UMLObject.
-        model.setOnMouseExited(new EventHandler<MouseEvent>() {
-          @Override public void handle(MouseEvent mouseEvent) {
-            if (MODE == Mode.SELECT) {
-              if (!mouseEvent.isPrimaryButtonDown()) {
-                model.getScene().setCursor(Cursor.DEFAULT);
-              }
-            }
-          }
-        });
+					// Sets cursor back to default when mouse exits the UMLObject.
+	        model.setOnMouseExited(new EventHandler<MouseEvent>() {
+	          @Override public void handle(MouseEvent mouseEvent) {
+	            if (MODE == Mode.SELECT) {
+	              if (!mouseEvent.isPrimaryButtonDown()) {
+	                model.getScene().setCursor(Cursor.DEFAULT);
+	              }
+	            }
+	          }
+	        });
+				}
 			}
     }
 

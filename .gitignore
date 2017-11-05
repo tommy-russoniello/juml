@@ -2,3 +2,5 @@
 
 # Ignore class files generated from compilation
 *.class
+# Ignore jar files
+*.jar

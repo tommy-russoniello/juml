@@ -142,4 +142,82 @@ public class ClassBox extends UMLNode {
   public String[] getMethods() {
     return methods.getText().split("\\|");
   }
+  
+	/*
+	 * Returns the x coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 * 
+	 * @return returns the calculated x coordinate.
+	 */
+	public double getAnchorX(double startX, double startY) {
+		double actinghalfWidth = (getWidth()) / 2;
+		double actinghalfHeight = (getHeight()) / 2;
+		double deltaX = startX - originX;
+		double deltaY = originY - startY;
+		double angle = Math.atan(deltaY / deltaX);
+		if (startX < originX)
+			angle += Math.PI;
+
+		// System.out.println("angle in degrees is "+angle*180/Math.PI);
+
+		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
+		System.out.println("Box angle in degrees is " + boxAngle * 180 / Math.PI);
+		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+			// crossing sides of box
+			double xOffset;
+			if (startX > originX)
+				xOffset = actinghalfWidth + 2;
+			else
+				xOffset = -actinghalfWidth;
+			return originX + xOffset;
+		} else {
+			// crossing top or bottom of box
+			double yOffset;
+			if (startY < originY)
+				yOffset = actinghalfHeight + 2;
+			else
+				yOffset = -actinghalfHeight;
+			double xOffset = yOffset / Math.tan(angle);
+			return originX + xOffset;
+		}
+	}
+
+	/*
+	 * Returns the y coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 * 
+	 * @return returns the calculated y coordinate.
+	 */
+	public double getAnchorY(double startX, double startY) {
+		double actinghalfWidth = (getWidth()) / 2;
+		double actinghalfHeight = (getHeight()) / 2;
+		double deltaX = startX - originX;
+		double deltaY = originY - startY;
+		double angle = Math.atan(deltaY / deltaX);
+		if (startX < originX)
+			angle += Math.PI;
+
+		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
+		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+			double xOffset;
+			if (startX < originX)
+				xOffset = actinghalfWidth + 2;
+			else
+				xOffset = -actinghalfWidth;
+
+			// do check if line crosses corner of box
+			// if line crosses "bottom" or "top"
+			double yOffset = Math.tan(angle) * xOffset;
+			return originY + yOffset;
+		} else {
+			double yOffset;
+			if (startY > originY)
+				yOffset = actinghalfHeight + 2;
+			else
+				yOffset = -actinghalfHeight;
+			return originY + yOffset;
+		}
+	}
+
+  
 }

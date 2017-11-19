@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -64,7 +65,6 @@ public class Controller {
 	// Main node that contains all drawn nodes as children.
 	@FXML private Pane pane;
 	@FXML private AnchorPane inspectorObject;
-	@FXML private TextField circleOriginX;
 
 	/*
 	 * Current mode. Defaulted to SELECT.
@@ -75,6 +75,8 @@ public class Controller {
 	 */
 	Deque<UMLNode> SELECTED = new LinkedList<>();
 	FileChooser fileChooser = new FileChooser();
+	
+
 	static Stage window;
 
 // ---------------------------------------------------------------------------------------------- \\
@@ -122,7 +124,7 @@ public class Controller {
 	 * @precondition Called by a MouseEvent on the pane.
 	 * @param event Event triggering this method.
 	 * @postcondition Mode-defined operation is performed on coordinate of event.
-	 */
+	 */	
 	public void paneClick(MouseEvent event) throws IOException {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
@@ -163,23 +165,14 @@ public class Controller {
 				UMLObject test = getObject(event.getTarget());
 
 				if (test instanceof UMLConnector) {
-					inspectorObject.getChildren().clear();
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Line.fxml")));
+					loadLineFXML(test);
 				} else if (test instanceof Point) {
-					inspectorObject.getChildren().clear();
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("Circle.fxml")));
-					//circleOriginX(getObject(event.getTarget()));
-
+					loadCircleFXML(test);
 				} else if (test instanceof ClassBox) {
-					inspectorObject.getChildren().clear();
-					inspectorObject.getChildren().add(FXMLLoader.load(getClass().getResource("ClassBox.fxml")));
+					loadClassBoxFXML(test);
 				} else {
 					inspectorObject.getChildren().clear();
 				}
-				// TODO:
-				// line.getStrokeDashArray().addAll(25d, 10d);
-				// event.getTarget().toString().startsWith("T") ||
-				//   event.getTarget().toString().startsWith("R")
 				break;
 
 			// Remove any UMLObject clicked on.
@@ -325,13 +318,13 @@ public class Controller {
 			}
     }
 
-		/*
-		 * Returns recognized UMLObject for given Object (typically one's underlying model).
-		 * @param inModel Object that will have its UMLObject (if it has one) searched for.
-		 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
-		 * * not recognized, but has an ancestor that is, that ancestor is the return.
-		 */
-		public UMLObject getObject (Object inModel) {
+    /*
+	 * Returns recognized UMLObject for given Object (typically one's underlying model).
+	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
+	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
+	 * * not recognized, but has an ancestor that is, that ancestor is the return.
+	 */
+	public UMLObject getObject (Object inModel) {
       Node model = (Node) inModel;
       UMLObject returnNode = NODES.get(model);
 			// If model is not a key in NODES (returns null to returnNode), it's UMLObject must be a
@@ -454,8 +447,61 @@ public class Controller {
 	/*
 	 * Inspector Properties WIP.
 	 */
-	public void circleOriginX(UMLObject target){
-		circleOriginX.setText(String.valueOf(target.originX));
+	
+	
+    /*
+	 * loads inspector fxml and allows user to change properties.
+	 * @param point instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given circle fxml and listens to given key/mouse events to change 
+	 * the inspector/circle properties.
+	 */
+	public void loadCircleFXML(UMLObject point){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Circle.fxml"));
+			Parent root = loader.load();			
+			CircleController circleFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			circleFXML.loadInspectorInfo(point);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+    /*
+	 * loads inspector fxml and allows user to change properties.
+	 * @param classBox instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given classBox fxml and listens to given key/mouse events to change 
+	 * the inspector/circle properties.
+	 */	
+	public void loadClassBoxFXML(UMLObject classBox){
+		try{
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassBox.fxml"));
+			Parent root = loader.load();			
+			ClassBoxController classBoxFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			classBoxFXML.loadInspectorInfo(classBox);
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+    /*
+	 * loads inspector fxml and allows user to change properties.
+	 * @param line instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change 
+	 * the inspector/circle properties.
+	 */		
+	public void loadLineFXML(UMLObject line){
+		try{
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Line.fxml"));
+			Parent root = loader.load();			
+			LineController lineFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			lineFXML.loadInspectorInfo(line);
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 
 }

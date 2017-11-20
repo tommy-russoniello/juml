@@ -30,6 +30,7 @@ public class UMLObject {
     update();
   }
 
+
   /*
    * Update values to reflect changes made to them.
    * @postcondition All data is updated (refreshed).

@@ -1,16 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 
-<Pane>
-	<Label layoutY="-1.0" prefHeight="29.0" prefWidth="100.0" text="  Class Name:" />
-	<TextField layoutX="100.0" layoutY="1.0" />
-	<Separator layoutY="27.0" prefHeight="4.0" prefWidth="250.0" />
-	<Label layoutY="29.0" prefHeight="29.0" prefWidth="100.0" text="  Attributes:" />
-	<TextArea layoutX="3.0" layoutY="58.0" prefHeight="100.0" prefWidth="245.0" />
-	<Separator layoutY="161.0" prefHeight="4.0" prefWidth="250.0" />
-	<Label layoutY="163.0" prefHeight="29.0" prefWidth="100.0" text="  Methods:" />
-	<TextArea layoutX="3.0" layoutY="192.0" prefHeight="100.0" prefWidth="245.0" />
+<Pane prefHeight="296.0" prefWidth="286.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.ClassBoxController">
+   <children>
+   	<Label layoutY="-1.0" prefHeight="29.0" prefWidth="100.0" text="  Class Name:" />
+   	<TextField fx:id="classBoxName" layoutX="100.0" layoutY="1.0" onKeyReleased="#updateText" />
+   	<Separator layoutY="27.0" prefHeight="4.0" prefWidth="250.0" />
+   	<Label layoutY="29.0" prefHeight="29.0" prefWidth="100.0" text="  Attributes:" />
+   	<TextArea fx:id="classBoxAttributes" layoutX="3.0" layoutY="58.0" onKeyReleased="#updateText" prefHeight="100.0" prefWidth="245.0" />
+   	<Separator layoutY="161.0" prefHeight="4.0" prefWidth="250.0" />
+   	<Label layoutY="163.0" prefHeight="29.0" prefWidth="100.0" text="  Methods:" />
+   	<TextArea fx:id="classBoxMethods" layoutX="3.0" layoutY="192.0" onKeyReleased="#updateText" prefHeight="100.0" prefWidth="245.0" />
+    <Separator layoutY="294.0" prefHeight="4.0" prefWidth="250.0" />
+	<Label layoutY="300.0" prefHeight="29.0" prefWidth="100.0" text="  Origin X" />
+	<TextField fx:id="classBoxOriginX" layoutX="100.0" layoutY="300.0" onKeyPressed="#classBoxOriginChange"/>
+	<Label layoutY="329.0" prefHeight="32.0" prefWidth="100.0" text="  Origin Y" />
+	<TextField fx:id="classBoxOriginY" layoutX="100.0" layoutY="330.0" onKeyPressed="#classBoxOriginChange"/>
+   </children>
 </Pane>

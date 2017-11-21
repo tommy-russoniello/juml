@@ -21,7 +21,13 @@ public class UMLConnector extends UMLObject {
    * underlying model.
    */
   private Line line;
-
+  
+  /*
+   * variable needed to keep track of line status
+   * 1 = line is dotted
+   * 0 = line is solid
+   */
+  private int isDottedCheck = 0;
   /*
    * Basic Constructor
    * @param inStart UMLNode whose origin coordinates this's underlying line will start at.
@@ -35,8 +41,11 @@ public class UMLConnector extends UMLObject {
     originY = start.getOriginY();
     // Line between the 2 UMLNodes.
     line = new Line(start.getOriginX(), start.getOriginY(), stop.getOriginX(), stop.getOriginY());
+    line.setStrokeWidth(2);
+    update();
     inStart.connections.add(this);
     inStop.connections.add(this);
+
   }
 
   /*
@@ -71,10 +80,10 @@ public class UMLConnector extends UMLObject {
    */
   public void update() {
     System.out.println("moving line");
-	  line.setStartX(start.getOriginX());
-	  line.setStartY(start.getOriginY());
-	  line.setEndX(stop.getOriginX());
-	  line.setEndY(stop.getOriginY());
+    line.setStartX(start.getAnchorX(stop.getOriginX(), stop.getOriginY()));
+    line.setStartY(start.getAnchorY(stop.getOriginX(), stop.getOriginY()));
+    line.setEndX(stop.getAnchorX(start.getOriginX(), start.getOriginY()));
+    line.setEndY(stop.getAnchorY(start.getOriginX(), start.getOriginY()));
   }
 
   /*
@@ -85,5 +94,37 @@ public class UMLConnector extends UMLObject {
     start.connections.remove(this);
     stop.connections.remove(this);
     System.out.println("connector has removed self from endpoints");
+  }
+  
+  
+  //Torrance Inspector Update
+  
+  /*
+   * Makes the UMLConnector Dotted.
+   */
+  public void makeDotted(){
+	  line.getStrokeDashArray().setAll(25d, 10d);
+	  isDottedCheck = 1;
+  }
+  
+  /*
+   * Makes the UMLConnector Solid.
+   */
+  public void makeSolid(){
+	  line.getStrokeDashArray().setAll(1d,1d);
+	  isDottedCheck = 0;
+  }
+  
+  
+  /*
+   * Return check if line is dotted.
+   * @return returns true if line is dotted, false if not. 
+   */
+  public boolean isDotted(){
+	  if(isDottedCheck == 1){
+		  return true;
+	  } else{
+		  return false;
+	  }
   }
 }

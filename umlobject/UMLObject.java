@@ -17,6 +17,18 @@ public class UMLObject {
    */
   public double originX;
   public double originY;
+  
+  
+  private boolean isSelected = false;
+  
+  public void setSelected(boolean b) {
+	  System.out.println("Selected set to: "+b);
+	  isSelected = b;
+  }
+  
+  public boolean isSelected() {
+	  return isSelected;
+  }
 
   /*
    * Reassign this to given coordinates.
@@ -29,6 +41,7 @@ public class UMLObject {
     originY = newY;
     update();
   }
+
 
   /*
    * Update values to reflect changes made to them.

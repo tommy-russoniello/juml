@@ -70,4 +70,52 @@ public class Point extends UMLNode {
     circle.setCenterY(newY);
     super.move(newX, newY);
   }
+  
+  	/*
+  	 * Returns the x coordinate of the point to which a connector should anchor if
+  	 * joined to this node.
+  	 * 
+  	 * @return returns the calculated x coordinate.
+  	 */
+  	public double getAnchorX(double startX, double startY) {
+  		double actingRadius = radius+5;
+  		double deltaX = startX - originX;
+   	double deltaY = originY - startY; 
+  		double angle = Math.atan(deltaY/deltaX);
+  		if (startX<originX) 
+  			angle+= Math.PI;
+  		double xOffset = actingRadius * Math.cos(angle);
+  		return originX + xOffset;
+  }
+  
+  	/*
+  	 * Returns the y coordinate of the point to which a connector should anchor if
+  	 * joined to this node.
+  	 * 
+  	 * @return returns the calculated y coordinate.
+  	 */
+  	public double getAnchorY(double startX, double startY) {
+  		double actingRadius = radius+5;
+  		double deltaX = startX - originX;
+  		double deltaY = originY - startY; 
+  		double angle = Math.atan(deltaY/deltaX);
+  		if (startX<originX) 
+  			angle+= Math.PI;
+  		//System.out.println("angle in degrees is "+angle*180/Math.PI);
+  		double yOffset = -actingRadius * Math.sin(angle);
+  		return originY + yOffset;
+  	}  
+  
+  
+  
+  //Torrance Inspector Update
+  /*
+   * Reassign this at given radius.
+   * @param newRadius reassigned for this.
+   * @postcondition This updates all of its data according to new radius.
+   */
+  public void setRadius(Double newRadius) {
+	  circle.setRadius(newRadius);
+	  radius = newRadius;
+  }
 }

@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
 
 <!-- Style Sheet -->
 
@@ -66,6 +68,9 @@
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Inspector" BorderPane.alignment="TOP_CENTER">
         <content>
           <AnchorPane fx:id="inspectorObject" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="349.0" prefWidth="250.0">
+			<children>
+
+        	 </children>
           </AnchorPane>
         </content>
       </TitledPane>

@@ -2,6 +2,7 @@ package umlobject;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 /*
  * Simple point class.
@@ -70,45 +71,43 @@ public class Point extends UMLNode {
     circle.setCenterY(newY);
     super.move(newX, newY);
   }
-  
+
   	/*
   	 * Returns the x coordinate of the point to which a connector should anchor if
   	 * joined to this node.
-  	 * 
+  	 *
   	 * @return returns the calculated x coordinate.
   	 */
   	public double getAnchorX(double startX, double startY) {
   		double actingRadius = radius+5;
   		double deltaX = startX - originX;
-   	double deltaY = originY - startY; 
+   	  double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);
-  		if (startX<originX) 
+  		if (startX<originX) {
   			angle+= Math.PI;
+      }
   		double xOffset = actingRadius * Math.cos(angle);
   		return originX + xOffset;
   }
-  
+
   	/*
   	 * Returns the y coordinate of the point to which a connector should anchor if
   	 * joined to this node.
-  	 * 
+  	 *
   	 * @return returns the calculated y coordinate.
   	 */
   	public double getAnchorY(double startX, double startY) {
   		double actingRadius = radius+5;
   		double deltaX = startX - originX;
-  		double deltaY = originY - startY; 
+  		double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);
-  		if (startX<originX) 
+  		if (startX<originX) {
   			angle+= Math.PI;
-  		//System.out.println("angle in degrees is "+angle*180/Math.PI);
+      }
   		double yOffset = -actingRadius * Math.sin(angle);
   		return originY + yOffset;
-  	}  
-  
-  
-  
-  //Torrance Inspector Update
+  	}
+
   /*
    * Reassign this at given radius.
    * @param newRadius reassigned for this.
@@ -117,5 +116,21 @@ public class Point extends UMLNode {
   public void setRadius(Double newRadius) {
 	  circle.setRadius(newRadius);
 	  radius = newRadius;
+  }
+
+  /*
+   * Changes color of underlying circle model to make the object appear highlighted.
+   * @postcondition Color of underlying circle model changed to blue.
+   */
+  public void highlight() {
+    circle.setFill(Color.BLUE);
+  }
+
+  /*
+   * Changes color of underlying circle model to make the object appear unhighlighted.
+   * @postcondition Color of underlying circle model changed to black.
+   */
+  public void unhighlight() {
+    circle.setFill(Color.BLACK);
   }
 }

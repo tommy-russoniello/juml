@@ -115,7 +115,7 @@ public class Tests {
 		assertEquals(2, pane.getChildren().size());
 		assertMap(juml.NODES, p1, p2);
 
-		juml.deleteObject(p1);
+		juml.deleteObjects(p1);
 
 		assertEquals(1, pane.getChildren().size());
 		assertNull(juml.NODES.get(p1.getModel()));
@@ -129,7 +129,7 @@ public class Tests {
 		assertEquals(2, pane.getChildren().size());
 		assertMap(juml.NODES, cb1, cb2);
 
- 		juml.deleteObject(cb1);
+ 		juml.deleteObjects(cb1);
 
  		assertEquals(1, pane.getChildren().size());
 		assertNull(juml.NODES.get(cb1.getModel()));
@@ -150,7 +150,7 @@ public class Tests {
 
 		assertMap(juml.CONNECTORS, c1);
 
-		juml.deleteObject(c1);
+		juml.deleteObjects(c1);
 
 		assertEquals(2, pane.getChildren().size());
 		// see if points removed connection
@@ -179,8 +179,8 @@ public class Tests {
 		assertConnections(p2, c1, c2);
 		assertConnections(p3, c2);
 
-		//this should delete the connector2 too
-		juml.deleteObject(p2);
+		//this should delete the connector too
+		juml.deleteObjects(p2);
 
 		// see if both point removed the connectors
 		assertMap(juml.CONNECTORS);

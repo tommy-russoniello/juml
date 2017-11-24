@@ -37,6 +37,18 @@ public class UMLObject {
    */
   public void update() {}
 
+    /*
+     * Changes colors within model to make the object appear highlighted.
+     * @postcondition Colors in model are changed to make the object appear highlighted.
+     */
+  public void highlight() {}
+
+    /*
+     * Changes colors within model to make the object appear unhighlighted.
+     * @postcondition Colors in model are changed to make the object appear unhighlighted.
+     */
+  public void unhighlight() {}
+
    /*
     * Returns underlying model.
     * @return underlying model Node.

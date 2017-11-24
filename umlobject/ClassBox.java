@@ -29,7 +29,7 @@ public class ClassBox extends UMLNode {
    */
   VBox box;
   Rectangle separator1, separator2;
-  Text name, attributes, methods;
+  public Text name, attributes, methods;
 
   /*
    * Basic Constructor
@@ -99,6 +99,12 @@ public class ClassBox extends UMLNode {
     super.move(newX, newY);
   }
 
+  public void trim() {
+    double greatestLength = Math.max(Math.max(name.getLayoutBounds().getWidth(),
+      attributes.getLayoutBounds().getWidth()), methods.getLayoutBounds().getWidth());
+    setWidth(greatestLength > 80 ? greatestLength : 80);
+  }
+
   /*
    * Calculates and returns total height of underlying model (VBox).
    * @return Total height of underlying Vbox model.
@@ -116,8 +122,6 @@ public class ClassBox extends UMLNode {
    * @return maintained width.
    */
   public double getWidth() {
-	 //double width = 0;
-	  
     return width;
   }
 
@@ -130,27 +134,39 @@ public class ClassBox extends UMLNode {
   }
 
   /*
-   * Returns contents of this's attributes field splt into string array.
-   * @return Contents of this's attributes field splt into string array.
+   * Returns contents of this's attributes field as string.
+   * @return Contents of this's attributes field as string.
    */
   public String getAttributes() {
-	  //return attributes.getText().split("\\|");
 	  return attributes.getText();
   }
+  /*
+   * Returns contents of this's attributes field splt into String array.
+   * @return Contents of this's attributes field splt into String array.
+   */
+  public String [] getAttributesArray() {
+    return attributes.getText().split("\\|");
+  }
 
+  /*
+   * Returns contents of this's methods field split as String.
+   * @return Contents of this's methods field split as String.
+   */
+  public String getMethods() {
+	  return methods.getText();
+  }
   /*
    * Returns contents of this's methods field split into string array.
    * @return Contents of this's methods field split into string array.
    */
-  public String getMethods() {
-	  //return methods.getText().split("\\|");
-	  return methods.getText();
+  public String [] getMethodsArray() {
+	  return methods.getText().split("\\|");
   }
-  
+
   /*
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
-   * 
+   *
    * @return returns the calculated x coordinate.
    */
   public double getAnchorX(double startX, double startY) {
@@ -159,37 +175,38 @@ public class ClassBox extends UMLNode {
   	double deltaX = startX - originX;
   	double deltaY = originY - startY;
   	double angle = Math.atan(deltaY / deltaX);
-  	if (startX < originX)
+  	if (startX < originX) {
   		angle += Math.PI;
-  
-  	// System.out.println("angle in degrees is "+angle*180/Math.PI);
-  
+    }
+
   	double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
-  	System.out.println("Box angle in degrees is " + boxAngle * 180 / Math.PI);
-  	if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+  	if ((angle < boxAngle && angle > -boxAngle) ||
+      ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
   		// crossing sides of box
   		double xOffset;
-  		if (startX > originX)
+  		if (startX > originX) {
   			xOffset = actinghalfWidth + 2;
-  		else
+      } else {
   			xOffset = -actinghalfWidth;
+      }
   		return originX + xOffset;
   	} else {
   		// crossing top or bottom of box
   		double yOffset;
-  		if (startY < originY)
+  		if (startY < originY) {
 	  		yOffset = actinghalfHeight + 2;
-  		else
+  		} else {
   			yOffset = -actinghalfHeight;
+      }
   		double xOffset = yOffset / Math.tan(angle);
   		return originX + xOffset;
   	}
   }
-  
+
   	/*
   	 * Returns the y coordinate of the point to which a connector should anchor if
   	 * joined to this node.
-  	 * 
+  	 *
   	 * @return returns the calculated y coordinate.
   	 */
   	public double getAnchorY(double startX, double startY) {
@@ -198,58 +215,99 @@ public class ClassBox extends UMLNode {
   		double deltaX = startX - originX;
   		double deltaY = originY - startY;
   		double angle = Math.atan(deltaY / deltaX);
-  		if (startX < originX)
+  		if (startX < originX) {
   			angle += Math.PI;
-  
+      }
+
   		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
-  		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+  		if ((angle < boxAngle && angle > -boxAngle) ||
+      ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
   			double xOffset;
-  			if (startX < originX)
+  			if (startX < originX) {
   				xOffset = actinghalfWidth + 2;
-  			else
+  			} else {
   				xOffset = -actinghalfWidth;
-  
+        }
+
   			// do check if line crosses corner of box
   			// if line crosses "bottom" or "top"
   			double yOffset = Math.tan(angle) * xOffset;
   			return originY + yOffset;
   		} else {
   			double yOffset;
-  			if (startY > originY)
+  			if (startY > originY) {
   				yOffset = actinghalfHeight + 2;
-  			else
+  			} else {
   				yOffset = -actinghalfHeight;
+        }
   			return originY + yOffset;
   		}
   }
-  
-  
-  //Torrance Inspector update
-  	
+
   /*
    * Reassign value of name to newName.
    * @param newName new string for name to be changed to.
    * @postcondition This updates the string value in name.
-   */	
+   */
   public void setName(String newName){
+    name.setWrappingWidth(0);
 	  name.setText(newName);
+    trim();
   }
-  
+
   /*
    * Reassign value of attributes to newAttributes.
    * @param newAttributes new string for attributes to be changed to.
    * @postcondition This updates the string value in attributes.
-   */	  
+   */
   public void setAttributes(String newAttributes){
+    attributes.setWrappingWidth(0);
 	  attributes.setText(newAttributes);
+    trim();
   }
-  
+
   /*
    * Reassign value of methods to newMethods.
    * @param newMethods new string for methods to be changed to.
    * @postcondition This updates the string value in methods.
-   */	  
+   */
   public void setMethods(String newMethods){
+    methods.setWrappingWidth(0);
 	  methods.setText(newMethods);
+    trim();
+  }
+
+  public void setWidth(double newWidth) {
+    width = newWidth;
+
+    separator1.setWidth(width);
+    separator2.setWidth(width);
+
+    name.setWrappingWidth(width);
+    attributes.setWrappingWidth(width);
+    methods.setWrappingWidth(width);
+
+    originX = box.getLayoutX() + (width / 2);
+    originY = box.getLayoutY() + (getHeight() / 2);
+
+    for (UMLConnector connector : connections) {
+      connector.update();
+    }
+  }
+
+  /*
+   * Changes color of underlying VBox model to make the object appear highlighted.
+   * @postcondition Color of underlying VBox model changed to blue.
+   */
+  public void highlight() {
+    box.setStyle("-fx-border-color: blue;");
+  }
+
+  /*
+   * Changes color of underlying VBox model to make the object appear unhighlighted.
+   * @postcondition Color of underlying VBox model changed to black.
+   */
+  public void unhighlight() {
+    box.setStyle("-fx-border-color: black;");
   }
 }

@@ -79,7 +79,7 @@ public class Point extends UMLNode {
   	 * @return returns the calculated x coordinate.
   	 */
   	public double getAnchorX(double startX, double startY) {
-  		double actingRadius = radius+5;
+  		double actingRadius = radius;
   		double deltaX = startX - originX;
    	  double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);
@@ -97,7 +97,7 @@ public class Point extends UMLNode {
   	 * @return returns the calculated y coordinate.
   	 */
   	public double getAnchorY(double startX, double startY) {
-  		double actingRadius = radius+5;
+  		double actingRadius = radius;
   		double deltaX = startX - originX;
   		double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);

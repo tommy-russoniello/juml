@@ -4,3 +4,5 @@
 *.class
 # Ignore jar files
 *.jar
+# ignore Mac's DS Store files
+*.DS_Store

@@ -17,7 +17,6 @@ public class UMLConnectorController {
 	@FXML TextField UMLConnectorStartOriginY;
 	@FXML TextField UMLConnectorEndOriginX;
 	@FXML TextField UMLConnectorEndOriginY;
-	@FXML CheckBox UMLConnectorDotted;
 
 	//Base variables to pass in UMLConnector object
 	UMLConnector connector = null;

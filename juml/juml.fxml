@@ -56,11 +56,16 @@
         <content>
           <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="140.0">
                <children>
-                  <Button fx:id="selectMode" layoutY="0" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Select" />
-                  <Button fx:id="lineMode" layoutY="25" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Line" />
-                  <Button fx:id="pointMode" layoutY="50" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Point" />
-                  <Button fx:id="classBoxMode" layoutY="75" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Class Box" />
-                  <Button fx:id="deleteMode" layoutY="100" mnemonicParsing="false" onAction="#modeClick" prefHeight="11" prefWidth="140" text="Delete" />
+                  <Button fx:id="selectMode" layoutY="0" mnemonicParsing="false" onAction="#modeClick" prefHeight="37.5" prefWidth="140" text="Select" />
+                  <Button fx:id="deleteMode" layoutY="37.5" mnemonicParsing="false" onAction="#modeClick" prefHeight="37.5" prefWidth="140" text="Delete" />
+                  <Button fx:id="pointMode" layoutY="75" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Point" />
+                  <Button fx:id="classBoxMode" layoutY="100" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Class Box" />
+                  <Button fx:id="associationMode" layoutY="125" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Association" />
+                  <Button fx:id="dependencyMode" layoutY="150" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Dependency" />
+                  <Button fx:id="aggregationMode" layoutY="175" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Aggregation" />
+                  <Button fx:id="compositionMode" layoutY="200" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Composition" />
+                  <Button fx:id="generalizationMode" layoutY="225" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Generalization" />
+                  <Button fx:id="lineSplitMode" layoutY="250" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Line Split" />
                </children>
             </AnchorPane>
         </content>

@@ -32,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -54,10 +55,15 @@ public class Controller {
 	// Draw modes
 	public enum Mode {
 		SELECT,
-		LINE,
 		POINT,
 		CLASSBOX,
-		DELETE
+		DELETE,
+		ASSOCIATION,
+		DEPENDENCY,
+		AGGREGATION,
+		COMPOSITION,
+		GENERALIZATION,
+		LINESPLIT
 	}
 
 	/*
@@ -202,6 +208,25 @@ public class Controller {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
 		switch (MODE) {
+			// Displays information of any UMLObject clicked on in the Inspector.
+			case SELECT:
+				deselectAll();
+				UMLObject selectedObject = getObject(event.getTarget());
+				if (selectedObject != null) {
+					selectObject(selectedObject);
+				}
+
+				break;
+
+			// Remove any UMLObject clicked on.
+			case DELETE:
+				UMLObject target = getObject(event.getTarget());
+				if (target != null) {
+					deleteObjects(target);
+				}
+
+				break;
+
 			// Adds Point UMLNode to pane coordinates that were clicked on.
 			case POINT:
 				deselectAll();
@@ -211,9 +236,18 @@ public class Controller {
 
 				break;
 
+			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
+			case CLASSBOX:
+				deselectAll();
+				ClassBox classBox = new ClassBox(event.getX(), event.getY());
+        addObjects(classBox);
+				selectObject(classBox);
+
+        break;
+
 			// Adds any UMLNode clicked to SELECTED
 			// If theres a UMLNode already in SELECTED, draws a line from it to currently clicked UMLNode.
-			case LINE:
+			case ASSOCIATION: case DEPENDENCY: case AGGREGATION: case COMPOSITION: case GENERALIZATION:
 				UMLObject object = getObject(event.getTarget());
 					deselectAllConnectors();
 					// If relevant node was selected.
@@ -224,38 +258,68 @@ public class Controller {
 						}
 						// If selected node wasn't just clicked on again.
 						else if (node != SELECTED.getLast()) {
-							UMLConnector connector = new UMLConnector((UMLNode) SELECTED.getLast(), node);
-							deselectAll();
-							addObjects(connector);
-							selectObject(connector);
+							switch (MODE) {
+								case ASSOCIATION:
+									Association association = new Association((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(association);
+									selectObject(association);
+									break;
+
+								case DEPENDENCY:
+									Dependency dependency = new Dependency((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(dependency);
+									selectObject(dependency);
+									break;
+
+								case AGGREGATION:
+									Aggregation aggregation = new Aggregation((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(aggregation);
+									selectObject(aggregation);
+									break;
+
+								case COMPOSITION:
+									Composition composition = new Composition((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(composition);
+									selectObject(composition);
+									break;
+
+								case GENERALIZATION:
+									Generalization generalization =
+										new Generalization((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(generalization);
+									selectObject(generalization);
+									break;
+							}
 						}
 					}
 
 				break;
 
-			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
-			case CLASSBOX:
-					deselectAll();
-					ClassBox classBox = new ClassBox(event.getX(), event.getY());
-	        addObjects(classBox);
-					selectObject(classBox);
-
-        break;
-
-			// Displays information of any UMLObject clicked on in the Inspector.
-			case SELECT:
-				deselectAll();
-				UMLObject selectedObject = getObject(event.getTarget());
-				if (selectedObject != null) {
-					selectObject(selectedObject);
-				}
-				break;
-
-			// Remove any UMLObject clicked on.
-			case DELETE:
-				UMLObject target = getObject(event.getTarget());
-				if (target != null) {
-					deleteObjects(target);
+			case LINESPLIT:
+				UMLObject splitPoint = getObject(event.getTarget());
+				deselectAllNodes();
+				// If relevant node was selected.
+				if (splitPoint != null && splitPoint instanceof Relationship) {
+					Relationship relationship = (Relationship) splitPoint;
+					if (SELECTED.isEmpty()) {
+						selectObject(relationship);
+					}
+					else if (relationship == SELECTED.getLast() && event.getTarget() instanceof Line) {
+						Line line = (Line) event.getTarget();
+						Segment segment = getSegment(relationship, line);
+						if (segment != null) {
+							ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
+							deselectAll();
+							selectObject(relationship);
+						}
+					} else {
+						deselectAll();
+					}
 				}
 
 				break;
@@ -307,7 +371,7 @@ public class Controller {
 		}
   }
 
-    /*
+  /*
 	 * Returns recognized UMLObject for given Object (typically one's underlying model).
 	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
 	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
@@ -335,6 +399,23 @@ public class Controller {
       }
       return returnNode;
     }
+
+		/* Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
+		 * * none of the given UMLConnector's Segments contain the given Line, returns null.
+		 * @param connector UMLConnector that's Segments will be searched through for containing given
+		 * * Line.
+		 * @param model Line that's corresponding Segment is being searched for.
+		 * @return Segment containing the given Line out all Segments in given UMLConnector. If none of
+		 * * the given UMLConnector's Segments contain the given Line, then null.
+		 */
+		public Segment getSegment(Relationship relationship, Line model) {
+			for(Segment segment : relationship.getSegments()) {
+				if (segment.getModel() == model) {
+					return segment;
+				}
+			}
+			return null;
+		}
 
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);

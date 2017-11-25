@@ -64,7 +64,7 @@ public class AddUMLNode extends UMLNodeAction {
 			  if (controller.MODE == Controller.Mode.SELECT) {
 				  if (model instanceof Parent) {
 					  node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x),
-						node.getOriginY() + (mouseEvent.getY() - dragSource.y));
+						  node.getOriginY() + (mouseEvent.getY() - dragSource.y));
 				  } else {
 					  node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }

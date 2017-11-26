@@ -66,6 +66,8 @@
                   <Button fx:id="compositionMode" layoutY="200" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Composition" />
                   <Button fx:id="generalizationMode" layoutY="225" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Generalization" />
                   <Button fx:id="lineSplitMode" layoutY="250" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Line Split" />
+                  <Button fx:id="lineMode" layoutY="275" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Line" />
+                  <Button fx:id="noteMode" layoutY="300" mnemonicParsing="false" onAction="#modeClick" prefHeight="25" prefWidth="140" text="Note" />
                </children>
             </AnchorPane>
         </content>

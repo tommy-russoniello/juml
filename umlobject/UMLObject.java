@@ -8,7 +8,7 @@ import javafx.scene.Node;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.2
  */
 public class UMLObject {

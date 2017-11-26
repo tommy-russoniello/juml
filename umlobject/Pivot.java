@@ -58,6 +58,14 @@ public class Pivot extends UMLNode {
   }
 
   /*
+   * Updates all Segments connected to this.
+   * @postcondition All Segments connected to this update the coordinates for their lines.
+   */
+  public void updateSegments() {
+    super.update();
+  }
+
+  /*
    * Reassign this at given coordinates.
    * @param newX x coordinate for this to be moved to.
    * @param newY y coordinate for this to be moved to.

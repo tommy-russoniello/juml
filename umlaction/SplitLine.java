@@ -7,7 +7,17 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
+import javafx.scene.shape.Line;
 
+/*
+ * Action class for splitting relationship lines with a pivot.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class SplitLine extends UMLConnectorAction {
   Relationship relationship;
   Segment newSegment, splitSegment;
@@ -22,10 +32,8 @@ public class SplitLine extends UMLConnectorAction {
     if (relationship instanceof Dependency) {
       newSegment = new Segment(splitSegment.getStart(), pivot, true);
     } else {
-      System.out.println(splitSegment.getStart());
       newSegment = new Segment(splitSegment.getStart(), pivot);
     }
-    relationship.getSegments().add(newSegment);
     doInitialAction();
   }
 
@@ -33,18 +41,29 @@ public class SplitLine extends UMLConnectorAction {
     splitSegment.disconnect();
     splitSegment.start = pivot;
     splitSegment.connect();
+    int pos = relationship.segments.indexOf(splitSegment);
+    relationship.pivots.add(pos, pivot);
+    relationship.segments.add(pos, newSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
     newSegment.connect();
+    if((Line) splitSegment.getModel() == relationship.startLine) {
+      relationship.startLine = (Line) newSegment.getModel();
+    }
     relationship.update();
   }
 
   public void undoAction() {
+    relationship.pivots.remove(pivot);
+    relationship.segments.remove(newSegment);
+    if((Line) newSegment.getModel() == relationship.startLine) {
+      relationship.startLine = (Line) splitSegment.getModel();
+    }
     newSegment.disconnect();
     relationship.group.getChildren().remove(newSegment.getModel());
     relationship.group.getChildren().remove(pivot.getModel());
     splitSegment.disconnect();
-    splitSegment.start = relationship.getStart();
+    splitSegment.start = newSegment.getStart();
     splitSegment.connect();
     relationship.update();
   }
@@ -56,6 +75,12 @@ public class SplitLine extends UMLConnectorAction {
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
     newSegment.connect();
+    int pos = relationship.segments.indexOf(splitSegment);
+    relationship.pivots.add(pos, pivot);
+    relationship.segments.add(pos, newSegment);
+    if((Line) splitSegment.getModel() == relationship.startLine) {
+      relationship.startLine = (Line) newSegment.getModel();
+    }
     relationship.update();
 
 
@@ -80,7 +105,6 @@ public class SplitLine extends UMLConnectorAction {
 					  dragSource.y = pivot.getOriginY() - mouseEvent.getY();
 				  }
   				pivot.getModel().getScene().setCursor(Cursor.MOVE);
-  				System.out.println("begin moving pivot");
 			  }
 		  }
 		});
@@ -88,7 +112,8 @@ public class SplitLine extends UMLConnectorAction {
 		// Moves UMLObject to new position it was dragged to.
 		pivot.getModel().setOnMouseDragged(new EventHandler<MouseEvent>() {
 		  @Override public void handle(MouseEvent mouseEvent) {
-			  if (controller.MODE == Controller.Mode.SELECT) {
+			  if (controller.MODE == Controller.Mode.SELECT && !Double.isNaN(dragSource.x) &&
+          !Double.isNaN(dragSource.y)) {
 				  if (pivot.getModel() instanceof Parent) {
 					  pivot.move(pivot.getOriginX() + (mouseEvent.getX() - dragSource.x),
 						  pivot.getOriginY() + (mouseEvent.getY() - dragSource.y));
@@ -96,7 +121,6 @@ public class SplitLine extends UMLConnectorAction {
 					  pivot.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }
 				  pivot.update();
-				  System.out.println("moved pivot");
 			  }
 		  }
 		});
@@ -105,6 +129,7 @@ public class SplitLine extends UMLConnectorAction {
 		pivot.getModel().setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (controller.MODE == Controller.Mode.SELECT) {
+          controller.UNDONE_ACTIONS.clear();
           controller.ACTIONS.push(
             new MoveUMLNode(pivot, originalPosition.x, originalPosition.y, false));
 				  pivot.getModel().getScene().setCursor(Cursor.HAND);

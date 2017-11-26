@@ -8,6 +8,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 
+/*
+ * Action class for adding UMLConnectors.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class AddUMLConnector extends UMLConnectorAction {
 	public AddUMLConnector(UMLConnector inConnector, Controller inController) {
 		if (inConnector != null && inController != null) {
@@ -56,5 +65,10 @@ public class AddUMLConnector extends UMLConnectorAction {
 				}
 			}
 		});
+
+		if (connector instanceof Relationship) {
+			Relationship relationship = (Relationship) connector;
+
+		}
 	}
 }

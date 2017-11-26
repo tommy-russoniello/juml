@@ -4,6 +4,15 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+/*
+ * UMLConnector Class for connecting UMLNodes with a plain line.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class Segment extends UMLConnector {
   /*
    * underlying model.

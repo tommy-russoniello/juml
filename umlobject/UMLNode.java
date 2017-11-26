@@ -3,7 +3,7 @@ package umlobject;
 import java.util.Vector;
 
 /*
- * connectable UML object representation (the "things").
+ * Connectable UML object representation (the "things").
  * @author Samuel Carroll
  * @author Torrance Graham
  * @author Quinn Minnich

@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.1
  */
 public class Point extends UMLNode {

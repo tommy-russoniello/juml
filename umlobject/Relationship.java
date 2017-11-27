@@ -221,7 +221,7 @@ public class Relationship extends UMLConnector {
     shape.setRotate(-rotateAngle);
 
     // Reset Notes to be on top of lines if they were already visible.
-    if (textHidden()) {
+    if (textVisible()) {
       hideText();
       showText();
     }
@@ -240,8 +240,8 @@ public class Relationship extends UMLConnector {
    * Returns whether or not this's notes are hidden.
    * @return Boolean value for whether or not this's note are hidden.
    */
-  public boolean textHidden() {
-    return group.getChildren().contains(startText.getModel()) &&
+  public boolean textVisible() {
+    return group.getChildren().contains(startText.getModel()) ||
       group.getChildren().contains(startText.getModel());
   }
 

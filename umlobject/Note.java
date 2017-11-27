@@ -51,7 +51,6 @@ public class Note extends UMLNode {
     box = new VBox();
     box.setLayoutX(x);
     box.setLayoutY(y);
-    // box.setStyle("-fx-border-color: black;");
     box.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
     text = new Text("text");

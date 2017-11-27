@@ -7,7 +7,15 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Cursor;
 
-
+/*
+ * Action class for adding UMLNodes.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class AddUMLNode extends UMLNodeAction {
   public AddUMLNode (UMLNode inNode, Controller inController) {
     if (inNode != null && inController != null) {
@@ -53,7 +61,6 @@ public class AddUMLNode extends UMLNodeAction {
 					  dragSource.y = node.getOriginY() - mouseEvent.getY();
 				  }
   				model.getScene().setCursor(Cursor.MOVE);
-  				System.out.println("begin moving Node");
 			  }
 		  }
 		});
@@ -61,15 +68,15 @@ public class AddUMLNode extends UMLNodeAction {
 		// Moves UMLObject to new position it was dragged to.
 		model.setOnMouseDragged(new EventHandler<MouseEvent>() {
 		  @Override public void handle(MouseEvent mouseEvent) {
-			  if (controller.MODE == Controller.Mode.SELECT) {
+			  if (controller.MODE == Controller.Mode.SELECT && !Double.isNaN(dragSource.x) &&
+          !Double.isNaN(dragSource.y)) {
 				  if (model instanceof Parent) {
 					  node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x),
-						node.getOriginY() + (mouseEvent.getY() - dragSource.y));
+						  node.getOriginY() + (mouseEvent.getY() - dragSource.y));
 				  } else {
 					  node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }
 				  node.update();
-				  System.out.println("moved Node");
 			  }
 		  }
 		});
@@ -78,6 +85,7 @@ public class AddUMLNode extends UMLNodeAction {
 		model.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (controller.MODE == Controller.Mode.SELECT) {
+          controller.UNDONE_ACTIONS.clear();
           controller.ACTIONS.push(
             new MoveUMLNode(node, originalPosition.x, originalPosition.y, false));
 				  model.getScene().setCursor(Cursor.HAND);

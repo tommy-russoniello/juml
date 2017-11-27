@@ -54,9 +54,9 @@ public class Tests {
 	public void addConnectorsBetweenPoints() {
 		juml.addObjects(p1, p2, p3);
 
-		c1 = new UMLConnector(p1, p2);
-		c2 = new UMLConnector(p2, p3);
-		c3 = new UMLConnector(p1, p3);
+		c1 = new Association(p1, p2);
+		c2 = new Association(p2, p3);
+		c3 = new Association(p1, p3);
 
 		juml.addObjects(c1, c2, c3);
 
@@ -71,9 +71,9 @@ public class Tests {
   public void addConnectorsBetweenClassBoxes() {
 		juml.addObjects(cb1, cb2, cb3);
 
-		c1 = new UMLConnector(cb1, cb2);
-		c2 = new UMLConnector(cb2, cb3);
-		c3 = new UMLConnector(cb1, cb3);
+		c1 = new Association(cb1, cb2);
+		c2 = new Association(cb2, cb3);
+		c3 = new Association(cb1, cb3);
 
 		juml.addObjects(c1, c2, c3);
 
@@ -89,12 +89,12 @@ public class Tests {
 	public void addConnectorsBetweenPointsAndClassBoxes() {
 		juml.addObjects(p1, p2, cb1, cb2);
 
-		c1 = new UMLConnector (p1, p2);
-		c2 = new UMLConnector (p1, cb1);
-		c3 = new UMLConnector (p1, cb2);
-		c4 = new UMLConnector (p2, cb1);
-		c5 = new UMLConnector (p2, cb2);
-		c6 = new UMLConnector (cb1, cb2);
+		c1 = new Association (p1, p2);
+		c2 = new Association (p1, cb1);
+		c3 = new Association (p1, cb2);
+		c4 = new Association (p2, cb1);
+		c5 = new Association (p2, cb2);
+		c6 = new Association (cb1, cb2);
 
 		juml.addObjects(c1, c2, c3, c4, c5, c6);
 
@@ -141,7 +141,7 @@ public class Tests {
 	public void deleteConnectors() {
 		juml.addObjects(p1, p2);
 
-		c1 = new UMLConnector(p2, p1);
+		c1 = new Association(p2, p1);
 		juml.addObjects(c1);
 		assertEquals(3, pane.getChildren().size());
 		// test that each point has added one connection
@@ -168,8 +168,8 @@ public class Tests {
 		//add points to the pane/hashmap
 		juml.addObjects(p1, p2, p3);
 
-		c1 = new UMLConnector(p1, p2);
-		c2 = new UMLConnector(p2, p3);
+		c1 = new Association(p1, p2);
+		c2 = new Association(p2, p3);
 
 		juml.addObjects(c1, c2);
 
@@ -197,9 +197,9 @@ public class Tests {
 		//set up points and connectors
 		juml.addObjects(p1, p2, p3);
 
-		c1 = new UMLConnector(p1, p2);
-		c2 = new UMLConnector(p2, p3);
-		c3 = new UMLConnector(p1, p3);
+		c1 = new Association(p1, p2);
+		c2 = new Association(p2, p3);
+		c3 = new Association(p1, p3);
 
 		juml.addObjects(c1, c2, c3);
 
@@ -213,9 +213,9 @@ public class Tests {
 		//set up points and connectors
 		juml.addObjects(p1, p2, p3);
 
-		c1 = new UMLConnector(p1, p2);
-		c2 = new UMLConnector(p2, p3);
-		c3 = new UMLConnector(p1, p3);
+		c1 = new Association(p1, p2);
+		c2 = new Association(p2, p3);
+		c3 = new Association(p1, p3);
 
 		juml.addObjects(c1, c2, c3);
 
@@ -229,9 +229,9 @@ public class Tests {
 		//set up points and connectors
 		juml.addObjects(cb1, cb2, cb3);
 
-		c1 = new UMLConnector(cb1, cb2);
-		c2 = new UMLConnector(cb2, cb3);
-		c3 = new UMLConnector(cb1, cb3);
+		c1 = new Association(cb1, cb2);
+		c2 = new Association(cb2, cb3);
+		c3 = new Association(cb1, cb3);
 
 		juml.addObjects(c1, c2, c3);
 

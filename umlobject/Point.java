@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.1
  */
 public class Point extends UMLNode {
@@ -79,7 +79,7 @@ public class Point extends UMLNode {
   	 * @return returns the calculated x coordinate.
   	 */
   	public double getAnchorX(double startX, double startY) {
-  		double actingRadius = radius+5;
+  		double actingRadius = radius;
   		double deltaX = startX - originX;
    	  double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);
@@ -97,7 +97,7 @@ public class Point extends UMLNode {
   	 * @return returns the calculated y coordinate.
   	 */
   	public double getAnchorY(double startX, double startY) {
-  		double actingRadius = radius+5;
+  		double actingRadius = radius;
   		double deltaX = startX - originX;
   		double deltaY = originY - startY;
   		double angle = Math.atan(deltaY/deltaX);

@@ -10,6 +10,15 @@ import umlobject.UMLConnector;
 import umlobject.UMLObject;
 import umlaction.*;
 
+/*
+ * Controller class for UMLConnector FXML.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class UMLConnectorController {
 
 	//UMLConnector.fxml IDs
@@ -17,7 +26,6 @@ public class UMLConnectorController {
 	@FXML TextField UMLConnectorStartOriginY;
 	@FXML TextField UMLConnectorEndOriginX;
 	@FXML TextField UMLConnectorEndOriginY;
-	@FXML CheckBox UMLConnectorDotted;
 
 	//Base variables to pass in UMLConnector object
 	UMLConnector connector = null;

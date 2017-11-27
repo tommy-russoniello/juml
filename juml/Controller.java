@@ -32,6 +32,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -46,7 +48,7 @@ import umlaction.*;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.1
  */
 public class Controller {
@@ -54,10 +56,17 @@ public class Controller {
 	// Draw modes
 	public enum Mode {
 		SELECT,
-		LINE,
 		POINT,
 		CLASSBOX,
-		DELETE
+		DELETE,
+		ASSOCIATION,
+		DEPENDENCY,
+		AGGREGATION,
+		COMPOSITION,
+		GENERALIZATION,
+		LINESPLIT,
+		LINE,
+		NOTE
 	}
 
 	/*
@@ -115,6 +124,10 @@ public class Controller {
 						printState();
 						event.consume();
 					}
+					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
+						refresh();
+						event.consume();
+					}
 				} else {
 					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
 	          undo();
@@ -126,6 +139,10 @@ public class Controller {
 	        }
 					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
 						printState();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
+						refresh();
 						event.consume();
 					}
 				}
@@ -154,6 +171,7 @@ public class Controller {
 			UMLAction a = ACTIONS.pop();
 			a.undoAction();
 			UNDONE_ACTIONS.push(a);
+			refresh();
 		} else {
 			System.out.println("Nothing to undo");
 		}
@@ -165,6 +183,7 @@ public class Controller {
 			UMLAction a = UNDONE_ACTIONS.pop();
 			a.doAction();
 			ACTIONS.push(a);
+			refresh();
 		} else {
 			System.out.println("Nothing to redo");
 		}
@@ -202,18 +221,50 @@ public class Controller {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
 		switch (MODE) {
-			// Adds Point UMLNode to pane coordinates that were clicked on.
-			case POINT:
+			// Displays information of any UMLObject clicked on in the Inspector.
+			case SELECT:
 				deselectAll();
-				Point point = new Point(event.getX(), event.getY());
-				addObjects(point);
-				selectObject(point);
+				UMLObject selectedObject = getObject(event.getTarget());
+				if (selectedObject != null) {
+					selectObject(selectedObject);
+				}
 
 				break;
 
+			// Remove any UMLObject clicked on.
+			case DELETE:
+				UMLObject target = getObject(event.getTarget());
+				if (target != null) {
+					if (target instanceof Relationship && event.getTarget() instanceof Circle) {
+						Relationship relationship = (Relationship) target;
+						Pivot pivot = getPivot(relationship, (Circle) event.getTarget());
+						if (pivot != null) {
+							ACTIONS.push(new DeletePivot(relationship, pivot));
+							UNDONE_ACTIONS.clear();
+							return;
+						}
+					}
+					deleteObjects(target);
+				}
+
+				break;
+
+			// Adds Point UMLNode to pane coordinates that were clicked on.
+			case POINT:
+				addObjects(new Point(event.getX(), event.getY()));
+
+				break;
+
+			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
+			case CLASSBOX:
+        addObjects(new ClassBox(event.getX(), event.getY()));
+
+        break;
+
 			// Adds any UMLNode clicked to SELECTED
 			// If theres a UMLNode already in SELECTED, draws a line from it to currently clicked UMLNode.
-			case LINE:
+			case ASSOCIATION: case DEPENDENCY: case AGGREGATION: case COMPOSITION: case GENERALIZATION:
+				case LINE:
 				UMLObject object = getObject(event.getTarget());
 					deselectAllConnectors();
 					// If relevant node was selected.
@@ -224,41 +275,65 @@ public class Controller {
 						}
 						// If selected node wasn't just clicked on again.
 						else if (node != SELECTED.getLast()) {
-							UMLConnector connector = new UMLConnector((UMLNode) SELECTED.getLast(), node);
-							deselectAll();
-							addObjects(connector);
-							selectObject(connector);
+							switch (MODE) {
+								case ASSOCIATION:
+									addObjects(new Association((UMLNode) SELECTED.getLast(), node));
+									break;
+
+								case DEPENDENCY:
+									addObjects(new Dependency((UMLNode) SELECTED.getLast(), node));
+									break;
+
+								case AGGREGATION:
+									addObjects(new Aggregation((UMLNode) SELECTED.getLast(), node));
+									break;
+
+								case COMPOSITION:
+									addObjects(new Composition((UMLNode) SELECTED.getLast(), node));
+									break;
+
+								case GENERALIZATION:
+									addObjects(new Generalization((UMLNode) SELECTED.getLast(), node));
+									break;
+								case LINE:
+									addObjects(new Segment((UMLNode) SELECTED.getLast(), node));
+									break;
+							}
 						}
 					}
 
 				break;
 
-			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
-			case CLASSBOX:
-					deselectAll();
-					ClassBox classBox = new ClassBox(event.getX(), event.getY());
-	        addObjects(classBox);
-					selectObject(classBox);
+			case LINESPLIT:
+				UMLObject splitPoint = getObject(event.getTarget());
+				deselectAllNodes();
+				// If relevant node was selected.
+				if (splitPoint != null && splitPoint instanceof Relationship) {
+					Relationship relationship = (Relationship) splitPoint;
+					if (SELECTED.isEmpty()) {
+						selectObject(relationship);
+					}
+					else if (relationship == SELECTED.getLast() && event.getTarget() instanceof Line) {
+						Line line = (Line) event.getTarget();
+						Segment segment = getSegment(relationship, line);
+						if (segment != null) {
+							UNDONE_ACTIONS.clear();
+							ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
+							deselectAll();
+							selectObject(relationship);
+						}
+					} else {
+						deselectAll();
+					}
+				}
 
-        break;
+				break;
 
-			// Displays information of any UMLObject clicked on in the Inspector.
-			case SELECT:
+			case NOTE:
 				deselectAll();
-				UMLObject selectedObject = getObject(event.getTarget());
-				if (selectedObject != null) {
-					selectObject(selectedObject);
-				}
-				break;
-
-			// Remove any UMLObject clicked on.
-			case DELETE:
-				UMLObject target = getObject(event.getTarget());
-				if (target != null) {
-					deleteObjects(target);
-				}
-
-				break;
+				Note note = new Note(event.getX(), event.getY());
+				addObjects(note);
+				selectObject(note);
 
 			default:
 
@@ -279,6 +354,7 @@ public class Controller {
 	 */
 	public void deleteObjects(UMLObject... objects) {
 		for (UMLObject object : objects) {
+			UNDONE_ACTIONS.clear();
 			if (object instanceof UMLConnector) {
 				ACTIONS.push(new DeleteUMLConnector((UMLConnector) object, this));
 			} else {
@@ -298,16 +374,22 @@ public class Controller {
 	 * @postcondition Any relevant handlers are defined on obj.
 	 */
 	public void addObjects(UMLObject... objects) {
+		UNDONE_ACTIONS.clear();
+		deselectAll();
 		for (UMLObject object : objects) {
 			if (object instanceof UMLConnector) {
-				ACTIONS.push(new AddUMLConnector((UMLConnector) object, this));
+				UMLConnector connector = (UMLConnector) object;
+				ACTIONS.push(new AddUMLConnector(connector, this));
+				selectObject(connector);
 			} else {
-				ACTIONS.push(new AddUMLNode((UMLNode) object, this));
+				UMLNode node = (UMLNode) object;
+				ACTIONS.push(new AddUMLNode(node, this));
+				selectObject(node);
 			}
 		}
   }
 
-    /*
+  /*
 	 * Returns recognized UMLObject for given Object (typically one's underlying model).
 	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
 	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
@@ -335,6 +417,40 @@ public class Controller {
       }
       return returnNode;
     }
+
+		/* Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
+		 * * none of the given UMLConnector's Segments contain the given Line, returns null.
+		 * @param connector UMLConnector that's Segments will be searched through for containing given
+		 * * Line.
+		 * @param model Line that's corresponding Segment is being searched for.
+		 * @return Segment containing the given Line out all Segments in given UMLConnector. If none of
+		 * * the given UMLConnector's Segments contain the given Line, then null.
+		 */
+		public Segment getSegment(Relationship relationship, Line model) {
+			for(Segment segment : relationship.getSegments()) {
+				if (segment.getModel() == model) {
+					return segment;
+				}
+			}
+			return null;
+		}
+
+		/* Finds the Pivot containing the given Circle out of all Pivots in given UMLConnector. If
+		 * * none of the given UMLConnector's Pivots contain the given Circle, returns null.
+		 * @param connector UMLConnector that's Pivots will be searched through for containing given
+		 * * Circle.
+		 * @param model Circle that's corresponding Pivot is being searched for.
+		 * @return Pivot containing the given Circle out all Pivots in given UMLConnector. If none of
+		 * * the given UMLConnector's Pivots contain the given Circle, then null.
+		 */
+		public Pivot getPivot(Relationship relationship, Circle model) {
+			for(Pivot pivot : relationship.getPivots()) {
+				if (pivot.getModel() == model) {
+					return pivot;
+				}
+			}
+			return null;
+		}
 
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
@@ -380,6 +496,17 @@ public class Controller {
 			}
 		}
 
+		public void refresh() {
+			Iterator iter = CONNECTORS.entrySet().iterator();
+			while (iter.hasNext()) {
+					Map.Entry pair = (Map.Entry) iter.next();
+					if (pair.getValue() instanceof Relationship) {
+						Relationship relationship = (Relationship) pair.getValue();
+						relationship.update(true);
+					}
+			}
+		}
+
 		public void printState() {
 			Iterator iter;
 			System.out.println("--------------------------\nPRINTING STATE");
@@ -397,15 +524,22 @@ public class Controller {
 			iter = NODES.entrySet().iterator();
 			while (iter.hasNext()) {
 					Map.Entry pair = (Map.Entry) iter.next();
-					System.out.println(pair.getKey() + " = " + pair.getValue());
-					iter.remove();
+					System.out.print(pair.getKey() + " = " + pair.getValue());
+					UMLNode node = (UMLNode) pair.getValue();
+					System.out.println("   connectors: " + node.getConnections().size());
 			}
 			System.out.println("\nCONNECTORS:   size: " + CONNECTORS.size());
 			iter = CONNECTORS.entrySet().iterator();
 			while (iter.hasNext()) {
-					Map.Entry pair = (Map.Entry) iter.next();
-					System.out.println(pair.getKey() + " = " + pair.getValue());
-					iter.remove();
+				Map.Entry pair = (Map.Entry) iter.next();
+				System.out.print(pair.getKey() + " = " + pair.getValue());
+				if (pair.getValue() instanceof Relationship) {
+					Relationship relationship = (Relationship) pair.getValue();
+					System.out.println("   segments: " + relationship.segments.size() + "   pivots: " +
+						relationship.pivots.size());
+				} else {
+					System.out.println();
+				}
 			}
 			System.out.println("\nUNDO STACK:   size: " + ACTIONS.size() + " (bottom to top)");
 			for (UMLAction action : ACTIONS) {

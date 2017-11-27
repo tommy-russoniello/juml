@@ -5,7 +5,15 @@ import umlobject.*;
 import java.util.Vector;
 import java.util.Collections;
 
-
+/*
+ * Action class for deleting UMLNodes.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class DeleteUMLNode extends UMLNodeAction {
   public Vector<DeleteUMLConnector> connectionActions;
 

@@ -15,7 +15,7 @@ import javafx.scene.layout.BackgroundFill;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.2
  */
 public class ClassBox extends UMLNode {
@@ -99,6 +99,11 @@ public class ClassBox extends UMLNode {
     super.move(newX, newY);
   }
 
+  /*
+   * "Trims" this to be only as wide as the widest of it's text fields with a minimum of 80.
+   * @postcondition All of this's components have the width of the widest of this's text fields, or
+   * * 80 if the widest text field is thinner than 80.
+   */
   public void trim() {
     double greatestLength = Math.max(Math.max(name.getLayoutBounds().getWidth(),
       attributes.getLayoutBounds().getWidth()), methods.getLayoutBounds().getWidth());
@@ -277,6 +282,11 @@ public class ClassBox extends UMLNode {
     trim();
   }
 
+  /*
+   * Changes width of all of this's components to match given width.
+   * @param newWidth New width for this to be set to.
+   * @postcondition All of this's components are altered to match given width for this.
+   */
   public void setWidth(double newWidth) {
     width = newWidth;
 

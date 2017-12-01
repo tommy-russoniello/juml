@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+
+<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.PointController">
+	<Label prefHeight="29.0" prefWidth="100.0" text="  Origin X" />
+	<TextField fx:id="pointOriginX" layoutX="100.0" layoutY="0.0" onKeyPressed="#pointChange"/>
+	<Label layoutY="29.0" prefHeight="32.0" prefWidth="100.0" text="  Origin Y" />
+	<TextField fx:id="pointOriginY" layoutX="100.0" layoutY="30.0" onKeyPressed="#pointChange"/>
+	<Label layoutY="61.0" prefHeight="32.0" prefWidth="100.0" text="  Radius" />
+	<TextField fx:id="pointRadius" layoutX="100.0" layoutY="60.0" onKeyPressed="#pointChange"/>
+</Pane>

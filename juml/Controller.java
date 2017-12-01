@@ -1,20 +1,26 @@
 package juml;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Map;
-import java.util.Set;
+import java.util.Scanner;
+import java.util.Stack;
+import java.util.Vector;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,18 +29,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.Cursor;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import java.util.Stack;
 import javafx.scene.Scene;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import umlobject.*;
+import umlaction.*;
 
 // ---------------------------------------------------------------------------------------------- \\
 
@@ -44,104 +55,46 @@ import umlobject.*;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.1
  */
 public class Controller {
 
 	// Draw modes
 	public enum Mode {
-		SELECT, LINE, POINT, CLASSBOX, DELETE
+		SELECT, POINT, CLASSBOX, DELETE, ASSOCIATION, DEPENDENCY, AGGREGATION, COMPOSITION, GENERALIZATION, LINESPLIT, LINE, NOTE
 	}
 
 	/*
 	 * All UMLNodes currently on the pane.
 	 */
-	static Map<Node, UMLNode> NODES = new HashMap<>();
+	public Map<Node, UMLNode> NODES = new HashMap<>();
 	/*
 	 * All UMLConnectors currently on the pane
 	 */
-	static Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
-
-	static Stack<Controller> actions = new Stack<>();
-	static Stack<Controller> undoneActions = new Stack<>();
+	public Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
 	// Main node that contains all drawn nodes as children.
 	@FXML
-	protected Pane pane;
+	public Pane pane;
 	@FXML
-	private AnchorPane inspectorObject;
+	public AnchorPane inspectorObject;
 
-	private static InspectorController currentInspector;
-	
 	/*
 	 * Current mode. Defaulted to SELECT.
 	 */
-	Mode MODE = Mode.SELECT;
+	public Mode MODE = Mode.SELECT;
 	/*
 	 * Collection of all "selected" UMLNodes
 	 */
-	Set<UMLNode> SELECTED = new LinkedHashSet <UMLNode>();
+	Deque<UMLObject> SELECTED = new LinkedList<>();
 	FileChooser fileChooser = new FileChooser();
 
-	static Stage window;
+	public Stack<UMLAction> ACTIONS = new Stack<>();
+	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
-	// ----------------------------------------------------------------------------------------------
-	// \\
-	// stuff having to do with undo/redo
-
-	public static void undo() {
-		// System.out.println("Undo called");
-		if (!actions.isEmpty()) {
-			Controller a = actions.pop();
-			a.undoAction();
-			undoneActions.push(a);
-		} else {
-			System.out.println("Nothing to undo");
-		}	
-		
-		if (currentInspector != null) {
-			currentInspector.refresh();
-		}
-	}
-
-	public static void redo() {
-		// System.out.println("Redo called");
-		if (!undoneActions.isEmpty()) {
-			Controller a = undoneActions.pop();
-			a.doAction();
-			actions.push(a);
-		} else {
-			System.out.println("Nothing to redo");
-		}
-		if (currentInspector != null) {
-			currentInspector.refresh();
-		}
-	}
-
-	public static void reset() {
-		NODES = new HashMap<>();
-		CONNECTORS = new HashMap<>();
-		actions.clear();
-		undoneActions.clear();
-	}
-
-	public Controller(Boolean addToStack) {
-		undoneActions.clear();
-		if (addToStack) {
-			actions.push(this);
-		}
-	}
-
-	public Controller() {
-		undoneActions.clear();
-	}
-
-	public void doAction() {
-	}
-
-	public void undoAction() {
-	}
+	Stage window;
+	Scene scene;
 
 	// ----------------------------------------------------------------------------------------------
 	// \\
@@ -151,8 +104,49 @@ public class Controller {
 	 * 
 	 * @param primaryStage Primary stage of application instance.
 	 */
-	public static void setPrimaryStage(Stage primaryStage) {
+	public void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
+		scene = window.getScene();
+
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent event) {
+				if (System.getProperty("os.name").contains("Mac")) {
+					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
+						undo();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
+						redo();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
+						printState();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
+						refresh();
+						event.consume();
+					}
+				} else {
+					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
+						undo();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
+						redo();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
+						printState();
+						event.consume();
+					}
+					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
+						refresh();
+						event.consume();
+					}
+				}
+			}
+		});
 	}
 
 	/*
@@ -166,11 +160,40 @@ public class Controller {
 
 	/*
 	 * Sets pane.
-	 * 
-	 * @return Main pane being used for application instance.
 	 */
 	public void setPane(Pane p) {
 		pane = p;
+	}
+
+	public void undo() {
+		if (!ACTIONS.isEmpty()) {
+			deselectAll();
+			UMLAction a = ACTIONS.pop();
+			a.undoAction();
+			UNDONE_ACTIONS.push(a);
+			refresh();
+		} else {
+			System.out.println("Nothing to undo");
+		}
+	}
+
+	public void redo() {
+		if (!UNDONE_ACTIONS.isEmpty()) {
+			deselectAll();
+			UMLAction a = UNDONE_ACTIONS.pop();
+			a.doAction();
+			ACTIONS.push(a);
+			refresh();
+		} else {
+			System.out.println("Nothing to redo");
+		}
+	}
+
+	public void reset() {
+		NODES = new HashMap<>();
+		CONNECTORS = new HashMap<>();
+		ACTIONS.clear();
+		UNDONE_ACTIONS.clear();
 	}
 
 	/*
@@ -184,6 +207,7 @@ public class Controller {
 	 * triggering this method.
 	 */
 	public void modeClick(ActionEvent event) {
+		deselectAll();
 		String newMode = ((Button) event.getSource()).getId();
 		newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
 		MODE = Mode.valueOf(newMode);
@@ -203,98 +227,127 @@ public class Controller {
 	public void paneClick(MouseEvent event) throws IOException {
 		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
-		if (event.getButton() == MouseButton.SECONDARY) {
-			undo();
-			return;
-		}
-		if (event.getButton() == MouseButton.MIDDLE) {
-			redo();
-			return;
-		}
 		switch (MODE) {
-		// Adds Point UMLNode to pane coordinates that were clicked on.
-		case POINT:
-			if (pane == null) {
-				System.out.println("No pane; faital error");
-				return;
-			}
-			Point p = new Point(event.getX(), event.getY());
-			makeDraggable(p);
-			new AddOrDeleteUMLNode(p, true, pane);
-			break;
-		// Adds any UMLNode clicked to SELECTED
-		// If theres a UMLNode already in SELECTED, draws a line from it to currently
-		// clicked UMLNode.
-		case LINE:
-			UMLNode node = (UMLNode) getObject(event.getTarget());
-			// If relevant node was selected.
-			if (node != null) {
-				if (SELECTED.isEmpty()) {
-					SELECTED.add(node);
-				}
-				// If selected node wasn't just clicked on again.
-				else if (SELECTED.size()==1 && node != (UMLNode)SELECTED.toArray()[0]) {
-					UMLConnector c = new UMLConnector((UMLNode)SELECTED.toArray()[0], node);
-					new AddUMLConnector(c, true, pane);
-					// actions.push(new AddUMLConnector(c, true));
-					SELECTED.clear();
-				}
-			}
-			break;
-
-		// Adds ClassBox UMLNode to pane coordinates that were clicked on.
-		case CLASSBOX:
-			ClassBox c = new ClassBox(event.getX(), event.getY());
-			makeDraggable(c);
-			new AddOrDeleteUMLNode(c, true, pane);
-			// actions.push(new AddUMLNode(c, true));
-			System.out.println("this is x " + event.getX() + "this is y " + event.getY());
-			break;
-
 		// Displays information of any UMLObject clicked on in the Inspector.
 		case SELECT:
-			if (!SELECTED.isEmpty())
-				for (UMLNode selectedNode : SELECTED) {
-					clearInspectorIfContains(selectedNode);	
-				}
-			UMLObject test = getObject(event.getTarget());
-			if (test instanceof UMLConnector) {
-				loadLineFXML(test);
-			} else if (test instanceof Point) {
-				loadCircleFXML(test);
-			} else if (test instanceof ClassBox) {
-				loadClassBoxFXML(test);
-			} else {
-				
+			deselectAll();
+			UMLObject selectedObject = getObject(event.getTarget());
+			if (selectedObject != null) {
+				selectObject(selectedObject);
 			}
-			
-			
-			// TODO:
-			// line.getStrokeDashArray().addAll(25d, 10d);
-			// event.getTarget().toString().startsWith("T") ||
-			// event.getTarget().toString().startsWith("R")
+
 			break;
 
 		// Remove any UMLObject clicked on.
 		case DELETE:
 			UMLObject target = getObject(event.getTarget());
 			if (target != null) {
-				if (target instanceof UMLConnector) {
-					UMLConnector connector = (UMLConnector) target;
-					new AddUMLConnector(connector, false, pane);
-					// actions.push(new AddUMLConnector(connector, false));
-				} else {
-					
-					new AddOrDeleteUMLNode((UMLNode) target, false, pane);
-					clearInspectorIfContains((UMLNode) target);
-					// new AddUMLNode((UMLNode)target, false);
-					// actions.push(new AddUMLNode((UMLNode)target, false));
-					// deleteObject(target);
+				if (target instanceof Relationship && event.getTarget() instanceof Circle) {
+					Relationship relationship = (Relationship) target;
+					Pivot pivot = getPivot(relationship, (Circle) event.getTarget());
+					if (pivot != null) {
+						ACTIONS.push(new DeletePivot(relationship, pivot));
+						UNDONE_ACTIONS.clear();
+						return;
+					}
 				}
+				deleteObjects(target);
 			}
+
 			break;
 
+		// Adds Point UMLNode to pane coordinates that were clicked on.
+		case POINT:
+			addObjects(new Point(event.getX(), event.getY()));
+
+			break;
+
+		// Adds ClassBox UMLNode to pane coordinates that were clicked on.
+		case CLASSBOX:
+			addObjects(new ClassBox(event.getX(), event.getY()));
+
+			break;
+
+		// Adds any UMLNode clicked to SELECTED
+		// If theres a UMLNode already in SELECTED, draws a line from it to currently
+		// clicked UMLNode.
+		case ASSOCIATION:
+		case DEPENDENCY:
+		case AGGREGATION:
+		case COMPOSITION:
+		case GENERALIZATION:
+		case LINE:
+			UMLObject object = getObject(event.getTarget());
+			deselectAllConnectors();
+			// If relevant node was selected.
+			if (object != null && !(object instanceof UMLConnector)) {
+				UMLNode node = (UMLNode) object;
+				if (SELECTED.isEmpty()) {
+					selectObject(node);
+				}
+				// If selected node wasn't just clicked on again.
+				else if (node != SELECTED.getLast()) {
+					switch (MODE) {
+					case ASSOCIATION:
+						addObjects(new Association((UMLNode) SELECTED.getLast(), node));
+						break;
+
+					case DEPENDENCY:
+						addObjects(new Dependency((UMLNode) SELECTED.getLast(), node));
+						break;
+
+					case AGGREGATION:
+						addObjects(new Aggregation((UMLNode) SELECTED.getLast(), node));
+						break;
+
+					case COMPOSITION:
+						addObjects(new Composition((UMLNode) SELECTED.getLast(), node));
+						break;
+
+					case GENERALIZATION:
+						addObjects(new Generalization((UMLNode) SELECTED.getLast(), node));
+						break;
+					case LINE:
+						addObjects(new Segment((UMLNode) SELECTED.getLast(), node));
+						break;
+					}
+				}
+			}
+
+			break;
+
+		case LINESPLIT:
+			UMLObject splitPoint = getObject(event.getTarget());
+			deselectAllNodes();
+			// If relevant node was selected.
+			if (splitPoint != null && splitPoint instanceof Relationship) {
+				Relationship relationship = (Relationship) splitPoint;
+				if (SELECTED.isEmpty()) {
+					selectObject(relationship);
+				} else if (relationship == SELECTED.getLast() && event.getTarget() instanceof Line) {
+					Line line = (Line) event.getTarget();
+					Segment segment = getSegment(relationship, line);
+					if (segment != null) {
+						UNDONE_ACTIONS.clear();
+						ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
+						deselectAll();
+						selectObject(relationship);
+					}
+				} else {
+					deselectAll();
+				}
+			}
+
+			break;
+
+		case NOTE:
+			deselectAll();
+			Note note = new Note(event.getX(), event.getY());
+			addObjects(note);
+			selectObject(note);
+
 		default:
+
 			break;
 		}
 	}
@@ -302,101 +355,61 @@ public class Controller {
 	// ----------------------------------------------------------------------------------------------
 	// \\
 
-	// The code for making an object draggable was originally written by jewelsea
-	// and copied from
-	// https://stackoverflow.com/questions/17312734/how-to-make-a-draggable-node-in-javafx-2-0
-	// have since modified parts of it to use in out project
-	public void makeDraggable(UMLNode node) {
-		Node model = node.getModel();
-		class DragSource {
-			double x, y;
+	/*
+	 * Removes given UMLObject from pane.
+	 * 
+	 * @precondition target is recognized UMLObject that is a child of the pane.
+	 * 
+	 * @param target UMLObject to be removed.
+	 * 
+	 * @postcondition target is removed from pane and relevant map.
+	 * 
+	 * @postcondition If target is a UMLNode, any UMLConnectors connected to it are
+	 * also removed.
+	 * 
+	 * @postcondition If target is a UMLConnector, it is removed from the list of
+	 * connectors for the * UMLNodes that it connects.
+	 */
+	public void deleteObjects(UMLObject... objects) {
+		for (UMLObject object : objects) {
+			UNDONE_ACTIONS.clear();
+			if (object instanceof UMLConnector) {
+				ACTIONS.push(new DeleteUMLConnector((UMLConnector) object, this));
+			} else {
+				ACTIONS.push(new DeleteUMLNode((UMLNode) object, this));
+			}
+			if (inspectorObject != null) {
+				inspectorObject.getChildren().clear();
+			}
 		}
-		final DragSource dragSource = new DragSource();
-		final DragSource oldPosition = new DragSource();
-		// Records dragging coordinate information
-		model.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				// Record mouse click coordinates if UMLObject is a Parent.
-				if (MODE == Mode.SELECT) {
-					if (model instanceof Parent) {
-						dragSource.x = mouseEvent.getX();
-						dragSource.y = mouseEvent.getY();
-						System.out.println("Changed old position ");
-						oldPosition.x = node.getOriginX();
-						oldPosition.y = node.getOriginY();
-					}
-					// Records delta of mouse click coordinates and UMLObject's origin if UMLObject
-					// is not
-					// * a Parent.
-					else {
-						dragSource.x = node.getOriginX() - mouseEvent.getX();
-						dragSource.y = node.getOriginY() - mouseEvent.getY();
-						System.out.println("Changed old position ");
-						oldPosition.x = node.getOriginX();
-						oldPosition.y = node.getOriginY();
-					}
-					model.getScene().setCursor(Cursor.MOVE);
-					System.out.println("begin moving Node");
-				}
-			}
-		});
-
-		// Moves UMLObject to new position it was dragged to.
-		model.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					if (model instanceof Parent) {
-						node.move(node.getOriginX() + (mouseEvent.getX() - dragSource.x),
-								node.getOriginY() + (mouseEvent.getY() - dragSource.y));
-					} else {
-						node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
-					}
-					node.update();
-					// System.out.println("moved Node");
-				}
-			}
-		});
-
-		// Sets cursor back to default when mouse is released on the UMLObject.
-		model.setOnMouseReleased(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					model.getScene().setCursor(Cursor.HAND);
-					System.out.print("Moved from (" + oldPosition.x + ", " + oldPosition.y + ") to ("
-							+ node.getOriginX() + ", " + node.getOriginY() + ")");
-					new MoveNode(node, oldPosition.x, oldPosition.y);
-				}
-			}
-		});
-
-		// Sets cursor to HAND when mouse enters the UMLObject.
-		model.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					if (!mouseEvent.isPrimaryButtonDown()) {
-						model.getScene().setCursor(Cursor.HAND);
-					}
-				}
-			}
-		});
-
-		// Sets cursor back to default when mouse exits the UMLObject.
-		model.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (MODE == Mode.SELECT) {
-					if (!mouseEvent.isPrimaryButtonDown()) {
-						model.getScene().setCursor(Cursor.DEFAULT);
-					}
-				}
-			}
-		});
 	}
 
+	/*
+	 * Adds already instantiated UMLObject to pane.
+	 * 
+	 * @precondition obj is instantiated UMLObject.
+	 * 
+	 * @param obj UMLObject to be added.
+	 * 
+	 * @postcondition obj is added to pane and relevant map.
+	 * 
+	 * @postcondition Any relevant handlers are defined on obj.
+	 */
+	public void addObjects(UMLObject... objects) {
+		UNDONE_ACTIONS.clear();
+		deselectAll();
+		for (UMLObject object : objects) {
+			if (object instanceof UMLConnector) {
+				UMLConnector connector = (UMLConnector) object;
+				ACTIONS.push(new AddUMLConnector(connector, this));
+				selectObject(connector);
+			} else {
+				UMLNode node = (UMLNode) object;
+				ACTIONS.push(new AddUMLNode(node, this));
+				selectObject(node);
+			}
+		}
+	}
 
 	/*
 	 * Returns recognized UMLObject for given Object (typically one's underlying
@@ -434,6 +447,152 @@ public class Controller {
 		return returnNode;
 	}
 
+	/*
+	 * Finds the Segment containing the given Line out of all Segments in given
+	 * UMLConnector. If * none of the given UMLConnector's Segments contain the
+	 * given Line, returns null.
+	 * 
+	 * @param connector UMLConnector that's Segments will be searched through for
+	 * containing given * Line.
+	 * 
+	 * @param model Line that's corresponding Segment is being searched for.
+	 * 
+	 * @return Segment containing the given Line out all Segments in given
+	 * UMLConnector. If none of * the given UMLConnector's Segments contain the
+	 * given Line, then null.
+	 */
+	public Segment getSegment(Relationship relationship, Line model) {
+		for (Segment segment : relationship.getSegments()) {
+			if (segment.getModel() == model) {
+				return segment;
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * Finds the Pivot containing the given Circle out of all Pivots in given
+	 * UMLConnector. If * none of the given UMLConnector's Pivots contain the given
+	 * Circle, returns null.
+	 * 
+	 * @param connector UMLConnector that's Pivots will be searched through for
+	 * containing given * Circle.
+	 * 
+	 * @param model Circle that's corresponding Pivot is being searched for.
+	 * 
+	 * @return Pivot containing the given Circle out all Pivots in given
+	 * UMLConnector. If none of * the given UMLConnector's Pivots contain the given
+	 * Circle, then null.
+	 */
+	public Pivot getPivot(Relationship relationship, Circle model) {
+		for (Pivot pivot : relationship.getPivots()) {
+			if (pivot.getModel() == model) {
+				return pivot;
+			}
+		}
+		return null;
+	}
+
+	public void selectObject(UMLObject object) {
+		SELECTED.addLast(object);
+		object.highlight();
+		if (object instanceof UMLConnector) {
+			loadUMLConnectorFXML(object);
+		} else if (object instanceof Point) {
+			loadPointFXML(object);
+		} else if (object instanceof ClassBox) {
+			loadClassBoxFXML(object);
+		} else if (inspectorObject != null) {
+			inspectorObject.getChildren().clear();
+		}
+	}
+
+	public void deselectObject(UMLObject object) {
+		SELECTED.remove(object);
+		object.unhighlight();
+	}
+
+	public void deselectAll() {
+		while (!SELECTED.isEmpty()) {
+			SELECTED.peekLast().unhighlight();
+			SELECTED.removeLast();
+		}
+	}
+
+	public void deselectAllNodes() {
+		for (UMLObject object : SELECTED) {
+			if (object instanceof UMLNode) {
+				object.unhighlight();
+				SELECTED.remove(object);
+			}
+		}
+	}
+
+	public void deselectAllConnectors() {
+		for (UMLObject object : SELECTED) {
+			if (object instanceof UMLConnector) {
+				object.unhighlight();
+				SELECTED.remove(object);
+			}
+		}
+	}
+
+	public void refresh() {
+		Iterator iter = CONNECTORS.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry pair = (Map.Entry) iter.next();
+			if (pair.getValue() instanceof Relationship) {
+				Relationship relationship = (Relationship) pair.getValue();
+				relationship.update(true);
+			}
+		}
+	}
+
+	public void printState() {
+		Iterator iter;
+		System.out.println("--------------------------\nPRINTING STATE");
+		System.out.println("\nMODE: " + MODE);
+		System.out.println("\nPANE: " + pane);
+		System.out.println("\nSTAGE: " + window);
+		System.out.println("\nSCENE: " + scene);
+		System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
+		System.out.println("\nFILE CHOOSER: " + fileChooser);
+		System.out.println("\nSELECTED:     size: " + SELECTED.size());
+		for (UMLObject node : SELECTED) {
+			System.out.println(node);
+		}
+		System.out.println("\nNODES:        size: " + NODES.size());
+		iter = NODES.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry pair = (Map.Entry) iter.next();
+			System.out.print(pair.getKey() + " = " + pair.getValue());
+			UMLNode node = (UMLNode) pair.getValue();
+			System.out.println("   connectors: " + node.getConnections().size());
+		}
+		System.out.println("\nCONNECTORS:   size: " + CONNECTORS.size());
+		iter = CONNECTORS.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry pair = (Map.Entry) iter.next();
+			System.out.print(pair.getKey() + " = " + pair.getValue());
+			if (pair.getValue() instanceof Relationship) {
+				Relationship relationship = (Relationship) pair.getValue();
+				System.out.println(
+						"   segments: " + relationship.segments.size() + "   pivots: " + relationship.pivots.size());
+			} else {
+				System.out.println();
+			}
+		}
+		System.out.println("\nUNDO STACK:   size: " + ACTIONS.size() + " (bottom to top)");
+		for (UMLAction action : ACTIONS) {
+			System.out.println(action);
+		}
+		System.out.println("\nREDO STACK:   size: " + UNDONE_ACTIONS.size() + " (bottom to top)");
+		for (UMLAction action : UNDONE_ACTIONS) {
+			System.out.println(action);
+		}
+		System.out.println("\n--------------------------\n");
+	}
+
 	// ----------------------------------------------------------------------------------------------
 	// \\
 	// MenuBar Action Controller
@@ -454,8 +613,12 @@ public class Controller {
 	 */
 	public void menuNewClicked() {
 		pane.getChildren().clear();
-		inspectorObject.getChildren().clear();
+		if (inspectorObject != null) {
+			inspectorObject.getChildren().clear();
+		}
 		NODES = new HashMap<>();
+		CONNECTORS = new HashMap<>();
+		
 	}
 
 	/*
@@ -465,38 +628,155 @@ public class Controller {
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
 		fileChooser.setTitle("Open Resource File");
 		File file = fileChooser.showOpenDialog(window);
+		if (file == null) {
+			return;
+		}
 		window.setTitle("Team Rocket UML Editor: " + file.toString());
 		try {
+			menuNewClicked();
+			ACTIONS = new Stack<>();
+			UNDONE_ACTIONS = new Stack<>();
 			// Clears current pane contents NODES = new HashMap<>(file);
-			pane.getChildren().clear();
-			BufferedReader input = new BufferedReader(new FileReader(new File(file.toString())));
-			String hashy = input.readLine();
-			System.out.println(hashy);
+			//pane.getChildren().clear();
+			Scanner input = new Scanner(file);
+			Vector <UMLNode> allNodes  = new Vector<UMLNode>();
+			while (input.hasNextLine()) {
+				if (!input.hasNext()) {
+					break;
+				}
+				String nextNode = input.next();
+				UMLNode node = null;
+				if (nextNode.equals("Point:")) {
+					node = new Point(input);
+				} else if (nextNode.equals("ClassBox:")) {
+					node = new ClassBox(input);
+				} else if (nextNode.equals("Connectors:")){
+					input.nextLine();
+					break;
+				}else {
+					System.out.println("Error! Unknown object type: " + nextNode);
+					return;
+				}
+				allNodes.add(node);
+				addObjects(node);
+			}
+			Vector <UMLConnector> allConnectors  = new Vector<UMLConnector>();
+			while (input.hasNextLine()) {
+				if (!input.hasNext()) {
+					break;
+				}
+				String textConnector = input.next();
+				UMLConnector connector = null;
+				if (textConnector.equals("Aggregation:")) {
+					connector = new Aggregation(input, allNodes, this);
+				} else if (textConnector.equals("Association:")) {
+					connector = new Association(input, allNodes, this);
+				} else if (textConnector.equals("Composition:")) {
+					connector = new Composition(input, allNodes, this);
+				} else if (textConnector.equals("Dependency:")) {
+					connector = new Dependency(input, allNodes,this);
+				} else if (textConnector.equals("Generalization:")) {
+					connector = new Generalization(input, allNodes, this);
+				} else if (textConnector.equals("Segment:")) {
+					//connector = new Segment(input, allNodes);
+				}
+				allConnectors.add(connector);
+				addObjects(connector);
+				printState();
+				input.nextLine();
+			}
+			
+			deselectAll();
+			ACTIONS = new Stack<>();
+			UNDONE_ACTIONS = new Stack<>();
+			System.out.println(allNodes.toString());
+
+			// BufferedReader input = new BufferedReader(new FileReader(new
+			// File(file.toString())));
+			// String hashy = input.readLine();
+			// System.out.println(hashy);
 			input.close();
 			// TODO: Load file text as pane children.
 
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
-
 	}
 
 	/*
 	 * Action to Save File WIP.
 	 */
 	public void menuSaveClicked() throws IOException {
+		System.out.println("Save Called");
 		String hashMap = NODES.toString();
 		String fxmlContent = pane.getChildren().toString();
-
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
 		File file = fileChooser.showSaveDialog(window);
+		if (file == null) {
+			return;
+		} 
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
 		try {
-			FileWriter fileWriter = null;
-			fileWriter = new FileWriter(file);
-			fileWriter.write(hashMap);
-			fileWriter.close();
+			BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
+			
+			Vector<UMLNode> allNodes = new Vector<UMLNode>();
+			for (UMLNode n : NODES.values()) {
+				allNodes.add(n);
+			}
+			for (int i=0; i<allNodes.size(); i++){
+				System.out.println(allNodes.get(i));
+			}
+			for (int i = 0; i < allNodes.size(); i++) {
+				UMLNode node = allNodes.get(i);
+				if (node instanceof Point) {
+					printSaveString(output, (((Point) node).saveAsString()));
+				} else if (node instanceof ClassBox) {
+					printSaveString(output, (((ClassBox) node).saveAsString()));
+				} 
+			}
+			output.write("Connectors:");
+			output.newLine();
+			Vector<UMLConnector> allConnectors = new Vector<UMLConnector>();
+			for (UMLConnector c : CONNECTORS.values()) {
+				allConnectors.add(c);
+			}
+			for (int i=0; i<allConnectors.size(); i++){
+				System.out.println(allConnectors.get(i));
+			}
+			for (int i = 0; i < allConnectors.size(); i++) {
+				UMLConnector connector = allConnectors.get(i);
+				if (connector instanceof Aggregation) {
+					output.write("Aggregation: ");		
+				} else if (connector instanceof Association) {
+					output.write("Association: ");
+				} else if (connector instanceof Composition) {
+					output.write("Composition: ");
+				} else if (connector instanceof Dependency) {
+					output.write("Dependency: ");
+				} else if (connector instanceof Generalization) {
+					output.write("Generalization: ");
+				} //else if (connector instanceof Segment) {
+					//output.write("Segment: ");
+				//}
+				output.write(connector.saveAsString(allNodes));
+				if (connector instanceof Relationship) {
+					printSaveString(output, ((Relationship)connector).saveAsString());
+				}
+				output.newLine();			
+			}
+			output.close();
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	public void printSaveString(BufferedWriter output, String saveString) throws IOException {
+		Scanner s = new Scanner(saveString);
+		while (s.hasNextLine()) {
+			output.write(s.nextLine());
+			output.newLine();
 		}
 	}
 
@@ -514,6 +794,14 @@ public class Controller {
 	}
 
 	public void menuSelectAllClicked() {
+	}
+
+	public void menuUndoClicked() {
+		undo();
+	}
+
+	public void menuRedoClicked() {
+		redo();
 	}
 
 	public void menuSpecificationsClicked() {
@@ -537,26 +825,6 @@ public class Controller {
 	 */
 
 	/*
-	 * clears the inspector if the current loaded node is the given one
-	 * 
-	 * @param UMLObject to test against current instructor
-	 * 
-	 * @postcondition This clears the current fxml if it contains the given node
-	 */
-	public void clearInspectorIfContains(UMLObject node) {
-		if (node.isSelected()) {
-			node.setSelected(false);
-			SELECTED.remove(node);
-			if (inspectorObject==null) {
-				System.out.println("Abourt!");
-			}
-			inspectorObject.getChildren().clear();
-			currentInspector = null;
-		}
-	}
-	
-
-	/*
 	 * loads inspector fxml and allows user to change properties.
 	 * 
 	 * @param point instance of current event target.
@@ -564,16 +832,13 @@ public class Controller {
 	 * @postcondition This loads the dynamic instance of the given circle fxml and
 	 * listens to given key/mouse events to change the inspector/circle properties.
 	 */
-	public void loadCircleFXML(UMLObject point) {
+	public void loadPointFXML(UMLObject point) {
 		try {
-			point.setSelected(true);
-			SELECTED.add((UMLNode)point);
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Circle.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Point.fxml"));
 			Parent root = loader.load();
-			CircleController circleFXML = loader.getController();
+			PointController pointFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
-			circleFXML.loadInspectorInfo(point);
-			currentInspector = circleFXML;
+			pointFXML.loadInspectorInfo(point, this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -589,14 +854,11 @@ public class Controller {
 	 */
 	public void loadClassBoxFXML(UMLObject classBox) {
 		try {
-			classBox.setSelected(true);
-			SELECTED.add((UMLNode)classBox);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassBox.fxml"));
 			Parent root = loader.load();
 			ClassBoxController classBoxFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
-			classBoxFXML.loadInspectorInfo(classBox);
-			currentInspector = classBoxFXML;
+			classBoxFXML.loadInspectorInfo(classBox, this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -610,20 +872,18 @@ public class Controller {
 	 * @postcondition This loads the dynamic instance of the given line fxml and
 	 * listens to given key/mouse events to change the inspector/circle properties.
 	 */
-	public void loadLineFXML(UMLObject line) {
+	public void loadUMLConnectorFXML(UMLObject connector) {
 		try {
-			line.setSelected(true);
-			//SELECTED.add((UMLNode)line);
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("Line.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("UMLConnector.fxml"));
 			Parent root = loader.load();
-			LineController lineFXML = loader.getController();
+			UMLConnectorController UMLConnectorFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
-			lineFXML.loadInspectorInfo(line);
-			currentInspector = lineFXML;
+			UMLConnectorFXML.loadInspectorInfo(connector, this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 }
 // ----------------------------------------------------------------------------------------------
 // \\

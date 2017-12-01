@@ -8,7 +8,7 @@ import javafx.scene.Node;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.2
  */
 public class UMLObject {
@@ -17,18 +17,6 @@ public class UMLObject {
    */
   public double originX;
   public double originY;
-  
-  
-  private boolean isSelected = false;
-  
-  public void setSelected(boolean b) {
-	  System.out.println("Selected set to: "+b);
-	  isSelected = b;
-  }
-  
-  public boolean isSelected() {
-	  return isSelected;
-  }
 
   /*
    * Reassign this to given coordinates.
@@ -48,6 +36,18 @@ public class UMLObject {
    * @postcondition All data is updated (refreshed).
    */
   public void update() {}
+
+    /*
+     * Changes colors within model to make the object appear highlighted.
+     * @postcondition Colors in model are changed to make the object appear highlighted.
+     */
+  public void highlight() {}
+
+    /*
+     * Changes colors within model to make the object appear unhighlighted.
+     * @postcondition Colors in model are changed to make the object appear unhighlighted.
+     */
+  public void unhighlight() {}
 
    /*
     * Returns underlying model.

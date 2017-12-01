@@ -1,6 +1,9 @@
 package umlobject;
 
 import javafx.scene.shape.Rectangle;
+
+import java.util.Scanner;
+
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
@@ -15,260 +18,378 @@ import javafx.scene.layout.BackgroundFill;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.2
  */
 public class ClassBox extends UMLNode {
-  /*
-   * Width of entire box, limits inner text length as well.
-   */
-  double width;
+	/*
+	 * Width of entire box, limits inner text length as well.
+	 */
+	double width;
 
-  /*
-   * Underlying model and it's children.
-   */
-  VBox box;
-  Rectangle separator1, separator2;
-  Text name, attributes, methods;
+	/*
+	 * Underlying model and it's children.
+	 */
+	VBox box;
+	Rectangle separator1, separator2;
+	public Text name, attributes, methods;
 
-  /*
-   * Basic Constructor
-   * @param x x coordinate for this to be made on.
-   * @param y y coordinate for this to be made on.
-   * @postcondition ClassBox instance with width of 80 and the given coordinates is created.
-   */
-  public ClassBox(double x, double y) {
-    this(x, y, 80);
-  }
+	/*
+	 * Basic Constructor
+	 * 
+	 * @param x x coordinate for this to be made on.
+	 * 
+	 * @param y y coordinate for this to be made on.
+	 * 
+	 * @postcondition ClassBox instance with width of 80 and the given coordinates
+	 * is created.
+	 */
+	public ClassBox(double x, double y) {
+		this(x, y, 80);
+	}
 
-  /*
-   * Explicit Constructor
-   * @param x x coordinate for this to be made on.
-   * @param y y coordinate for this to be made on.
-   * @param w Width that this will be created with.
-   * @postcondition ClassBox instance with given width and coordinates is created.
-   */
-  public ClassBox(double x, double y, double w) {
-    width = w;
+	public ClassBox(Scanner input) {
+	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+	    //System.out.println("Base construction");
+	    name.setText(buildString(input, input.nextInt()));
+	    //System.out.println("Name construction");
+	    attributes.setText(buildString(input, input.nextInt()));
+	    //System.out.println("Attributes construction");
+	    methods.setText(buildString(input, input.nextInt()));
+	   // System.out.println("Methods construction");
+	}
 
-    box = new VBox();
-    box.setLayoutX(x);
-    box.setLayoutY(y);
-    box.setStyle("-fx-border-color: black;");
-    box.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+	public String saveAsString() {
+		int numNameChars = name.getText().length();
+		int numAttributesChars = attributes.getText().length();
+		int numMethodsChars = methods.getText().length();
+		return "ClassBox: " + (box.getLayoutX()) + " " + (box.getLayoutY()) + " " + width+ " "+numNameChars + " "+name.getText()
+			+"\n"+numAttributesChars + " "+attributes.getText()+"\n"+numMethodsChars + " "+methods.getText();
+	}
 
-    separator1 = new Rectangle(width, 1);
-    separator1.setFill(Color.BLACK);
-    separator2 = new Rectangle(width, 1);
-    separator1.setFill(Color.BLACK);
+	public String buildString(Scanner input, int numChars) {
+		String result = input.nextLine();
+		if (numChars==0) {
+			return "";
+		}
+		result = result.substring(1, result.length());
+		//System.out.println(result.length() + ","+result);
+		while(result.length() != numChars) {
+			result += "\n";
+			//System.out.println(result.length() + ","+result);
+			result += input.nextLine();
+			
+		}
+		return result;
+	}
 
-    name = new Text("class name");
-    name.setWrappingWidth(width);
-    name.setTextAlignment(TextAlignment.CENTER);
+	/*
+	 * Explicit Constructor
+	 * 
+	 * @param x x coordinate for this to be made on.
+	 * 
+	 * @param y y coordinate for this to be made on.
+	 * 
+	 * @param w Width that this will be created with.
+	 * 
+	 * @postcondition ClassBox instance with given width and coordinates is created.
+	 */
+	public ClassBox(double x, double y, double w) {
+		width = w;
 
-    attributes = new Text("attributes");
-    attributes.setWrappingWidth(width);
-    attributes.setTextAlignment(TextAlignment.CENTER);
+		box = new VBox();
+		box.setLayoutX(x);
+		box.setLayoutY(y);
+		box.setStyle("-fx-border-color: black;");
+		box.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
-    methods = new Text("methods");
-    methods.setWrappingWidth(width);
-    methods.setTextAlignment(TextAlignment.CENTER);
+		separator1 = new Rectangle(width, 1);
+		separator1.setFill(Color.BLACK);
+		separator2 = new Rectangle(width, 1);
+		separator1.setFill(Color.BLACK);
 
-    box.getChildren().addAll(name, separator1, attributes, separator2, methods);
-    originX = x + (width / 2);
-    originY = y + (getHeight() / 2);
-  }
+		name = new Text("class name");
+		name.setWrappingWidth(width);
+		name.setTextAlignment(TextAlignment.CENTER);
 
-  /*
-   * Returns underlying model.
-   * @return underlying model VBox.
-   */
-  public Node getModel() {
-    return box;
-  }
+		attributes = new Text("attributes");
+		attributes.setWrappingWidth(width);
+		attributes.setTextAlignment(TextAlignment.CENTER);
 
-  /*
-   * Reassign this to given coordinates.
-   * @param newX x coordinate for this to be moved to.
-   * @param newY y coordinate for this to be moved to.
-   * @postcondition This updates all of its data according to new coordinates.
-   */
-  public void move(double newX, double newY) {
-    box.setLayoutX(newX - (width / 2));
-    box.setLayoutY(newY - (getHeight() / 2));
-    super.move(newX, newY);
-  }
+		methods = new Text("methods");
+		methods.setWrappingWidth(width);
+		methods.setTextAlignment(TextAlignment.CENTER);
 
-  /*
-   * Calculates and returns total height of underlying model (VBox).
-   * @return Total height of underlying Vbox model.
-   */
-  public double getHeight() {
-    double height = 0;
-    for (Node n: box.getChildren()) {
-      height += n.getBoundsInParent().getHeight();
-    }
+		box.getChildren().addAll(name, separator1, attributes, separator2, methods);
+		originX = x + (width / 2);
+		originY = y + (getHeight() / 2);
+	}
 
-    return height;
-  }
+	/*
+	 * Returns underlying model.
+	 * 
+	 * @return underlying model VBox.
+	 */
+	public Node getModel() {
+		return box;
+	}
 
-  /*
-   * returns maintained width.
-   * @return maintained width.
-   */
-  public double getWidth() {
-    return width;
-  }
+	/*
+	 * Reassign this to given coordinates.
+	 * 
+	 * @param newX x coordinate for this to be moved to.
+	 * 
+	 * @param newY y coordinate for this to be moved to.
+	 * 
+	 * @postcondition This updates all of its data according to new coordinates.
+	 */
+	public void move(double newX, double newY) {
+		box.setLayoutX(newX - (width / 2));
+		box.setLayoutY(newY - (getHeight() / 2));
+		super.move(newX, newY);
+	}
 
-  /*
-   * Returns contents of this's name field.
-   * @return Contents of this's name field.
-   */
-  public String getName() {
-    return name.getText();
-  }
+	/*
+	 * "Trims" this to be only as wide as the widest of it's text fields with a
+	 * minimum of 80.
+	 * 
+	 * @postcondition All of this's components have the width of the widest of
+	 * this's text fields, or * 80 if the widest text field is thinner than 80.
+	 */
+	public void trim() {
+		double greatestLength = Math.max(
+				Math.max(name.getLayoutBounds().getWidth(), attributes.getLayoutBounds().getWidth()),
+				methods.getLayoutBounds().getWidth());
+		setWidth(greatestLength > 80 ? greatestLength : 80);
+	}
 
-  /*
-   * Returns contents of this's attributes field splt into string array.
-   * @return Contents of this's attributes field splt into string array.
-   */
-  public String getAttributes() {
-	  //return attributes.getText().split("\\|");
-	  return attributes.getText();
-  }
+	/*
+	 * Calculates and returns total height of underlying model (VBox).
+	 * 
+	 * @return Total height of underlying Vbox model.
+	 */
+	public double getHeight() {
+		double height = 0;
+		for (Node n : box.getChildren()) {
+			height += n.getBoundsInParent().getHeight();
+		}
+		return height;
+	}
 
-  /*
-   * Returns contents of this's methods field split into string array.
-   * @return Contents of this's methods field split into string array.
-   */
-  public String getMethods() {
-	  //return methods.getText().split("\\|");
-	  return methods.getText();
-  }
-  
-  public void update() {
-	    box.setLayoutX(originX - (width / 2));
-	    box.setLayoutY(originY - (getHeight() / 2));
-	    super.update();
-  }
-  
-  /*
-   * Returns the x coordinate of the point to which a connector should anchor if
-   * joined to this node.
-   * 
-   * @return returns the calculated x coordinate.
-   */
-  public double getAnchorX(double startX, double startY) {
-  	double actinghalfWidth = (getWidth()) / 2;
-  	double actinghalfHeight = (getHeight()) / 2;
-  	double deltaX = startX - originX;
-  	double deltaY = originY - startY;
-  	double angle = Math.atan(deltaY / deltaX);
-  	if (startX < originX)
-  		angle += Math.PI;
-  
-  	// System.out.println("angle in degrees is "+angle*180/Math.PI);
-  
-  	double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
-  	//System.out.println("Box angle in degrees is " + boxAngle * 180 / Math.PI);
-  	if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
-  		// crossing sides of box
-  		double xOffset;
-  		if (startX > originX)
-  			xOffset = actinghalfWidth + 2;
-  		else
-  			xOffset = -actinghalfWidth;
-  		return originX + xOffset;
-  	} else {
-  		// crossing top or bottom of box
-  		double yOffset;
-  		if (startY < originY)
-	  		yOffset = actinghalfHeight + 2;
-  		else
-  			yOffset = -actinghalfHeight;
-  		double xOffset = yOffset / Math.tan(angle);
-  		return originX + xOffset;
-  	}
-  }
-  
-  	/*
-  	 * Returns the y coordinate of the point to which a connector should anchor if
-  	 * joined to this node.
-  	 * 
-  	 * @return returns the calculated y coordinate.
-  	 */
-  	public double getAnchorY(double startX, double startY) {
-  	    //System.out.println("Getting anchor points. Height is: "+getHeight());
-  	    
-  		double actinghalfWidth = (getWidth()) / 2;
-  		double actinghalfHeight = (getHeight()) / 2;
-  		double deltaX = startX - originX;
-  		double deltaY = originY - startY;
-  		double angle = Math.atan(deltaY / deltaX);
-  		if (startX < originX)
-  			angle += Math.PI;
-  
-  		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
-  		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
-  			double xOffset;
-  			if (startX < originX)
-  				xOffset = actinghalfWidth + 2;
-  			else
-  				xOffset = -actinghalfWidth;
-  
-  			// do check if line crosses corner of box
-  			// if line crosses "bottom" or "top"
-  			double yOffset = Math.tan(angle) * xOffset;
-  			//System.out.println("Returned anchor point: "+(originY + yOffset));
-  			return originY + yOffset;
-  		} else {
-  			double yOffset;
-  			if (startY > originY)
-  				yOffset = actinghalfHeight + 2;
-  			else
-  				yOffset = -actinghalfHeight;
-  			//System.out.println("Returned anchor point: "+(originY + yOffset));
-  			return originY + yOffset;
-  		}
-  }
-  
-  
-  //Torrance Inspector update
-  	
-  /*
-   * Reassign value of name to newName.
-   * @param newName new string for name to be changed to.
-   * @postcondition This updates the string value in name.
-   */	
-  public void setName(String newName){
-	  name.setText(newName);
-  }
-  
-  public Text getNameField() {
-	  return name;
-  }
-  public Text getAttributesField() {
-	  return attributes;
-  }
-  public Text getMethodsField() {
-	  return methods;
-  }
+	/*
+	 * returns maintained width.
+	 * 
+	 * @return maintained width.
+	 */
+	public double getWidth() {
+		return width;
+	}
 
-  /*
-   * Reassign value of attributes to newAttributes.
-   * @param newAttributes new string for attributes to be changed to.
-   * @postcondition This updates the string value in attributes.
-   */	  
-  public void setAttributes(String newAttributes){
-	  attributes.setText(newAttributes);
-  }
-  
-  /*
-   * Reassign value of methods to newMethods.
-   * @param newMethods new string for methods to be changed to.
-   * @postcondition This updates the string value in methods.
-   */	  
-  public void setMethods(String newMethods){
-	  methods.setText(newMethods);
-  }
+	/*
+	 * Returns contents of this's name field.
+	 * 
+	 * @return Contents of this's name field.
+	 */
+	public String getName() {
+		return name.getText();
+	}
+
+	/*
+	 * Returns contents of this's attributes field as string.
+	 * 
+	 * @return Contents of this's attributes field as string.
+	 */
+	public String getAttributes() {
+		return attributes.getText();
+	}
+
+	/*
+	 * Returns contents of this's attributes field splt into String array.
+	 * 
+	 * @return Contents of this's attributes field splt into String array.
+	 */
+	public String[] getAttributesArray() {
+		return attributes.getText().split("\\|");
+	}
+
+	/*
+	 * Returns contents of this's methods field split as String.
+	 * 
+	 * @return Contents of this's methods field split as String.
+	 */
+	public String getMethods() {
+		return methods.getText();
+	}
+
+	/*
+	 * Returns contents of this's methods field split into string array.
+	 * 
+	 * @return Contents of this's methods field split into string array.
+	 */
+	public String[] getMethodsArray() {
+		return methods.getText().split("\\|");
+	}
+
+	/*
+	 * Returns the x coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 *
+	 * @return returns the calculated x coordinate.
+	 */
+	public double getAnchorX(double startX, double startY) {
+		double actinghalfWidth = (getWidth()) / 2;
+		double actinghalfHeight = (getHeight()) / 2;
+		double deltaX = startX - originX;
+		double deltaY = originY - startY;
+		double angle = Math.atan(deltaY / deltaX);
+		if (startX < originX) {
+			angle += Math.PI;
+		}
+
+		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
+		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+			// crossing sides of box
+			double xOffset;
+			if (startX > originX) {
+				xOffset = actinghalfWidth + 2;
+			} else {
+				xOffset = -actinghalfWidth;
+			}
+			return originX + xOffset;
+		} else {
+			// crossing top or bottom of box
+			double yOffset;
+			if (startY < originY) {
+				yOffset = actinghalfHeight + 2;
+			} else {
+				yOffset = -actinghalfHeight;
+			}
+			double xOffset = yOffset / Math.tan(angle);
+			return originX + xOffset;
+		}
+	}
+
+	/*
+	 * Returns the y coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 *
+	 * @return returns the calculated y coordinate.
+	 */
+	public double getAnchorY(double startX, double startY) {
+		double actinghalfWidth = (getWidth()) / 2;
+		double actinghalfHeight = (getHeight()) / 2;
+		double deltaX = startX - originX;
+		double deltaY = originY - startY;
+		double angle = Math.atan(deltaY / deltaX);
+		if (startX < originX) {
+			angle += Math.PI;
+		}
+
+		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
+		if ((angle < boxAngle && angle > -boxAngle) || ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+			double xOffset;
+			if (startX < originX) {
+				xOffset = actinghalfWidth + 2;
+			} else {
+				xOffset = -actinghalfWidth;
+			}
+
+			// do check if line crosses corner of box
+			// if line crosses "bottom" or "top"
+			double yOffset = Math.tan(angle) * xOffset;
+			return originY + yOffset;
+		} else {
+			double yOffset;
+			if (startY > originY) {
+				yOffset = actinghalfHeight + 2;
+			} else {
+				yOffset = -actinghalfHeight;
+			}
+			return originY + yOffset;
+		}
+	}
+
+	/*
+	 * Reassign value of name to newName.
+	 * 
+	 * @param newName new string for name to be changed to.
+	 * 
+	 * @postcondition This updates the string value in name.
+	 */
+	public void setName(String newName) {
+		name.setWrappingWidth(0);
+		name.setText(newName);
+		trim();
+	}
+
+	/*
+	 * Reassign value of attributes to newAttributes.
+	 * 
+	 * @param newAttributes new string for attributes to be changed to.
+	 * 
+	 * @postcondition This updates the string value in attributes.
+	 */
+	public void setAttributes(String newAttributes) {
+		attributes.setWrappingWidth(0);
+		attributes.setText(newAttributes);
+		trim();
+	}
+
+	/*
+	 * Reassign value of methods to newMethods.
+	 * 
+	 * @param newMethods new string for methods to be changed to.
+	 * 
+	 * @postcondition This updates the string value in methods.
+	 */
+	public void setMethods(String newMethods) {
+		methods.setWrappingWidth(0);
+		methods.setText(newMethods);
+		trim();
+	}
+
+	/*
+	 * Changes width of all of this's components to match given width.
+	 * 
+	 * @param newWidth New width for this to be set to.
+	 * 
+	 * @postcondition All of this's components are altered to match given width for
+	 * this.
+	 */
+	public void setWidth(double newWidth) {
+		width = newWidth;
+
+		separator1.setWidth(width);
+		separator2.setWidth(width);
+
+		name.setWrappingWidth(width);
+		attributes.setWrappingWidth(width);
+		methods.setWrappingWidth(width);
+
+		originX = box.getLayoutX() + (width / 2);
+		originY = box.getLayoutY() + (getHeight() / 2);
+
+		for (UMLConnector connector : connections) {
+			connector.update();
+		}
+	}
+
+	/*
+	 * Changes color of underlying VBox model to make the object appear highlighted.
+	 * 
+	 * @postcondition Color of underlying VBox model changed to blue.
+	 */
+	public void highlight() {
+		box.setStyle("-fx-border-color: blue;");
+	}
+
+	/*
+	 * Changes color of underlying VBox model to make the object appear
+	 * unhighlighted.
+	 * 
+	 * @postcondition Color of underlying VBox model changed to black.
+	 */
+	public void unhighlight() {
+		box.setStyle("-fx-border-color: black;");
+	}
 }

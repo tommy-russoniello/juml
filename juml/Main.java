@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
  * @author Torrance Graham
  * @author Quinn Minnich
  * @author Thomas Russoniello
- * @version 0.2
+ * @version 0.3
  * @since 0.1
  */
 public class Main extends Application {
@@ -34,21 +34,23 @@ public class Main extends Application {
      */
     @Override
     public void start(final Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("juml.fxml"));
-        // Variable will update based on current file name, new file will be called untitled.
-        String fileName = new String ("Untitled");
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("juml.fxml"));
+      Parent root = (Parent)loader.load();
+      // Variable will update based on current file name, new file will be called untitled.
+      String fileName = new String ("Untitled");
 
-        window = primaryStage;
-        window.setTitle("Team Rocket UML Editor: " + fileName);
+      window = primaryStage;
+      window.setTitle("Team Rocket UML Editor: " + fileName);
 
-        Scene scene = new Scene(root, 1000, 500);
-        window.getIcons().add(new Image(Main.class.getResourceAsStream(
-          "/images/Team_Rocket_Logo.jpg")));
-        window.setScene(scene);
-        window.show();
+      Scene scene = new Scene(root, 1000, 500);
+      window.getIcons().add(new Image(Main.class.getResourceAsStream(
+        "/images/Team_Rocket_Logo.jpg")));
+      window.setScene(scene);
+      window.show();
 
-        // Give primary stage to controller.
-        Controller.setPrimaryStage(window);
+      // Give primary stage to controller.
+      Controller controller = (Controller) loader.getController();
+      controller.setPrimaryStage(window);
     }
 
 }

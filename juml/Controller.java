@@ -865,28 +865,17 @@ public class Controller {
 		image = SwingFXUtils.fromFXImage(snapshot, null);
 		PDPage page = new PDPage();
 
-    try {
-    	doc.addPage(page);
-    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
-
-    	try {
-				PDPageContentStream contents = new PDPageContentStream(doc, page);
-    		contents.drawImage(img, 20, 20);
-				contents.close();
-        //Every document requires at least one page, so we will add one
-        //blank page.
-        doc.save(fileName);
-    	}
-
-			catch (FileNotFoundException fnfe) {
-				System.out.println("Cancelled");
-			}
-
-			finally {
-				if(doc != null) {
-	    		doc.close();
-	 			}
-			}
+	    try{
+	    	doc.addPage(page);
+	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
+	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){
+	    		contents.drawImage(img, 20, 20);
+	        //Every document requires at least one page, so we will add one
+	        //blank page.
+	    	}
+	        doc.save(fileName);
+		} catch (IOException ex) {
+		Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 		catch (IOException ex) {

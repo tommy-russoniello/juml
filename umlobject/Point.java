@@ -67,6 +67,12 @@ public class Point extends UMLNode {
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
+    if(newX - getRadius() < 0){
+      newX = 0 + getRadius();
+    }
+    if(newY - getRadius() < 0){
+      newY =  0 + getRadius();
+    }
     circle.setCenterX(newX);
     circle.setCenterY(newY);
     super.move(newX, newY);

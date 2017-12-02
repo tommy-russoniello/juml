@@ -666,8 +666,7 @@ public class Controller {
 		image = SwingFXUtils.fromFXImage(snapshot, null);
 		PDPage page = new PDPage();
 
-	    try
-	    {
+	    try{
 	    	doc.addPage(page);
 	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
 	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){

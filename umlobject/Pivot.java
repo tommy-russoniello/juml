@@ -72,7 +72,13 @@ public class Pivot extends UMLNode {
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
-    circle.setCenterX(newX);
+    if(newX < 0){
+  		newX = 0;
+    }
+  	if(newY < 0){
+  		newY = 0;
+    }
+	  circle.setCenterX(newX);
     circle.setCenterY(newY);
     super.move(newX, newY);
   }

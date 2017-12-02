@@ -20,6 +20,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.Cursor;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -34,13 +36,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.*;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import umlobject.*;
 import umlaction.*;
@@ -223,17 +218,7 @@ public class Controller {
 	 * @postcondition Mode-defined operation is performed on coordinate of event.
 	 */
 	public void paneClick(MouseEvent event) throws IOException {
-		double xOff = getXOffset();
-		double yOff = getYOffset();
-
-		if(event.getX() < scrollPane.getLayoutBounds().getWidth())
-			System.out.print("Pane clicked at " + event.getX() + " ");
-		else
-			System.out.print(xOff + " ");
-		if(event.getY() < scrollPane.getLayoutBounds().getHeight())
-			System.out.println(event.getY());
-		else
-			System.out.println(yOff);
+		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
 
 		switch (MODE) {
 			// Displays information of any UMLObject clicked on in the Inspector.
@@ -266,13 +251,13 @@ public class Controller {
 
 			// Adds Point UMLNode to pane coordinates that were clicked on.
 			case POINT:
-				addObjects(new Point(xOff + event.getX(), yOff + event.getY()));
+				addObjects(new Point(event.getX(), event.getY()));
 
 				break;
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-        addObjects(new ClassBox(xOff + event.getX(), yOff + event.getY()));
+        addObjects(new ClassBox(event.getX(), event.getY()));
 
         break;
 
@@ -346,7 +331,7 @@ public class Controller {
 
 			case NOTE:
 				deselectAll();
-				Note note = new Note(xOff + event.getX(), yOff + event.getY());
+				Note note = new Note(event.getX(), event.getY());
 				addObjects(note);
 				selectObject(note);
 
@@ -522,26 +507,6 @@ public class Controller {
 			}
 		}
 
-		public double getXOffset(){
-			double viewWidth = scrollPane.getViewportBounds().getWidth();
-			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
-			double hValue = scrollPane.getHvalue();
-			double hMax= scrollPane.getHmax();
-			double hValueRel = hValue / hMax;
-			double xLoc = (contentWidth - viewWidth) * hValueRel;
-			return xLoc;
-		}
-
-		public double getYOffset(){
-			double viewHeight = scrollPane.getViewportBounds().getHeight();
-			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
-			double vValue = scrollPane.getVvalue();
-			double vMax = scrollPane.getVmax();
-			double vValueRel = vValue / vMax;
-			double yLoc = (contentHeight - viewHeight) * vValueRel;
-			return yLoc;
-		}
-
 		public void printState() {
 			Iterator iter;
 			System.out.println("--------------------------\nPRINTING STATE");
@@ -655,31 +620,6 @@ public class Controller {
 		}
 	}
 
-	public void menuExportClicked() throws IOException{
-		WritableImage snapshot = scrollPane.getContent().snapshot(new SnapshotParameters(), null);
-		PDDocument doc = new PDDocument();
-		fileChooser.getExtensionFilters().add(
-		new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-		File file = fileChooser.showSaveDialog(window);
-		String fileName = file.getPath();
-		BufferedImage image;
-		image = SwingFXUtils.fromFXImage(snapshot, null);
-		PDPage page = new PDPage();
-
-	    try
-	    {
-	    	doc.addPage(page);
-	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
-	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){
-	    		contents.drawImage(img, 20, 20);
-	        //Every document requires at least one page, so we will add one
-	        //blank page.
-	    	}
-	        doc.save(fileName);
-		} catch (IOException ex) {
-		Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
 	// WIP Menu Bar Actions
 	public void menuCloseClicked() {
 	}

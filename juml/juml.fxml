@@ -24,9 +24,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuOpenClicked" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuSaveClicked" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuExportClicked" text="Export" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuExitClicked" text="Exit" />
             </items>
@@ -50,11 +49,7 @@
       </MenuBar>
    </top>
    <center>
-     <ScrollPane fx:id="scrollPane" onMouseClicked="#paneClick" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" minHeight="0.0" minWidth="0.0">
-     <content>
-       <Pane fx:id="pane" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER"/>
-     </content>
-    </ScrollPane> />
+      <Pane fx:id="pane" onMouseClicked="#paneClick" BorderPane.alignment="CENTER" />
    </center>
    <left>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Object Builder" BorderPane.alignment="TOP_CENTER">

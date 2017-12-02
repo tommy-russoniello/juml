@@ -2,9 +2,13 @@ package juml;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import umlobject.UMLConnector;
 import umlobject.UMLObject;
+import umlaction.*;
 
 /*
  * Controller class for UMLConnector FXML.

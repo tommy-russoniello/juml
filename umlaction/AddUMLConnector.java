@@ -26,13 +26,18 @@ public class AddUMLConnector extends UMLConnectorAction {
 			doInitialAction();
 		}
 	}
-
+/*
+*Adds the specified connector between two UMLNodes.
+*/
 	public void doAction() {
 		controller.pane.getChildren().add(model);
 		controller.CONNECTORS.put(model, connector);
 		connector.connect();
 	}
 
+/*
+*Undoes adding a connector between two UMLNodes.
+*/
 	public void undoAction() {
 		controller.CONNECTORS.remove(model);
     controller.pane.getChildren().remove(model);

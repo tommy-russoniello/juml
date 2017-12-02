@@ -2,6 +2,7 @@ package juml;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,12 +35,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import umlobject.*;
@@ -655,28 +654,36 @@ public class Controller {
 		}
 	}
 
-	public void menuExportClicked() throws IOException{
+	public void menuExportClicked() throws IOException, NullPointerException, FileNotFoundException{
 		WritableImage snapshot = scrollPane.getContent().snapshot(new SnapshotParameters(), null);
 		PDDocument doc = new PDDocument();
 		fileChooser.getExtensionFilters().add(
 		new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+		String fileName = "";
+		try{
 		File file = fileChooser.showSaveDialog(window);
-		String fileName = file.getPath();
+		fileName = file.getPath();
+		} catch (NullPointerException npe){
+			System.out.println("Cancelled");
+		}
 		BufferedImage image;
 		image = SwingFXUtils.fromFXImage(snapshot, null);
 		PDPage page = new PDPage();
 
-	    try{
+	    try
+	    {
 	    	doc.addPage(page);
 	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
 	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){
 	    		contents.drawImage(img, 20, 20);
 	        //Every document requires at least one page, so we will add one
 	        //blank page.
-	    	}
 	        doc.save(fileName);
+	    	} catch (FileNotFoundException fnfe){
+				System.out.println("Cancelled");
+			}
 		} catch (IOException ex) {
-		Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 	// WIP Menu Bar Actions

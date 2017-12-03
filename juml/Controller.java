@@ -90,6 +90,7 @@ public class Controller {
 	// Main node that contains all drawn nodes as children.
 	@FXML public Pane pane;
 	@FXML public AnchorPane inspectorObject;
+	@FXML public ScrollPane scrollPane;
 
 	/*
 	 * Current mode. Defaulted to SELECT.
@@ -710,34 +711,51 @@ public class Controller {
 	}
 
 	public void menuExportClicked() throws IOException, NullPointerException, FileNotFoundException{
+		deselectAll();
 		WritableImage snapshot = scrollPane.getContent().snapshot(new SnapshotParameters(), null);
 		PDDocument doc = new PDDocument();
 		fileChooser.getExtensionFilters().add(
 		new FileChooser.ExtensionFilter("PDF", "*.pdf"));
 		String fileName = "";
-		try{
-		File file = fileChooser.showSaveDialog(window);
-		fileName = file.getPath();
-		} catch (NullPointerException npe){
+
+		try {
+			File file = fileChooser.showSaveDialog(window);
+			fileName = file.getPath();
+		}
+
+		catch (NullPointerException npe) {
 			System.out.println("Cancelled");
 		}
+
 		BufferedImage image;
 		image = SwingFXUtils.fromFXImage(snapshot, null);
 		PDPage page = new PDPage();
 
-	    try
-	    {
-	    	doc.addPage(page);
-	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
-	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){
-	    		contents.drawImage(img, 20, 20);
-	        //Every document requires at least one page, so we will add one
-	        //blank page.
-	        doc.save(fileName);
-	    	} catch (FileNotFoundException fnfe){
+    try {
+    	doc.addPage(page);
+    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
+
+    	try {
+				PDPageContentStream contents = new PDPageContentStream(doc, page);
+    		contents.drawImage(img, 20, 20);
+				contents.close();
+        //Every document requires at least one page, so we will add one
+        //blank page.
+        doc.save(fileName);
+    	}
+
+			catch (FileNotFoundException fnfe) {
 				System.out.println("Cancelled");
 			}
-		} catch (IOException ex) {
+
+			finally {
+				if(doc != null) {
+	    		doc.close();
+	 			}
+			}
+		}
+
+		catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

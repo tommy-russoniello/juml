@@ -82,7 +82,7 @@ public class Note extends UMLNode {
     if(newX - (getWidth()/2) < 0){
   		newX = 0 + (getWidth()/2);
     }
-  	if (newY - (getHeight()/2) < 0){}
+  	if (newY - (getHeight()/2) < 0){
   		newY = 0 + (getHeight()/2);
     }
     box.setLayoutX(newX - (width / 2));

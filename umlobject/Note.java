@@ -35,6 +35,7 @@ public class Note extends UMLNode {
    */
   double width;
 
+<<<<<<< HEAD
 
 	/**
 	 * Build from string method
@@ -80,6 +81,8 @@ public Note(Scanner input) {
 	}
 
 
+=======
+>>>>>>> Comment Updates
   /**
    * Basic Constructor
    * @param x x coordinate for this to be made on.
@@ -124,19 +127,14 @@ public Note(Scanner input) {
 
   /**
    * Reassign this to given coordinates.
-   * If either coordinate is negative the respective coordinate is set to 0.
    * @param newX x coordinate for this to be moved to.
    * @param newY y coordinate for this to be moved to.
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
-    if(newX - (getWidth()/2) < 0){
-  		newX = 0 + (getWidth()/2);
-    }
-  	if (newY - (getHeight()/2) < 0){}
-  		newY = 0 + (getHeight()/2);
-    }
-    box.setLayoutX(newX - (width / 2));
+	if(newX - (getWidth()/2) < 0 || newY - (getHeight()/2) < 0)
+	   return;
+	box.setLayoutX(newX - (width / 2));
     box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }

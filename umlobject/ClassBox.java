@@ -111,8 +111,7 @@ public class ClassBox extends UMLNode {
     }
   	if (newY - (getHeight()/2) < 0) {
   		newY = 0 + (getHeight()/2);
-    }
-    box.setLayoutX(newX - (width / 2));
+  	box.setLayoutX(newX - (width / 2));
     box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }

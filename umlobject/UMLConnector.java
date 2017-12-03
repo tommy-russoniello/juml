@@ -1,6 +1,6 @@
 package umlobject;
 
-/*
+/**
  * UML relationship representation.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -10,12 +10,13 @@ package umlobject;
  * @since 0.1
  */
 public class UMLConnector extends UMLObject {
-  /*
-   * 2 objects that this UMLConnector connects.
+
+  /**
+   * Two objects that this UMLConnector connects.
    */
   public UMLNode start, stop;
 
-  /*
+  /**
    * Return the UMLNode that the underlying Line model starts at.
    * @return UMLNode that the underlying Line model starts at.
    */
@@ -23,7 +24,7 @@ public class UMLConnector extends UMLObject {
     return start;
   }
 
-  /*
+  /**
    * Return the UMLNode that the underlying Line model stops at.
    * @return UMLNode that the underlying Line model stops at.
    */
@@ -31,7 +32,7 @@ public class UMLConnector extends UMLObject {
     return stop;
   }
 
-  /*
+  /**
    * Adds this to starting and stopping UMLNodes' list of UMLConnectors.
    * @postcondition This is added to starting and stopping UMLNodes' list of UMLConnectors.
    */
@@ -40,7 +41,7 @@ public class UMLConnector extends UMLObject {
     stop.connections.add(this);
   }
 
-  /*
+  /**
    * Removes this from starting and stopping UMLNodes' list of UMLConnectors.
    * @postcondition This is removed from starting and stopping UMLNodes' list of UMLConnectors.
    */

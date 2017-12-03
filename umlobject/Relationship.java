@@ -9,9 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 
-/*
+/**
  * UML relationship representation.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -21,25 +20,42 @@ import javafx.scene.text.Text;
  * @since 0.3
  */
 public class Relationship extends UMLConnector {
+
   /*
-   * underlying model.
+   * The underlying model for Relationship.
    */
   public Group group;
+
   /*
-   * underlying model's children.
+   * The underlying model's children.
    */
   public Polygon shape;
+
+  /**
+   * The labels that can be place at the beginning and end of the Relationship.
+   */
   public Note startText, endText;
+
+  /**
+   * The list of segments in the Relationship.
+   */
   public List<Segment> segments;
+
+  /**
+   * The list of pivots in the Relationship.
+   */
   public List<Pivot> pivots;
 
+  /**
+   * The segments at the beginning and end of the Relationship.
+   */
   public Line startLine, endLine;
 
-  /*
+  /**
    * Resets start and end Lines to be in default position so shape and note positions can be reset.
-   * * Used to line all shapes back up with each other after a bad movement (NaN delta).
+   *  Used to line all shapes back up with each other after a bad movement (NaN delta).
    * @postcondition Positions of first and last segment (may be the same one), and notes are reset
-   * * to default (shape is resest in each individual relationship Class implementation).
+   *  to default (shape is resest in each individual relationship Class implementation).
    */
   public void reset() {
     if (!shape.getPoints().isEmpty()) {
@@ -57,7 +73,7 @@ public class Relationship extends UMLConnector {
     endText.move(20, 0);
   }
 
-  /*
+  /**
    * Removes start and end Notes from group's children, effectively hiding them from the scene.
    * @postcondition start and end Notes are removed from group's children.
    */
@@ -66,7 +82,7 @@ public class Relationship extends UMLConnector {
     group.getChildren().remove(endText.getModel());
   }
 
-  /*
+  /**
    * Adds start and end Notes to group's children, effectively making them visible in the scene.
    * @postcondition start and end Notes are added to group's children.
    */
@@ -75,7 +91,7 @@ public class Relationship extends UMLConnector {
     group.getChildren().add(endText.getModel());
   }
 
-  /*
+  /**
    * Getter for the contents of startText Note.
    * @return contents of startText Note as String.
    */
@@ -83,7 +99,7 @@ public class Relationship extends UMLConnector {
     return startText.getText();
   }
 
-  /*
+  /**
    * Getter for the contents of startText Note.
    * @return contents of startText Note as String.
    */
@@ -91,12 +107,12 @@ public class Relationship extends UMLConnector {
     return endText.getText();
   }
 
-  /*
+  /**
    * Changes text of startText Note to given string if the resulting width of startText is <= 20.
    * @param newText String for startText Note's text to potentially be changed to.
    * @return Boolean of whether startText's text was actually changed.
    * @postcondition Text of startText Note is changed to newText unless the resulting width of
-   * * startText would be > 20 (in that case nothing is changed).
+   *  startText would be > 20 (in that case nothing is changed).
    */
   public boolean setStartText(String newText) {
     String temp = getStartText();
@@ -108,12 +124,12 @@ public class Relationship extends UMLConnector {
     return true;
   }
 
-  /*
+  /**
    * Changes text of endText Note to given string if the resulting width of endText is <= 20.
    * @param newText String for endText Note's text to potentially be changed to.
    * @return Boolean of whether endText's text was actually changed.
    * @postcondition Text of endText Note is changed to newText unless the resulting width of
-   * * endText would be > 20 (in that case nothing is changed).
+   *  endText would be > 20 (in that case nothing is changed).
    */
   public boolean setEndText(String newText) {
     String temp = getEndText();
@@ -125,17 +141,19 @@ public class Relationship extends UMLConnector {
     return true;
   }
 
-  /*
+  /**
    * "Redraws" underlying Group model's Segments to be between starting and stopping UMLNodes,
-   * * its shape to be at the end of the Segment on the stopping side at the same angle as the
-   * * last Segment, and the notes to be on the starting of the first segment and the ending of the
-   * * last segment. Used when the starting, stopping, or pivot UMLNodes have been moved, or when
-   * * initially setting position.
+   *  its shape to be at the end of the Segment on the stopping side at the same angle as the
+   *  last Segment, and the notes to be on the starting of the first segment and the ending of the
+   *  last segment. Used when the starting, stopping, or pivot UMLNodes have been moved, or when
+   *  initially setting position.
+   * @param midPoint the mid point
+   * @param isReset the is reset
    * @postcondition Underlying Group model's Segments are reassigned to current coordinates of
-   * * starting, stopping, and pivot UMLNodes' anchor points, underlying Group model's shape is
-   * * reassigned to end at stopping UMLNode's anchor point (rotated to match the last Segment's
-   * * angle), and start/endText Notes are reassigned to be at start of first segment and end of
-   * * last segment, respectively.
+   *  starting, stopping, and pivot UMLNodes' anchor points, underlying Group model's shape is
+   *  reassigned to end at stopping UMLNode's anchor point (rotated to match the last Segment's
+   *  angle), and start/endText Notes are reassigned to be at start of first segment and end of
+   *  last segment, respectively.
    */
   public void update(double midPoint, boolean isReset) {
     final double startTextMidPoint = 20, endTextMidPoint = 30;
@@ -227,16 +245,25 @@ public class Relationship extends UMLConnector {
     }
   }
 
+  /**
+   * Calls the update method where isReset is false.
+   *
+   * @param midPoint is the mid-point of the line.
+   */
   public void update(double midPoint) {
     update(midPoint, false);
   }
 
+  /**
+   * This is just so update can be called this way on any given relationship. This method should
+   * be implemented in any direct subclasses of this Class.
+   * @param isReset
+   */
   public void update(boolean isReset) {
-    // This is just so update can be called this way on any given relationship. This method should
-    // * be implemented in any direct subclasses of this Class.
+
   }
 
-  /*
+  /**
    * Returns whether or not this's notes are hidden.
    * @return Boolean value for whether or not this's note are hidden.
    */
@@ -245,9 +272,8 @@ public class Relationship extends UMLConnector {
       group.getChildren().contains(startText.getModel());
   }
 
-
-  /*
-   * updates all segments in the Relationship.
+  /**
+   * Updates all segments in the Relationship.
    * @postcondition all segments in the Relationship update the coordinates of their lines.
    */
   public void updateSegments() {
@@ -260,7 +286,7 @@ public class Relationship extends UMLConnector {
     }
   }
 
-  /*
+  /**
    * Calculates arctangent angle of given line for given direction.
    * @param line Line for angle to be calculated on.
    * @param direction Direction of given line for angle to be calculated with.
@@ -288,23 +314,23 @@ public class Relationship extends UMLConnector {
     return posAngle;
   }
 
-  /*
-   * Returns list of segments in this UMLConnector
+  /**
+   * Returns a list of segments in this UMLConnector.
    * @return List of segments in this UMLConnector
    */
   public List<Segment> getSegments() {
     return segments;
   }
 
- /*
-  * Returns list of pivots in this UMLConnector
-  * @return List of pivots in this UMLConnector
-  */
+  /**
+   * Returns a list of pivots in this UMLConnector.
+   * @return List of pivots in this UMLConnector
+   */
   public List<Pivot> getPivots() {
     return pivots;
   }
 
-  /*
+  /**
    * Changes color of underlying Group model's line and shape to make the object appear highlighted.
    * @postcondition Color of underlying Group model's line and shape changed to blue.
    */
@@ -320,7 +346,7 @@ public class Relationship extends UMLConnector {
     }
   }
 
-  /*
+  /**
    * Changes color of underlying Group model's line and shape to make the object appear
    * unhighlighted.
    * @postcondition Color of underlying Group model's line changed to black.
@@ -337,7 +363,7 @@ public class Relationship extends UMLConnector {
     }
   }
 
-  /*
+  /**
    * Returns underlying model.
    * @return Underlying Group model.
    */

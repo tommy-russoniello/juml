@@ -2,7 +2,7 @@ package umlobject;
 
 import javafx.scene.Node;
 
-/*
+/**
  * UML object representation.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -12,13 +12,18 @@ import javafx.scene.Node;
  * @since 0.2
  */
 public class UMLObject {
-  /*
-   * Origin point coordinates.
+
+  /**
+   * The origin x coordinate
    */
   public double originX;
+
+  /**
+   * The origin y coordinate
+   */
   public double originY;
 
-  /*
+  /**
    * Reassign this to given coordinates.
    * @param newX x coordinate for this to be moved to.
    * @param newY y coordinate for this to be moved to.
@@ -30,26 +35,25 @@ public class UMLObject {
     update();
   }
 
-
-  /*
+  /**
    * Update values to reflect changes made to them.
    * @postcondition All data is updated (refreshed).
    */
   public void update() {}
 
-    /*
-     * Changes colors within model to make the object appear highlighted.
-     * @postcondition Colors in model are changed to make the object appear highlighted.
-     */
+  /**
+   * Changes colors within model to make the object appear highlighted.
+   * @postcondition Colors in model are changed to make the object appear highlighted.
+   */
   public void highlight() {}
 
-    /*
-     * Changes colors within model to make the object appear unhighlighted.
-     * @postcondition Colors in model are changed to make the object appear unhighlighted.
-     */
+  /**
+   * Changes colors within model to make the object appear unhighlighted.
+   * @postcondition Colors in model are changed to make the object appear unhighlighted.
+   */
   public void unhighlight() {}
 
-   /*
+   /**
     * Returns underlying model.
     * @return underlying model Node.
     */
@@ -57,7 +61,7 @@ public class UMLObject {
      return null;
    }
 
-   /*
+   /**
     * Returns origin point x coordinate.
     * @return Origin x coordinate of this.
     */
@@ -65,7 +69,7 @@ public class UMLObject {
      return originX;
    }
 
-   /*
+   /**
     * Returns origin point y coordinate.
     * @return Origin y coordinate of this.
     */

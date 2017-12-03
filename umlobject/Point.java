@@ -4,7 +4,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
-/*
+/**
  * Simple point class.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -14,13 +14,18 @@ import javafx.scene.paint.Color;
  * @since 0.1
  */
 public class Point extends UMLNode {
-  /*
-   * Underlying model.
+
+  /**
+   * The underlying model of Point.
    */
   public Circle circle;
+
+  /**
+   * The radius.
+   */
   private double radius;
 
-  /*
+  /**
    * Basic Constructor
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
@@ -30,7 +35,7 @@ public class Point extends UMLNode {
     this(x, y, 5);
   }
 
-  /*
+  /**
    * Explicit Constructor
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
@@ -44,7 +49,7 @@ public class Point extends UMLNode {
     circle = new Circle(originX, originY, radius);
   }
 
-  /*
+  /**
    * Returns underlying model.
    * @return Underlying circle model.
    */
@@ -52,7 +57,7 @@ public class Point extends UMLNode {
     return circle;
   }
 
-  /*
+  /**
    * Return maintained radius.
    * @return Maintained radius.
    */
@@ -60,61 +65,61 @@ public class Point extends UMLNode {
     return radius;
   }
 
-  /*
+  /**
    * Reassign this at given coordinates.
    * @param newX x coordinate for this to be moved to.
    * @param newY y coordinate for this to be moved to.
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
-    if(newX - getRadius() < 0){
-      newX = 0 + getRadius();
-    }
-    if(newY - getRadius() < 0){
-      newY =  0 + getRadius();
-    }
-    circle.setCenterX(newX);
+	    if(newX - getRadius() < 0){
+	  		newX = 0 + getRadius();
+	    }
+	  	if(newY - getRadius() < 0){
+	  		newY =  0 + getRadius();
+	    }
+	circle.setCenterX(newX);
     circle.setCenterY(newY);
     super.move(newX, newY);
   }
 
-  	/*
-  	 * Returns the x coordinate of the point to which a connector should anchor if
-  	 * joined to this node.
-  	 *
-  	 * @return returns the calculated x coordinate.
-  	 */
-  	public double getAnchorX(double startX, double startY) {
-  		double actingRadius = radius;
-  		double deltaX = startX - originX;
-   	  double deltaY = originY - startY;
-  		double angle = Math.atan(deltaY/deltaX);
-  		if (startX<originX) {
-  			angle+= Math.PI;
-      }
-  		double xOffset = actingRadius * Math.cos(angle);
-  		return originX + xOffset;
-  }
+	/**
+	 * Returns the x coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 *
+	 * @return returns the calculated x coordinate.
+	 */
+	public double getAnchorX(double startX, double startY) {
+		double actingRadius = radius;
+		double deltaX = startX - originX;
+ 	  double deltaY = originY - startY;
+		double angle = Math.atan(deltaY/deltaX);
+		if (startX<originX) {
+			angle+= Math.PI;
+    }
+		double xOffset = actingRadius * Math.cos(angle);
+		return originX + xOffset;
+	}
 
-  	/*
-  	 * Returns the y coordinate of the point to which a connector should anchor if
-  	 * joined to this node.
-  	 *
-  	 * @return returns the calculated y coordinate.
-  	 */
-  	public double getAnchorY(double startX, double startY) {
-  		double actingRadius = radius;
-  		double deltaX = startX - originX;
-  		double deltaY = originY - startY;
-  		double angle = Math.atan(deltaY/deltaX);
-  		if (startX<originX) {
-  			angle+= Math.PI;
-      }
-  		double yOffset = -actingRadius * Math.sin(angle);
-  		return originY + yOffset;
-  	}
+	/**
+	 * Returns the y coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 *
+	 * @return returns the calculated y coordinate.
+	 */
+	public double getAnchorY(double startX, double startY) {
+		double actingRadius = radius;
+		double deltaX = startX - originX;
+		double deltaY = originY - startY;
+		double angle = Math.atan(deltaY/deltaX);
+		if (startX<originX) {
+			angle+= Math.PI;
+    }
+		double yOffset = -actingRadius * Math.sin(angle);
+		return originY + yOffset;
+	}
 
-  /*
+  /**
    * Reassign this at given radius.
    * @param newRadius reassigned for this.
    * @postcondition This updates all of its data according to new radius.
@@ -124,7 +129,7 @@ public class Point extends UMLNode {
 	  radius = newRadius;
   }
 
-  /*
+  /**
    * Changes color of underlying circle model to make the object appear highlighted.
    * @postcondition Color of underlying circle model changed to blue.
    */
@@ -132,7 +137,7 @@ public class Point extends UMLNode {
     circle.setFill(Color.BLUE);
   }
 
-  /*
+  /**
    * Changes color of underlying circle model to make the object appear unhighlighted.
    * @postcondition Color of underlying circle model changed to black.
    */

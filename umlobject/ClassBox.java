@@ -105,7 +105,7 @@ public class ClassBox extends UMLNode {
    * @param newY y coordinate for this to be moved to.
    * @postcondition This updates all of its data according to new coordinates.
    */
-  public void move(double newX, double newY)  {
+  public void move(double newX, double newY) {
     if(newX - (getWidth()/2) < 0){
   		newX = 0 + (getWidth()/2);
     }
@@ -234,8 +234,8 @@ public class ClassBox extends UMLNode {
 	 * Returns the y coordinate of the point to which a connector should anchor if
 	 * joined to this node.
 	 *
-   * @param startX the starting x value that is used in calculating the anchor
-   * @param startY the starting y value that is used in calculating the anchor
+   	 * @param startX the starting x value that is used in calculating the anchor
+         * @param startY the starting y value that is used in calculating the anchor
 	 * @return returns the calculated y coordinate.
 	 */
 	public double getAnchorY(double startX, double startY) {
@@ -246,17 +246,17 @@ public class ClassBox extends UMLNode {
 		double angle = Math.atan(deltaY / deltaX);
 		if (startX < originX) {
 			angle += Math.PI;
-    }
+    		}
 
 		double boxAngle = Math.atan(actinghalfHeight / actinghalfWidth);
 		if ((angle < boxAngle && angle > -boxAngle) ||
-    ((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
+    		((angle > Math.PI - boxAngle && angle < Math.PI + boxAngle))) {
 			double xOffset;
 			if (startX < originX) {
 				xOffset = actinghalfWidth + 2;
 			} else {
 				xOffset = -actinghalfWidth;
-      }
+     		}
 
 			// do check if line crosses corner of box
 			// if line crosses "bottom" or "top"
@@ -268,7 +268,7 @@ public class ClassBox extends UMLNode {
 				yOffset = actinghalfHeight + 2;
 			} else {
 				yOffset = -actinghalfHeight;
-      }
+     			}
 			return originY + yOffset;
 		}
   }

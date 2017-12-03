@@ -105,7 +105,7 @@ public class ClassBox extends UMLNode {
    * @param newY y coordinate for this to be moved to.
    * @postcondition This updates all of its data according to new coordinates.
    */
-  public void move(double newX, double newY){
+  public void move(double newX, double newY)  {
     if(newX - (getWidth()/2) < 0){
   		newX = 0 + (getWidth()/2);
     }

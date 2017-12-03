@@ -120,7 +120,7 @@ public class ClassBox extends UMLNode {
   /**
    * "Trims" this to be only as wide as the widest of it's text fields with a minimum of 80.
    * @postcondition All of this's components have the width of the widest of this's text fields, or
-   * * 80 if the widest text field is thinner than 80.
+   *  80 if the widest text field is thinner than 80.
    */
   public void trim() {
     double greatestLength = Math.max(Math.max(name.getLayoutBounds().getWidth(),

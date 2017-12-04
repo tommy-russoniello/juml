@@ -2,6 +2,7 @@ package juml;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,19 +10,33 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Stack;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Map;
-import java.util.Stack;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.WritableImage;
@@ -32,19 +47,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import umlobject.*;
 import umlaction.*;
@@ -664,53 +670,174 @@ public class Controller {
 			inspectorObject.getChildren().clear();
 		}
 		NODES = new HashMap<>();
+		CONNECTORS = new HashMap<>();
 	}
 
 	/*
 	 * Action to Open file WIP.
 	 */
 	public void menuOpenClicked() {
-		fileChooser.getExtensionFilters().add(
-			new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.juml"));
 		fileChooser.setTitle("Open Resource File");
 		File file = fileChooser.showOpenDialog(window);
+		if (file == null) {
+			return;
+		}
 		window.setTitle("Team Rocket UML Editor: " + file.toString());
 		try {
+			menuNewClicked();
+			ACTIONS = new Stack<>();
+			UNDONE_ACTIONS = new Stack<>();
 			// Clears current pane contents NODES = new HashMap<>(file);
-			pane.getChildren().clear();
-			BufferedReader input = new BufferedReader(new FileReader(new File(file.toString())));
-			String hashy = input.readLine();
-			System.out.println(hashy);
+			//pane.getChildren().clear();
+			Scanner input = new Scanner(file);
+			Vector <UMLNode> allNodes  = new Vector<UMLNode>();
+			while (input.hasNextLine()) {
+				if (!input.hasNext()) {
+					break;
+				}
+				String nextNode = input.next();
+				UMLNode node = null;
+				if (nextNode.equals("Point:")) {
+					node = new Point(input);
+				} else if (nextNode.equals("ClassBox:")) {
+					node = new ClassBox(input);
+				} else if (nextNode.equals("Note:")) {
+					node = new Note(input);
+				} else if (nextNode.equals("Connectors:")){
+					input.nextLine();
+					break;
+				}else {
+					System.out.println("Error! Unknown object type: " + nextNode);
+					return;
+				}
+				allNodes.add(node);
+				addObjects(node);
+			}
+			Vector <UMLConnector> allConnectors  = new Vector<UMLConnector>();
+			while (input.hasNextLine()) {
+				if (!input.hasNext()) {
+					break;
+				}
+				String textConnector = input.next();
+				UMLConnector connector = null;
+				if (textConnector.equals("Aggregation:")) {
+					connector = new Aggregation(input, allNodes, this);
+				} else if (textConnector.equals("Association:")) {
+					connector = new Association(input, allNodes, this);
+				} else if (textConnector.equals("Composition:")) {
+					connector = new Composition(input, allNodes, this);
+				} else if (textConnector.equals("Dependency:")) {
+					connector = new Dependency(input, allNodes, this);
+				} else if (textConnector.equals("Generalization:")) {
+					connector = new Generalization(input, allNodes, this);
+				} else if (textConnector.equals("Line:")) {
+					System.out.println("Importing a line");
+					connector = new Segment(input, allNodes);
+				}
+				allConnectors.add(connector);
+				addObjects(connector);
+				printState();
+				input.nextLine();
+			}
+
+			deselectAll();
+			refresh();
+			ACTIONS = new Stack<>();
+			UNDONE_ACTIONS = new Stack<>();
+			System.out.println(allNodes.toString());
+			System.out.println("Got to the end of load");
+
 			input.close();
 			// TODO: Load file text as pane children.
 
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
-
 	}
+
 
 	/*
 	 * Action to Save File WIP.
 	 */
 	public void menuSaveClicked() throws IOException {
+		System.out.println("Save Called");
 		String hashMap = NODES.toString();
 		String fxmlContent = pane.getChildren().toString();
-
-		fileChooser.getExtensionFilters().add(
-			new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.juml"));
 		File file = fileChooser.showSaveDialog(window);
+		if (file == null) {
+			return;
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
 		try {
-			FileWriter fileWriter = null;
-			fileWriter = new FileWriter(file);
-			fileWriter.write(hashMap);
-			fileWriter.close();
+			BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
+
+			Vector<UMLNode> allNodes = new Vector<UMLNode>();
+			for (UMLNode n : NODES.values()) {
+				allNodes.add(n);
+			}
+			for (int i=0; i<allNodes.size(); i++){
+				System.out.println(allNodes.get(i));
+			}
+			for (int i = 0; i < allNodes.size(); i++) {
+				UMLNode node = allNodes.get(i);
+				if (node instanceof Point) {
+					printSaveString(output, (((Point) node).saveAsString()));
+				} else if (node instanceof ClassBox) {
+					printSaveString(output, (((ClassBox) node).saveAsString()));
+				} else if (node instanceof Note) {
+					printSaveString(output, (((Note) node).saveAsString()));
+				}
+			}
+			output.write("Connectors:");
+			output.newLine();
+			Vector<UMLConnector> allConnectors = new Vector<UMLConnector>();
+			for (UMLConnector c : CONNECTORS.values()) {
+				allConnectors.add(c);
+			}
+			for (int i=0; i<allConnectors.size(); i++){
+				System.out.println(allConnectors.get(i));
+			}
+			for (int i = 0; i < allConnectors.size(); i++) {
+				UMLConnector connector = allConnectors.get(i);
+				if (connector instanceof Aggregation) {
+					output.write("Aggregation: ");
+				} else if (connector instanceof Association) {
+					output.write("Association: ");
+				} else if (connector instanceof Composition) {
+					output.write("Composition: ");
+				} else if (connector instanceof Dependency) {
+					output.write("Dependency: ");
+				} else if (connector instanceof Generalization) {
+					output.write("Generalization: ");
+				} else {
+					output.write("Line: ");
+				}
+				output.write(connector.saveAsString(allNodes));
+				if (connector instanceof Relationship) {
+					printSaveString(output, ((Relationship)connector).saveAsString());
+				}
+				output.newLine();
+			}
+			output.close();
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
+	public void printSaveString(BufferedWriter output, String saveString) throws IOException {
+		Scanner s = new Scanner(saveString);
+		while (s.hasNextLine()) {
+			output.write(s.nextLine());
+			output.newLine();
+		}
+	}
+
 	public void menuExportClicked() throws IOException, NullPointerException, FileNotFoundException{
+
 		deselectAll();
 		WritableImage snapshot = scrollPane.getContent().snapshot(new SnapshotParameters(), null);
 		PDDocument doc = new PDDocument();
@@ -758,7 +885,9 @@ public class Controller {
 		catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
+
 	}
+
 	// WIP Menu Bar Actions
 	public void menuCloseClicked() {
 	}

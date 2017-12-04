@@ -1,34 +1,45 @@
 package juml;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.Cursor;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -36,16 +47,31 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import umlobject.*;
-import umlaction.*;
+import umlaction.AddUMLConnector;
+import umlaction.AddUMLNode;
+import umlaction.DeletePivot;
+import umlaction.DeleteUMLConnector;
+import umlaction.DeleteUMLNode;
+import umlaction.SplitLine;
+import umlaction.UMLAction;
+import umlobject.Aggregation;
+import umlobject.Association;
+import umlobject.ClassBox;
+import umlobject.Composition;
+import umlobject.Dependency;
+import umlobject.Generalization;
+import umlobject.Note;
+import umlobject.Pivot;
+import umlobject.Point;
+import umlobject.Relationship;
+import umlobject.Segment;
+import umlobject.UMLConnector;
+import umlobject.UMLNode;
+import umlobject.UMLObject;
 
 // ---------------------------------------------------------------------------------------------- \\
 
@@ -62,7 +88,18 @@ public class Controller {
 
 	// Draw modes
 	public enum Mode {
-		SELECT, POINT, CLASSBOX, DELETE, ASSOCIATION, DEPENDENCY, AGGREGATION, COMPOSITION, GENERALIZATION, LINESPLIT, LINE, NOTE
+		SELECT,
+		POINT,
+		CLASSBOX,
+		DELETE,
+		ASSOCIATION,
+		DEPENDENCY,
+		AGGREGATION,
+		COMPOSITION,
+		GENERALIZATION,
+		LINESPLIT,
+		LINE,
+		NOTE
 	}
 
 	/*
@@ -75,10 +112,9 @@ public class Controller {
 	public Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
 	// Main node that contains all drawn nodes as children.
-	@FXML
-	public Pane pane;
-	@FXML
-	public AnchorPane inspectorObject;
+	@FXML public Pane pane;
+	@FXML public AnchorPane inspectorObject;
+	@FXML public ScrollPane scrollPane;
 
 	/*
 	 * Current mode. Defaulted to SELECT.
@@ -93,32 +129,81 @@ public class Controller {
 	public Stack<UMLAction> ACTIONS = new Stack<>();
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
+
 	Stage window;
 	Scene scene;
 
-	// ----------------------------------------------------------------------------------------------
-	// \\
+// ---------------------------------------------------------------------------------------------- \\
 
 	/*
 	 * Sets the Primary Stage. Called from Main.
-	 * 
 	 * @param primaryStage Primary stage of application instance.
 	 */
 	public void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
 		scene = window.getScene();
 
+		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+			try{
+			UMLObject node = getObject(e.getTarget());
+			if(node instanceof UMLNode){
+				if(node.originX > scrollPane.getViewportBounds().getWidth()){
+					scrollPane.setHvalue(1);
+				}
+				if(node.originY > scrollPane.getViewportBounds().getHeight()){
+					scrollPane.setVvalue(1);
+				}
+			}else if (node instanceof Relationship && e.getTarget() instanceof Circle){
+				Relationship relationship = (Relationship) node;
+				Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
+				if(pivot.originX > scrollPane.getViewportBounds().getWidth()){
+					scrollPane.setHvalue(1);
+				}
+				if(pivot.originY > scrollPane.getViewportBounds().getHeight()){
+					scrollPane.setVvalue(1);
+				}
+			}
+			}catch(NullPointerException npe){
+
+			}
+		});
+
+		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+			try{
+				UMLObject node = getObject(e.getTarget());
+				if(node instanceof UMLNode){
+					if(node.originX > scrollPane.getViewportBounds().getWidth()){
+						scrollPane.setHvalue(1);
+					}
+					if(node.originY > scrollPane.getViewportBounds().getHeight()){
+						scrollPane.setVvalue(1);
+					}
+				}else if (node instanceof Relationship && e.getTarget() instanceof Circle){
+					Relationship relationship = (Relationship) node;
+					Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
+					if(pivot.originX > scrollPane.getViewportBounds().getWidth()){
+						scrollPane.setHvalue(1);
+					}
+					if(pivot.originY > scrollPane.getViewportBounds().getHeight()){
+						scrollPane.setVvalue(1);
+					}
+				}
+				}catch(NullPointerException npe){
+
+				}
+		});
+
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
+      public void handle(KeyEvent event) {
 				if (System.getProperty("os.name").contains("Mac")) {
-					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
-						undo();
+	        if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
+	          undo();
 						event.consume();
-					}
+	        }
 					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
-						redo();
+	          redo();
 						event.consume();
-					}
+	        }
 					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
 						printState();
 						event.consume();
@@ -129,13 +214,13 @@ public class Controller {
 					}
 				} else {
 					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
-						undo();
+	          undo();
 						event.consume();
-					}
+	        }
 					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
-						redo();
+	          redo();
 						event.consume();
-					}
+	        }
 					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
 						printState();
 						event.consume();
@@ -145,13 +230,12 @@ public class Controller {
 						event.consume();
 					}
 				}
-			}
-		});
+      }
+  	});
 	}
 
 	/*
 	 * Returns pane.
-	 * 
 	 * @return Main pane being used for application instance.
 	 */
 	public Pane getPane() {
@@ -198,13 +282,9 @@ public class Controller {
 
 	/*
 	 * Changes mode according to event source.
-	 * 
 	 * @precondition Called by event on object builder button.
-	 * 
 	 * @param event Event triggering this method.
-	 * 
-	 * @postcondition MODE is updated according to button that received event
-	 * triggering this method.
+	 * @postcondition MODE is updated according to button that received event triggering this method.
 	 */
 	public void modeClick(ActionEvent event) {
 		deselectAll();
@@ -217,158 +297,154 @@ public class Controller {
 
 	/*
 	 * Performs draw action relative to current draw mode.
-	 * 
 	 * @precondition Called by a MouseEvent on the pane.
-	 * 
 	 * @param event Event triggering this method.
-	 * 
 	 * @postcondition Mode-defined operation is performed on coordinate of event.
 	 */
 	public void paneClick(MouseEvent event) throws IOException {
-		System.out.println("Pane clicked at " + event.getX() + " " + event.getY());
+		double xOff = getXOffset();
+		double yOff = getYOffset();
+
+		if(event.getX() < scrollPane.getLayoutBounds().getWidth())
+			System.out.print("Pane clicked at " + event.getX() + " ");
+		else
+			System.out.print(xOff + " ");
+		if(event.getY() < scrollPane.getLayoutBounds().getHeight())
+			System.out.println(event.getY());
+		else
+			System.out.println(yOff);
 
 		switch (MODE) {
-		// Displays information of any UMLObject clicked on in the Inspector.
-		case SELECT:
-			deselectAll();
-			UMLObject selectedObject = getObject(event.getTarget());
-			if (selectedObject != null) {
-				selectObject(selectedObject);
-			}
+			// Displays information of any UMLObject clicked on in the Inspector.
+			case SELECT:
+				deselectAll();
+				UMLObject selectedObject = getObject(event.getTarget());
+				if (selectedObject != null) {
+					selectObject(selectedObject);
+				}
 
-			break;
+				break;
 
-		// Remove any UMLObject clicked on.
-		case DELETE:
-			UMLObject target = getObject(event.getTarget());
-			if (target != null) {
-				if (target instanceof Relationship && event.getTarget() instanceof Circle) {
-					Relationship relationship = (Relationship) target;
-					Pivot pivot = getPivot(relationship, (Circle) event.getTarget());
-					if (pivot != null) {
-						ACTIONS.push(new DeletePivot(relationship, pivot));
-						UNDONE_ACTIONS.clear();
-						return;
+			// Remove any UMLObject clicked on.
+			case DELETE:
+				UMLObject target = getObject(event.getTarget());
+				if (target != null) {
+					if (target instanceof Relationship && event.getTarget() instanceof Circle) {
+						Relationship relationship = (Relationship) target;
+						Pivot pivot = getPivot(relationship, (Circle) event.getTarget());
+						if (pivot != null) {
+							ACTIONS.push(new DeletePivot(relationship, pivot));
+							UNDONE_ACTIONS.clear();
+							return;
+						}
 					}
+					deleteObjects(target);
 				}
-				deleteObjects(target);
-			}
 
-			break;
+				break;
 
-		// Adds Point UMLNode to pane coordinates that were clicked on.
-		case POINT:
-			addObjects(new Point(event.getX(), event.getY()));
+			// Adds Point UMLNode to pane coordinates that were clicked on.
+			case POINT:
+				addObjects(new Point(xOff + event.getX(), yOff + event.getY()));
 
-			break;
+				break;
 
-		// Adds ClassBox UMLNode to pane coordinates that were clicked on.
-		case CLASSBOX:
-			addObjects(new ClassBox(event.getX(), event.getY()));
+			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
+			case CLASSBOX:
+        addObjects(new ClassBox(xOff + event.getX(), yOff + event.getY()));
 
-			break;
+        break;
 
-		// Adds any UMLNode clicked to SELECTED
-		// If theres a UMLNode already in SELECTED, draws a line from it to currently
-		// clicked UMLNode.
-		case ASSOCIATION:
-		case DEPENDENCY:
-		case AGGREGATION:
-		case COMPOSITION:
-		case GENERALIZATION:
-		case LINE:
-			UMLObject object = getObject(event.getTarget());
-			deselectAllConnectors();
-			// If relevant node was selected.
-			if (object != null && !(object instanceof UMLConnector)) {
-				UMLNode node = (UMLNode) object;
-				if (SELECTED.isEmpty()) {
-					selectObject(node);
-				}
-				// If selected node wasn't just clicked on again.
-				else if (node != SELECTED.getLast()) {
-					switch (MODE) {
-					case ASSOCIATION:
-						addObjects(new Association((UMLNode) SELECTED.getLast(), node));
-						break;
+			// Adds any UMLNode clicked to SELECTED
+			// If theres a UMLNode already in SELECTED, draws a line from it to currently clicked UMLNode.
+			case ASSOCIATION: case DEPENDENCY: case AGGREGATION: case COMPOSITION: case GENERALIZATION:
+				case LINE:
+				UMLObject object = getObject(event.getTarget());
+					deselectAllConnectors();
+					// If relevant node was selected.
+					if (object != null && !(object instanceof UMLConnector)) {
+						UMLNode node = (UMLNode) object;
+						if (SELECTED.isEmpty()) {
+							selectObject(node);
+						}
+						// If selected node wasn't just clicked on again.
+						else if (node != SELECTED.getLast()) {
+							switch (MODE) {
+								case ASSOCIATION:
+									addObjects(new Association((UMLNode) SELECTED.getLast(), node));
+									break;
 
-					case DEPENDENCY:
-						addObjects(new Dependency((UMLNode) SELECTED.getLast(), node));
-						break;
+								case DEPENDENCY:
+									addObjects(new Dependency((UMLNode) SELECTED.getLast(), node));
+									break;
 
-					case AGGREGATION:
-						addObjects(new Aggregation((UMLNode) SELECTED.getLast(), node));
-						break;
+								case AGGREGATION:
+									addObjects(new Aggregation((UMLNode) SELECTED.getLast(), node));
+									break;
 
-					case COMPOSITION:
-						addObjects(new Composition((UMLNode) SELECTED.getLast(), node));
-						break;
+								case COMPOSITION:
+									addObjects(new Composition((UMLNode) SELECTED.getLast(), node));
+									break;
 
-					case GENERALIZATION:
-						addObjects(new Generalization((UMLNode) SELECTED.getLast(), node));
-						break;
-					case LINE:
-						addObjects(new Segment((UMLNode) SELECTED.getLast(), node));
-						break;
+								case GENERALIZATION:
+									addObjects(new Generalization((UMLNode) SELECTED.getLast(), node));
+									break;
+								case LINE:
+									addObjects(new Segment((UMLNode) SELECTED.getLast(), node));
+									break;
+							}
+						}
 					}
-				}
-			}
 
-			break;
+				break;
 
-		case LINESPLIT:
-			UMLObject splitPoint = getObject(event.getTarget());
-			deselectAllNodes();
-			// If relevant node was selected.
-			if (splitPoint != null && splitPoint instanceof Relationship) {
-				Relationship relationship = (Relationship) splitPoint;
-				if (SELECTED.isEmpty()) {
-					selectObject(relationship);
-				} else if (relationship == SELECTED.getLast() && event.getTarget() instanceof Line) {
-					Line line = (Line) event.getTarget();
-					Segment segment = getSegment(relationship, line);
-					if (segment != null) {
-						UNDONE_ACTIONS.clear();
-						ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
-						deselectAll();
+			case LINESPLIT:
+				UMLObject splitPoint = getObject(event.getTarget());
+				deselectAllNodes();
+				// If relevant node was selected.
+				if (splitPoint != null && splitPoint instanceof Relationship) {
+					Relationship relationship = (Relationship) splitPoint;
+					if (SELECTED.isEmpty()) {
 						selectObject(relationship);
 					}
-				} else {
-					deselectAll();
+					else if (relationship == SELECTED.getLast() && event.getTarget() instanceof Line) {
+						Line line = (Line) event.getTarget();
+						Segment segment = getSegment(relationship, line);
+						if (segment != null) {
+							UNDONE_ACTIONS.clear();
+							ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
+							deselectAll();
+							selectObject(relationship);
+						}
+					} else {
+						deselectAll();
+					}
 				}
-			}
 
-			break;
+				break;
 
-		case NOTE:
-			deselectAll();
-			Note note = new Note(event.getX(), event.getY());
-			addObjects(note);
-			selectObject(note);
+			case NOTE:
+				deselectAll();
+				Note note = new Note(xOff + event.getX(), yOff + event.getY());
+				addObjects(note);
+				selectObject(note);
 
-		default:
+			default:
 
-			break;
+				break;
 		}
 	}
 
-	// ----------------------------------------------------------------------------------------------
-	// \\
+// ---------------------------------------------------------------------------------------------- \\
 
 	/*
 	 * Removes given UMLObject from pane.
-	 * 
 	 * @precondition target is recognized UMLObject that is a child of the pane.
-	 * 
 	 * @param target UMLObject to be removed.
-	 * 
 	 * @postcondition target is removed from pane and relevant map.
-	 * 
-	 * @postcondition If target is a UMLNode, any UMLConnectors connected to it are
-	 * also removed.
-	 * 
-	 * @postcondition If target is a UMLConnector, it is removed from the list of
-	 * connectors for the * UMLNodes that it connects.
+	 * @postcondition If target is a UMLNode, any UMLConnectors connected to it are also removed.
+	 * @postcondition If target is a UMLConnector, it is removed from the list of connectors for the
+	 * * UMLNodes that it connects.
 	 */
 	public void deleteObjects(UMLObject... objects) {
 		for (UMLObject object : objects) {
@@ -386,13 +462,9 @@ public class Controller {
 
 	/*
 	 * Adds already instantiated UMLObject to pane.
-	 * 
 	 * @precondition obj is instantiated UMLObject.
-	 * 
 	 * @param obj UMLObject to be added.
-	 * 
 	 * @postcondition obj is added to pane and relevant map.
-	 * 
 	 * @postcondition Any relevant handlers are defined on obj.
 	 */
 	public void addObjects(UMLObject... objects) {
@@ -409,197 +481,197 @@ public class Controller {
 				selectObject(node);
 			}
 		}
-	}
+  }
 
-	/*
-	 * Returns recognized UMLObject for given Object (typically one's underlying
-	 * model).
-	 * 
-	 * @param inModel Object that will have its UMLObject (if it has one) searched
-	 * for.
-	 * 
-	 * @return UMLObject that contains inModel as part of its underlying model. If
-	 * given Object is * not recognized, but has an ancestor that is, that ancestor
-	 * is the return.
+  /*
+	 * Returns recognized UMLObject for given Object (typically one's underlying model).
+	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
+	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
+	 * * not recognized, but has an ancestor that is, that ancestor is the return.
 	 */
-	public UMLObject getObject(Object inModel) {
-		Node model = (Node) inModel;
-		UMLObject returnNode = NODES.get(model);
-		// If model is not a key in NODES (returns null to returnNode), it's UMLObject
-		// must be a
-		// * UMLConnector
-		if (returnNode == null) {
-			returnNode = CONNECTORS.get(model);
-		}
-		// Follow ancestry line until recognized UMLObject is found or until pane is
-		// reached or until
-		// * end of ancestry line is reached.
-		while (returnNode == null) {
-			if (model == pane || model == null) {
-				break;
+	public UMLObject getObject (Object inModel) {
+      Node model = (Node) inModel;
+      UMLObject returnNode = NODES.get(model);
+			// If model is not a key in NODES (returns null to returnNode), it's UMLObject must be a
+			// * UMLConnector
+      if (returnNode == null) {
+        returnNode = CONNECTORS.get(model);
+      }
+			// Follow ancestry line until recognized UMLObject is found or until pane is reached or until
+			// * end of ancestry line is reached.
+      while (returnNode == null) {
+        if (model == pane || model == null) {
+          break;
+        }
+        model = model.getParent();
+        returnNode = NODES.get(model);
+        if (returnNode == null) {
+          returnNode = CONNECTORS.get(model);
+        }
+      }
+      return returnNode;
+    }
+
+		/* Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
+		 * * none of the given UMLConnector's Segments contain the given Line, returns null.
+		 * @param connector UMLConnector that's Segments will be searched through for containing given
+		 * * Line.
+		 * @param model Line that's corresponding Segment is being searched for.
+		 * @return Segment containing the given Line out all Segments in given UMLConnector. If none of
+		 * * the given UMLConnector's Segments contain the given Line, then null.
+		 */
+		public Segment getSegment(Relationship relationship, Line model) {
+			for(Segment segment : relationship.getSegments()) {
+				if (segment.getModel() == model) {
+					return segment;
+				}
 			}
-			model = model.getParent();
-			returnNode = NODES.get(model);
-			if (returnNode == null) {
-				returnNode = CONNECTORS.get(model);
+			return null;
+		}
+
+		/* Finds the Pivot containing the given Circle out of all Pivots in given UMLConnector. If
+		 * * none of the given UMLConnector's Pivots contain the given Circle, returns null.
+		 * @param connector UMLConnector that's Pivots will be searched through for containing given
+		 * * Circle.
+		 * @param model Circle that's corresponding Pivot is being searched for.
+		 * @return Pivot containing the given Circle out all Pivots in given UMLConnector. If none of
+		 * * the given UMLConnector's Pivots contain the given Circle, then null.
+		 */
+		public Pivot getPivot(Relationship relationship, Circle model) {
+			for(Pivot pivot : relationship.getPivots()) {
+				if (pivot.getModel() == model) {
+					return pivot;
+				}
 			}
+			return null;
 		}
-		return returnNode;
-	}
 
-	/*
-	 * Finds the Segment containing the given Line out of all Segments in given
-	 * UMLConnector. If * none of the given UMLConnector's Segments contain the
-	 * given Line, returns null.
-	 * 
-	 * @param connector UMLConnector that's Segments will be searched through for
-	 * containing given * Line.
-	 * 
-	 * @param model Line that's corresponding Segment is being searched for.
-	 * 
-	 * @return Segment containing the given Line out all Segments in given
-	 * UMLConnector. If none of * the given UMLConnector's Segments contain the
-	 * given Line, then null.
-	 */
-	public Segment getSegment(Relationship relationship, Line model) {
-		for (Segment segment : relationship.getSegments()) {
-			if (segment.getModel() == model) {
-				return segment;
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * Finds the Pivot containing the given Circle out of all Pivots in given
-	 * UMLConnector. If * none of the given UMLConnector's Pivots contain the given
-	 * Circle, returns null.
-	 * 
-	 * @param connector UMLConnector that's Pivots will be searched through for
-	 * containing given * Circle.
-	 * 
-	 * @param model Circle that's corresponding Pivot is being searched for.
-	 * 
-	 * @return Pivot containing the given Circle out all Pivots in given
-	 * UMLConnector. If none of * the given UMLConnector's Pivots contain the given
-	 * Circle, then null.
-	 */
-	public Pivot getPivot(Relationship relationship, Circle model) {
-		for (Pivot pivot : relationship.getPivots()) {
-			if (pivot.getModel() == model) {
-				return pivot;
-			}
-		}
-		return null;
-	}
-
-	public void selectObject(UMLObject object) {
-		SELECTED.addLast(object);
-		object.highlight();
-		if (object instanceof UMLConnector) {
-			loadUMLConnectorFXML(object);
-		} else if (object instanceof Point) {
-			loadPointFXML(object);
-		} else if (object instanceof ClassBox) {
-			loadClassBoxFXML(object);
-		} else if (inspectorObject != null) {
-			inspectorObject.getChildren().clear();
-		}
-	}
-
-	public void deselectObject(UMLObject object) {
-		SELECTED.remove(object);
-		object.unhighlight();
-	}
-
-	public void deselectAll() {
-		while (!SELECTED.isEmpty()) {
-			SELECTED.peekLast().unhighlight();
-			SELECTED.removeLast();
-		}
-	}
-
-	public void deselectAllNodes() {
-		for (UMLObject object : SELECTED) {
-			if (object instanceof UMLNode) {
-				object.unhighlight();
-				SELECTED.remove(object);
-			}
-		}
-	}
-
-	public void deselectAllConnectors() {
-		for (UMLObject object : SELECTED) {
+		public void selectObject(UMLObject object) {
+			SELECTED.addLast(object);
+			object.highlight();
 			if (object instanceof UMLConnector) {
-				object.unhighlight();
-				SELECTED.remove(object);
+				loadUMLConnectorFXML(object);
+			} else if (object instanceof Point) {
+				loadPointFXML(object);
+			} else if (object instanceof ClassBox) {
+				loadClassBoxFXML(object);
+			} else if (inspectorObject != null) {
+				inspectorObject.getChildren().clear();
 			}
 		}
-	}
 
-	public void refresh() {
-		Iterator iter = CONNECTORS.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry pair = (Map.Entry) iter.next();
-			if (pair.getValue() instanceof Relationship) {
-				Relationship relationship = (Relationship) pair.getValue();
-				relationship.update(true);
+		public void deselectObject(UMLObject object) {
+			SELECTED.remove(object);
+			object.unhighlight();
+		}
+
+		public void deselectAll() {
+			while (!SELECTED.isEmpty()) {
+				SELECTED.peekLast().unhighlight();
+				SELECTED.removeLast();
 			}
 		}
-	}
 
-	public void printState() {
-		Iterator iter;
-		System.out.println("--------------------------\nPRINTING STATE");
-		System.out.println("\nMODE: " + MODE);
-		System.out.println("\nPANE: " + pane);
-		System.out.println("\nSTAGE: " + window);
-		System.out.println("\nSCENE: " + scene);
-		System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
-		System.out.println("\nFILE CHOOSER: " + fileChooser);
-		System.out.println("\nSELECTED:     size: " + SELECTED.size());
-		for (UMLObject node : SELECTED) {
-			System.out.println(node);
-		}
-		System.out.println("\nNODES:        size: " + NODES.size());
-		iter = NODES.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry pair = (Map.Entry) iter.next();
-			System.out.print(pair.getKey() + " = " + pair.getValue());
-			UMLNode node = (UMLNode) pair.getValue();
-			System.out.println("   connectors: " + node.getConnections().size());
-		}
-		System.out.println("\nCONNECTORS:   size: " + CONNECTORS.size());
-		iter = CONNECTORS.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry pair = (Map.Entry) iter.next();
-			System.out.print(pair.getKey() + " = " + pair.getValue());
-			if (pair.getValue() instanceof Relationship) {
-				Relationship relationship = (Relationship) pair.getValue();
-				System.out.println(
-						"   segments: " + relationship.segments.size() + "   pivots: " + relationship.pivots.size());
-			} else {
-				System.out.println();
+		public void deselectAllNodes() {
+			for (UMLObject object : SELECTED) {
+				if (object instanceof UMLNode) {
+					object.unhighlight();
+					SELECTED.remove(object);
+				}
 			}
 		}
-		System.out.println("\nUNDO STACK:   size: " + ACTIONS.size() + " (bottom to top)");
-		for (UMLAction action : ACTIONS) {
-			System.out.println(action);
-		}
-		System.out.println("\nREDO STACK:   size: " + UNDONE_ACTIONS.size() + " (bottom to top)");
-		for (UMLAction action : UNDONE_ACTIONS) {
-			System.out.println(action);
-		}
-		System.out.println("\n--------------------------\n");
-	}
 
-	// ----------------------------------------------------------------------------------------------
-	// \\
+		public void deselectAllConnectors() {
+			for (UMLObject object : SELECTED) {
+				if (object instanceof UMLConnector) {
+					object.unhighlight();
+					SELECTED.remove(object);
+				}
+			}
+		}
+
+		public void refresh() {
+			Iterator iter = CONNECTORS.entrySet().iterator();
+			while (iter.hasNext()) {
+					Map.Entry pair = (Map.Entry) iter.next();
+					if (pair.getValue() instanceof Relationship) {
+						Relationship relationship = (Relationship) pair.getValue();
+						relationship.update(true);
+					}
+			}
+		}
+
+		public double getXOffset(){
+			double viewWidth = scrollPane.getViewportBounds().getWidth();
+			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
+			double hValue = scrollPane.getHvalue();
+			double hMax= scrollPane.getHmax();
+			double hValueRel = hValue / hMax;
+			double xLoc = (contentWidth - viewWidth) * hValueRel;
+			return xLoc;
+		}
+
+		public double getYOffset(){
+			double viewHeight = scrollPane.getViewportBounds().getHeight();
+			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
+			double vValue = scrollPane.getVvalue();
+			double vMax = scrollPane.getVmax();
+			double vValueRel = vValue / vMax;
+			double yLoc = (contentHeight - viewHeight) * vValueRel;
+			return yLoc;
+		}
+
+		public void printState() {
+			Iterator iter;
+			System.out.println("--------------------------\nPRINTING STATE");
+			System.out.println("\nMODE: "+ MODE);
+			System.out.println("\nPANE: " + pane);
+			System.out.println("\nSTAGE: " + window);
+			System.out.println("\nSCENE: " + scene);
+			System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
+			System.out.println("\nFILE CHOOSER: " + fileChooser);
+			System.out.println("\nSELECTED:     size: " + SELECTED.size());
+			for (UMLObject node : SELECTED) {
+				System.out.println(node);
+			}
+			System.out.println("\nNODES:        size: " + NODES.size());
+			iter = NODES.entrySet().iterator();
+			while (iter.hasNext()) {
+					Map.Entry pair = (Map.Entry) iter.next();
+					System.out.print(pair.getKey() + " = " + pair.getValue());
+					UMLNode node = (UMLNode) pair.getValue();
+					System.out.println("   connectors: " + node.getConnections().size());
+			}
+			System.out.println("\nCONNECTORS:   size: " + CONNECTORS.size());
+			iter = CONNECTORS.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry pair = (Map.Entry) iter.next();
+				System.out.print(pair.getKey() + " = " + pair.getValue());
+				if (pair.getValue() instanceof Relationship) {
+					Relationship relationship = (Relationship) pair.getValue();
+					System.out.println("   segments: " + relationship.segments.size() + "   pivots: " +
+						relationship.pivots.size());
+				} else {
+					System.out.println();
+				}
+			}
+			System.out.println("\nUNDO STACK:   size: " + ACTIONS.size() + " (bottom to top)");
+			for (UMLAction action : ACTIONS) {
+				System.out.println(action);
+			}
+			System.out.println(
+				"\nREDO STACK:   size: " + UNDONE_ACTIONS.size() + " (bottom to top)");
+			for (UMLAction action : UNDONE_ACTIONS) {
+				System.out.println(action);
+			}
+			System.out.println("\n--------------------------\n");
+		}
+
+// ---------------------------------------------------------------------------------------------- \\
 	// MenuBar Action Controller
 
 	/*
-	 * Action used to Close the program: assigned to Exit.
-	 * 
+	 *  Action used to Close the program: assigned to Exit.
 	 * @postcondition Application is exited.
 	 */
 	public void menuExitClicked() {
@@ -608,7 +680,6 @@ public class Controller {
 
 	/*
 	 * Opens new window with blank file.
-	 * 
 	 * @postcondition all maintained variables are reset.
 	 */
 	public void menuNewClicked() {
@@ -618,14 +689,13 @@ public class Controller {
 		}
 		NODES = new HashMap<>();
 		CONNECTORS = new HashMap<>();
-		
 	}
 
 	/*
 	 * Action to Open file WIP.
 	 */
 	public void menuOpenClicked() {
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.juml"));
 		fileChooser.setTitle("Open Resource File");
 		File file = fileChooser.showOpenDialog(window);
 		if (file == null) {
@@ -650,6 +720,8 @@ public class Controller {
 					node = new Point(input);
 				} else if (nextNode.equals("ClassBox:")) {
 					node = new ClassBox(input);
+				} else if (nextNode.equals("Note:")) {
+					node = new Note(input);
 				} else if (nextNode.equals("Connectors:")){
 					input.nextLine();
 					break;
@@ -674,11 +746,12 @@ public class Controller {
 				} else if (textConnector.equals("Composition:")) {
 					connector = new Composition(input, allNodes, this);
 				} else if (textConnector.equals("Dependency:")) {
-					connector = new Dependency(input, allNodes,this);
+					connector = new Dependency(input, allNodes, this);
 				} else if (textConnector.equals("Generalization:")) {
 					connector = new Generalization(input, allNodes, this);
-				} else if (textConnector.equals("Segment:")) {
-					//connector = new Segment(input, allNodes);
+				} else if (textConnector.equals("Line:")) {
+					System.out.println("Importing a line");
+					connector = new Segment(input, allNodes);
 				}
 				allConnectors.add(connector);
 				addObjects(connector);
@@ -687,14 +760,12 @@ public class Controller {
 			}
 			
 			deselectAll();
+			refresh();
 			ACTIONS = new Stack<>();
 			UNDONE_ACTIONS = new Stack<>();
 			System.out.println(allNodes.toString());
+			System.out.println("Got to the end of load");
 
-			// BufferedReader input = new BufferedReader(new FileReader(new
-			// File(file.toString())));
-			// String hashy = input.readLine();
-			// System.out.println(hashy);
 			input.close();
 			// TODO: Load file text as pane children.
 
@@ -703,6 +774,7 @@ public class Controller {
 		}
 	}
 
+
 	/*
 	 * Action to Save File WIP.
 	 */
@@ -710,7 +782,7 @@ public class Controller {
 		System.out.println("Save Called");
 		String hashMap = NODES.toString();
 		String fxmlContent = pane.getChildren().toString();
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.txt"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.juml"));
 		File file = fileChooser.showSaveDialog(window);
 		if (file == null) {
 			return;
@@ -734,6 +806,8 @@ public class Controller {
 					printSaveString(output, (((Point) node).saveAsString()));
 				} else if (node instanceof ClassBox) {
 					printSaveString(output, (((ClassBox) node).saveAsString()));
+				} else if (node instanceof Note) {
+					printSaveString(output, (((Note) node).saveAsString()));
 				} 
 			}
 			output.write("Connectors:");
@@ -757,9 +831,9 @@ public class Controller {
 					output.write("Dependency: ");
 				} else if (connector instanceof Generalization) {
 					output.write("Generalization: ");
-				} //else if (connector instanceof Segment) {
-					//output.write("Segment: ");
-				//}
+				} else {
+					output.write("Line: ");
+				}
 				output.write(connector.saveAsString(allNodes));
 				if (connector instanceof Relationship) {
 					printSaveString(output, ((Relationship)connector).saveAsString());
@@ -780,6 +854,58 @@ public class Controller {
 		}
 	}
 
+	public void menuExportClicked() throws IOException, NullPointerException, FileNotFoundException{
+		
+		deselectAll();
+		WritableImage snapshot = scrollPane.getContent().snapshot(new SnapshotParameters(), null);
+		PDDocument doc = new PDDocument();
+		fileChooser.getExtensionFilters().add(
+		new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+		String fileName = "";
+
+		try {
+			File file = fileChooser.showSaveDialog(window);
+			fileName = file.getPath();
+		}
+
+		catch (NullPointerException npe) {
+			System.out.println("Cancelled");
+		}
+
+		BufferedImage image;
+		image = SwingFXUtils.fromFXImage(snapshot, null);
+		PDPage page = new PDPage();
+
+    try {
+    	doc.addPage(page);
+    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
+
+    	try {
+				PDPageContentStream contents = new PDPageContentStream(doc, page);
+    		contents.drawImage(img, 20, 20);
+				contents.close();
+        //Every document requires at least one page, so we will add one
+        //blank page.
+        doc.save(fileName);
+    	}
+
+			catch (FileNotFoundException fnfe) {
+				System.out.println("Cancelled");
+			}
+
+			finally {
+				if(doc != null) {
+	    		doc.close();
+	 			}
+			}
+		}
+
+		catch (IOException ex) {
+			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+	}
+	
 	// WIP Menu Bar Actions
 	public void menuCloseClicked() {
 	}
@@ -815,7 +941,7 @@ public class Controller {
 	 */
 	public void saveFile(Map<Node, UMLNode> NODES) throws IOException {
 		ObjectOutputStream outputStream = new ObjectOutputStream(
-				new FileOutputStream("C:/Users/xTmil_000/Desktop/eclipse/Workspace/juml-master/Hashmap.txt"));
+			new FileOutputStream("C:/Users/xTmil_000/Desktop/eclipse/Workspace/juml-master/Hashmap.txt"));
 		outputStream.writeObject(NODES);
 		outputStream.close();
 	}
@@ -824,15 +950,14 @@ public class Controller {
 	 * Inspector Properties WIP.
 	 */
 
-	/*
+
+    /*
 	 * loads inspector fxml and allows user to change properties.
-	 * 
 	 * @param point instance of current event target.
-	 * 
-	 * @postcondition This loads the dynamic instance of the given circle fxml and
-	 * listens to given key/mouse events to change the inspector/circle properties.
+	 * @postcondition This loads the dynamic instance of the given circle fxml and listens to given key/mouse events to change
+	 * the inspector/circle properties.
 	 */
-	public void loadPointFXML(UMLObject point) {
+	public void loadPointFXML(UMLObject point){
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Point.fxml"));
 			Parent root = loader.load();
@@ -844,46 +969,41 @@ public class Controller {
 		}
 	}
 
-	/*
+    /*
 	 * loads inspector fxml and allows user to change properties.
-	 * 
 	 * @param classBox instance of current event target.
-	 * 
-	 * @postcondition This loads the dynamic instance of the given classBox fxml and
-	 * listens to given key/mouse events to change the inspector/circle properties.
+	 * @postcondition This loads the dynamic instance of the given classBox fxml and listens to given key/mouse events to change
+	 * the inspector/circle properties.
 	 */
-	public void loadClassBoxFXML(UMLObject classBox) {
-		try {
+	public void loadClassBoxFXML(UMLObject classBox){
+		try{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassBox.fxml"));
 			Parent root = loader.load();
 			ClassBoxController classBoxFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
 			classBoxFXML.loadInspectorInfo(classBox, this);
-		} catch (IOException e) {
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	/*
+    /*
 	 * loads inspector fxml and allows user to change properties.
-	 * 
 	 * @param line instance of current event target.
-	 * 
-	 * @postcondition This loads the dynamic instance of the given line fxml and
-	 * listens to given key/mouse events to change the inspector/circle properties.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+	 * the inspector/circle properties.
 	 */
-	public void loadUMLConnectorFXML(UMLObject connector) {
-		try {
+	public void loadUMLConnectorFXML(UMLObject connector){
+		try{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("UMLConnector.fxml"));
 			Parent root = loader.load();
 			UMLConnectorController UMLConnectorFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
 			UMLConnectorFXML.loadInspectorInfo(connector, this);
-		} catch (IOException e) {
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 	}
 
 }
-// ----------------------------------------------------------------------------------------------
-// \\
+// ---------------------------------------------------------------------------------------------- \\

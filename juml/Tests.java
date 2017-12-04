@@ -6,8 +6,6 @@ import javafx.scene.layout.VBox;
 import java.util.Vector;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Scanner;
-
 import umlobject.*;
 import static org.junit.Assert.*;
 import javafx.collections.*;
@@ -35,24 +33,6 @@ public class Tests {
 		cb2 = new ClassBox(5,6);
 		cb3 = new ClassBox(6,7);
 	}
-	
-	@Test
-	public void saveClassBox(){
-		ClassBox c1 = new ClassBox(4,5);
-		
-		c1.setAttributes("Attributes \n lines");
-		String saveString = c1.saveAsString();
-		
-		
-		System.out.println(saveString);
-		Scanner s = new Scanner(saveString);
-		s.next();
-		ClassBox c2 = new ClassBox(s);
-		System.out.println(c2.saveAsString());
-
-		//assertEquals(3, pane.getChildren().size());
-	}
-	
 
 	@Test
 	public void addPoints(){

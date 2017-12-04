@@ -32,6 +32,7 @@ public class DeletePivot extends UMLConnectorAction {
 
   public void doAction() {
     preSegment.disconnect();
+
     postSegment.disconnect();
     postSegment.start = preSegment.start;
     postSegment.connect();
@@ -45,7 +46,7 @@ public class DeletePivot extends UMLConnectorAction {
 
     relationship.segments.remove(preSegment);
     relationship.pivots.remove(pivot);
-    
+
     relationship.update(true);
   }
 

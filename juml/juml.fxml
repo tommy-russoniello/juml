@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 
 <!-- Style Sheet -->
 
@@ -24,8 +25,9 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuOpenClicked" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuSaveClicked" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuExportClicked" text="Export" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuExitClicked" text="Exit" />
             </items>
@@ -49,7 +51,11 @@
       </MenuBar>
    </top>
    <center>
-      <Pane fx:id="pane" onMouseClicked="#paneClick" BorderPane.alignment="CENTER" />
+     <ScrollPane fx:id="scrollPane" onMouseClicked="#paneClick" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" minHeight="0.0" minWidth="0.0">
+     <content>
+       <Pane fx:id="pane" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER"/>
+     </content>
+    </ScrollPane>
    </center>
    <left>
       <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Object Builder" BorderPane.alignment="TOP_CENTER">

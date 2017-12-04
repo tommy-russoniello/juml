@@ -1,5 +1,7 @@
 package umlobject;
 
+import java.util.Scanner;
+
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
@@ -9,7 +11,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.text.Font;
 
-/*
+/**
  * UML note representation.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -19,17 +21,66 @@ import javafx.scene.text.Font;
  * @since 0.3
  */
 public class Note extends UMLNode {
-  /*
+
+  /**
    * Underlying model and it's children.
    */
   public VBox box;
+
+  /** The text of the note. */
   public Text text;
-  /*
+
+  /**
    * Width of entire box, limits inner text length as well.
    */
   double width;
 
-  /*
+  
+	/**
+	 * Build from string method
+	 * @param input The scanner from which the object can read in its save string
+	 * @postcondition Object will have constructed itself from the information
+	 *                provided by input
+	 */
+public Note(Scanner input) {
+	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+	    text.setText(buildString(input, input.nextInt()));
+	}
+  
+  /**
+   * Save method; stored as "delimiter x y (upper right corner) width, chacactersInText text\n"
+   * @postcondition generates a string with the necessary information for the object to rebuild itself.
+   */
+  public String saveAsString() {
+		int numTextChars = text.getText().length();
+		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + width+ " " + numTextChars + " "+text.getText();
+	}
+
+	/**
+	 * Build text 
+	 * @precondition The text to read in will end with a \n character
+	 * @param input The scanner from which the text can be read
+     * @param numChars The number of chars to read in
+	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
+	 */
+	public String buildString(Scanner input, int numChars) {
+		String result = input.nextLine();
+		if (numChars==0) {
+			return "";
+		}
+		result = result.substring(1, result.length());
+		//System.out.println(result.length() + ","+result);
+		while(result.length() != numChars) {
+			result += "\n";
+			//System.out.println(result.length() + ","+result);
+			result += input.nextLine();
+			
+		}
+		return result;
+	}
+  
+  
+  /**
    * Basic Constructor
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
@@ -39,7 +90,7 @@ public class Note extends UMLNode {
     this(x, y, 40);
   }
 
-  /*
+  /**
    * Explicit Constructor
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
@@ -63,7 +114,7 @@ public class Note extends UMLNode {
     originY = y + (getHeight() / 2);
   }
 
-  /*
+  /**
    * Returns underlying model.
    * @return underlying model VBox.
    */
@@ -71,19 +122,26 @@ public class Note extends UMLNode {
     return box;
   }
 
-  /*
+  /**
    * Reassign this to given coordinates.
+   * If either coordinate is negative the respective coordinate is set to 0.
    * @param newX x coordinate for this to be moved to.
    * @param newY y coordinate for this to be moved to.
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
+    if(newX - (getWidth()/2) < 0) {
+  		newX = 0 + (getWidth()/2);
+    }
+  	if (newY - (getHeight()/2) < 0) {
+  		newY = 0 + (getHeight()/2);
+    }
     box.setLayoutX(newX - (width / 2));
     box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }
 
-  /*
+  /**
    * Calculates and returns total height of underlying model (VBox).
    * @return Total height of underlying Vbox model.
    */
@@ -95,15 +153,15 @@ public class Note extends UMLNode {
     return height;
   }
 
-  /*
-   * returns maintained width.
+  /**
+   * Returns maintained width.
    * @return maintained width.
    */
   public double getWidth() {
     return width;
   }
 
-  /*
+  /**
    * Returns contents of this's text field.
    * @return Contents of this's text field.
    */
@@ -111,7 +169,7 @@ public class Note extends UMLNode {
     return text.getText();
   }
 
-  /*
+  /**
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
@@ -151,7 +209,7 @@ public class Note extends UMLNode {
   	}
   }
 
-  	/*
+	/**
   	 * Returns the y coordinate of the point to which a connector should anchor if
   	 * joined to this node.
   	 *
@@ -192,7 +250,7 @@ public class Note extends UMLNode {
   		}
   }
 
-  /*
+  /**
    * Reassign value of text to newText.
    * @param newText new string for text to be changed to.
    * @postcondition This updates the string value in text.
@@ -202,7 +260,7 @@ public class Note extends UMLNode {
 	  text.setText(newText);
   }
 
-  /*
+  /**
    * Changes width of all of this's components to match given width.
    * @param newWidth New width for this to be set to.
    * @postcondition All of this's components are altered to match given width for this.
@@ -218,7 +276,7 @@ public class Note extends UMLNode {
     }
   }
 
-  /*
+  /**
    * Changes color of underlying VBox model to make the object appear highlighted.
    * @postcondition Color of underlying VBox model changed to blue.
    */
@@ -226,7 +284,7 @@ public class Note extends UMLNode {
     box.setStyle("-fx-border-color: blue;");
   }
 
-  /*
+  /**
    * Changes color of underlying VBox model to make the object appear unhighlighted.
    * @postcondition Color of underlying VBox model changed to black.
    */

@@ -1,7 +1,0 @@
-juml (or Java UML), uses the Model View Controller design pattern. 
-
-The view is implemented in the fxml file “juml.fxml.” The view specifies the style of the scene for the program and then builds it. On relevant nodes, the view passes off received actions to corresponding handlers within the controller.
-
-The controller is implemented in the file “controller.java.” The controller handles actions passed in from the view and interacts with the model accordingly. The controller keeps track of the draw mode (currently either “SELECT”, “POINT”, or “CONNECTOR”). When handlers receive events, the controller determines the correct course of action depending on the current draw mode. This may include the movement, creation, or selection of nodes. 
-
-The model is implemented in the file “UMLNode.java” and its subclasses “point.java” and “connector.java.” UMLNode is the generalization of all custom nodes created for the project (currently only points and connectors). These nodes need to be subclasses of the UMLNode generalization in order to be grouped as our custom nodes. At the same time, they also needed to be subclasses of the javaFX class “Region” so that they can be children of the Pane and show up in the scene. This was a crucial detail to the hierarchical structure of the classes to make the design more dynamic for future changes and additions.

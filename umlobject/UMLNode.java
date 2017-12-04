@@ -2,7 +2,7 @@ package umlobject;
 
 import java.util.Vector;
 
-/*
+/**
  * Connectable UML object representation (the "things").
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -12,12 +12,13 @@ import java.util.Vector;
  * @since 0.1
  */
 public class UMLNode extends UMLObject {
-  /*
+
+  /**
    * Set of all UMLConnectors connected to this.
    */
   public Vector<UMLConnector> connections = new Vector<>();
 
-  /*
+  /**
    * Returns list of UMLConnectors connected to this.
    * @return list of UMLConnectors connected to this.
    */
@@ -25,7 +26,7 @@ public class UMLNode extends UMLObject {
     return connections;
   }
 
-  /*
+  /**
    * Updates all UMLConnectors connected to this.
    * @postcondition All UMLConnectors connected to this update the coordinates for their lines.
    */
@@ -35,7 +36,7 @@ public class UMLNode extends UMLObject {
   	}
   }
 
- /*
+  /**
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
@@ -45,7 +46,7 @@ public class UMLNode extends UMLObject {
   	return originX;
   }
 
-  /*
+  /**
    * Returns the y coordinate of the point to which a connector should anchor if
    * joined to this node.
    *

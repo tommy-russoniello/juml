@@ -38,8 +38,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuPasteClicked" text="Paste" />
                   <MenuItem mnemonicParsing="false" onAction="#menuDeleteClicked" text="Delete" />
                   <MenuItem mnemonicParsing="false" onAction="#menuSelectAllClicked" text="SelectAll" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuUndoClicked" text="Undo" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuRedoClicked" text="Redo" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuUndoClicked" text="Undo:	Z+Ctrl" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuRedoClicked" text="Redo:	Y+Ctrl" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

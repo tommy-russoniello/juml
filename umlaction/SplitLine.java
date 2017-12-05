@@ -3,8 +3,6 @@ package umlaction;
 import juml.*;
 import umlobject.*;
 
-import java.util.Vector;
-
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -42,15 +40,13 @@ public class SplitLine extends UMLConnectorAction {
   public void doAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
-    connectToPivots(splitSegment);
+    splitSegment.connect();
     int pos = relationship.segments.indexOf(splitSegment);
     relationship.pivots.add(pos, pivot);
     relationship.segments.add(pos, newSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
-    connectToPivots(newSegment);
+    newSegment.connect();
     if((Line) splitSegment.getModel() == relationship.startLine) {
       relationship.startLine = (Line) newSegment.getModel();
     }
@@ -68,39 +64,17 @@ public class SplitLine extends UMLConnectorAction {
     relationship.group.getChildren().remove(pivot.getModel());
     splitSegment.disconnect();
     splitSegment.start = newSegment.getStart();
-    //splitSegment.connect();
-    connectToPivots(newSegment);
+    splitSegment.connect();
     relationship.update();
   }
-
- public void connectToPivots(Segment s) {
-	    if (s.start instanceof Pivot) {
-	    	s.start.getConnections().addElement(s);
-	    }
-	    if (s.stop instanceof Pivot) {
-	    	s.stop.getConnections().addElement(s);
-	    }
- }
-
 
   public void doInitialAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
-    connectToPivots(splitSegment);
+    splitSegment.connect();
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
-    if (!(splitSegment.start instanceof Pivot)) {
-    	Vector<UMLConnector> connections = splitSegment.start.getConnections();
-    	for (int i=0; i<connections.size(); i++) {
-    		if (connections.get(i).getModel().equals(splitSegment.getModel())) {
-    			System.out.println("Connector removed");
-    			break;
-    		}
-    	}
-    }
-    connectToPivots(newSegment);
+    newSegment.connect();
     int pos = relationship.segments.indexOf(splitSegment);
     relationship.pivots.add(pos, pivot);
     relationship.segments.add(pos, newSegment);

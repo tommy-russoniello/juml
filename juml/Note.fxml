@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+
+<Pane prefHeight="296.0" prefWidth="286.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.NoteController">
+   <children>
+   	<Label layoutY="3.0" prefHeight="29.0" prefWidth="100.0" text=" Notes:" />
+   	<TextArea fx:id="noteText" layoutX="3.0" layoutY="28.0" onKeyPressed="#updateText" prefHeight="100.0" prefWidth="245.0" />
+   	<Separator layoutY="131.0" prefHeight="4.0" prefWidth="286.0" />
+    <Separator layoutY="294.0" prefHeight="4.0" prefWidth="250.0" />
+	<Label layoutY="138.0" prefHeight="29.0" prefWidth="100.0" text="  Origin X" />
+	<TextField fx:id="originX" layoutX="100.0" layoutY="137.0" onKeyPressed="#updateCoordinates" />
+	<Label layoutY="167.0" prefHeight="32.0" prefWidth="100.0" text="  Origin Y" />
+	<TextField fx:id="originY" layoutX="100.0" layoutY="168.0" onKeyPressed="#updateCoordinates" />
+    <Button fx:id="applyButton" layoutX="14.0" layoutY="209.0" mnemonicParsing="false" onAction="#applyChanges" text="Apply Changes"/>
+   </children>
+</Pane>

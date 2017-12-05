@@ -1,16 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 
-<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.UMLConnectorController">
-	<Label prefHeight="29.0" prefWidth="100.0" text=" Start Origin X" />
-	<TextField fx:id="UMLConnectorStartOriginX" layoutX="100.0" layoutY="-1.0" />
-	<Label layoutY="29.0" prefHeight="32.0" prefWidth="100.0" text=" Start Origin Y" />
-	<TextField fx:id="UMLConnectorStartOriginY" layoutX="100.0" layoutY="30.0" />
-	<Label layoutY="61.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin X" />
-	<TextField fx:id="UMLConnectorEndOriginX" layoutX="100.0" layoutY="61.0" />
-	<Label layoutY="92.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin Y" />
-	<TextField fx:id="UMLConnectorEndOriginY" layoutX="100.0" layoutY="92.0" />
-	<Separator layoutY="125.0" prefHeight="3.0" prefWidth="298.0" />
+<Pane prefHeight="465.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.UMLConnectorController">
+   <children>
+   	<Label prefHeight="29.0" prefWidth="100.0" text=" Start Origin X" />
+   	<TextField fx:id="UMLConnectorStartOriginX" layoutX="100.0" layoutY="-1.0" />
+   	<Label layoutY="29.0" prefHeight="32.0" prefWidth="100.0" text=" Start Origin Y" />
+   	<TextField fx:id="UMLConnectorStartOriginY" layoutX="100.0" layoutY="30.0" />
+   	<Label layoutY="61.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin X" />
+   	<TextField fx:id="UMLConnectorEndOriginX" layoutX="100.0" layoutY="61.0" />
+   	<Label layoutY="92.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin Y" />
+   	<TextField fx:id="UMLConnectorEndOriginY" layoutX="100.0" layoutY="92.0" />
+   	<Separator layoutY="125.0" prefHeight="3.0" prefWidth="298.0" />
+    <Label layoutX="-1.0" layoutY="129.0" prefHeight="29.0" prefWidth="125.0" text="  Start Point Text:" />
+    <TextArea fx:id="startText" layoutX="14.0" layoutY="160.0" onKeyPressed="#updateStartText" prefHeight="59.0" prefWidth="269.0" />
+    <Label layoutX="-1.0" layoutY="221.0" prefHeight="29.0" prefWidth="125.0" text="  End Point Text:" />
+    <TextArea fx:id="endText" layoutX="14.0" layoutY="249.0" onKeyPressed="#updateEndText" prefHeight="59.0" prefWidth="269.0" />
+    <ChoiceBox fx:id="lineProperties" layoutX="100.0" layoutY="317.0" prefWidth="150.0" onAction="#changeLineType" />
+    <Label layoutX="8.0" layoutY="318.0" prefHeight="29.0" prefWidth="125.0" text=" Line Type:" />
+    <Button fx:id="applyButton" layoutX="11.0" layoutY="360.0" mnemonicParsing="false" onAction="#applyChanges" text="Apply Changes" />
+    <Button fx:id="flipDirection" layoutX="139.0" layoutY="360.0" mnemonicParsing="false" onAction="#flipDirection" text="Flip Direction" />
+   </children>
 </Pane>

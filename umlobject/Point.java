@@ -1,15 +1,11 @@
 package umlobject;
 
 import javafx.scene.shape.Circle;
-
-import java.util.Scanner;
-
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
 /**
  * Simple point class.
- *
  * @author Samuel Carroll
  * @author Torrance Graham
  * @author Quinn Minnich
@@ -19,102 +15,73 @@ import javafx.scene.paint.Color;
  */
 public class Point extends UMLNode {
 
-	/**
-	 * The underlying model of Point.
-	 */
-	public Circle circle;
+  /**
+   * The underlying model of Point.
+   */
+  public Circle circle;
 
-	/**
-	 * The radius.
-	 */
-	private double radius;
+  /**
+   * The radius.
+   */
+  private double radius;
 
-	/**
-	 * Build from string method. Stored as "delimiter x y radius"
-	 * @param input The scanner from which the object can read in its save string
-	 * @postcondition Object will have constructed itself from the information
-	 *                provided by input
-	 */
-	public Point(Scanner input) {
-		this(input.nextDouble(), input.nextDouble(), input.nextInt());
-	}
+  /**
+   * Basic Constructor
+   * @param x x coordinate for this to be made on.
+   * @param y y coordinate for this to be made on.
+   * @postcondition Point instance with given coordinates and default radius of 5 is created.
+   */
+  public Point(double x, double y) {
+    this(x, y, 5);
+  }
 
-	/**
-	 * Save method
-	 * @postcondition generates a string with the necessary information for the
-	 *                object to rebuild itself.
-	 */
-	public String saveAsString() {
-		return "Point: " + originX + " " + originY + " " + radius;
-	}
+  /**
+   * Explicit Constructor
+   * @param x x coordinate for this to be made on.
+   * @param y y coordinate for this to be made on.
+   * @param inRadius Radius for underlying circle model to have.
+   * @postcondition Point instance with given coordinates and radius is created.
+   */
+  public Point(double x, double y, int inRadius) {
+    originX = x;
+    originY = y;
+    radius = inRadius;
+    circle = new Circle(originX, originY, radius);
+  }
 
-	/**
-	 * Basic Constructor
-	 * @param x x coordinate for this to be made on.
-	 * @param y y coordinate for this to be made on.
-	 * @postcondition Point instance with given coordinates and default radius of 5
-	 *                is created.
-	 */
-	public Point(double x, double y) {
-		this(x, y, 5);
-	}
+  /**
+   * Returns underlying model.
+   * @return Underlying circle model.
+   */
+  public Node getModel() {
+    return circle;
+  }
 
-	/**
-	 * Explicit Constructor
-	 *
-	 * @param x
-	 *            x coordinate for this to be made on.
-	 * @param y
-	 *            y coordinate for this to be made on.
-	 * @param inRadius
-	 *            Radius for underlying circle model to have.
-	 * @postcondition Point instance with given coordinates and radius is created.
-	 */
-	public Point(double x, double y, int inRadius) {
-		originX = x;
-		originY = y;
-		radius = inRadius;
-		circle = new Circle(originX, originY, radius);
-	}
+  /**
+   * Return maintained radius.
+   * @return Maintained radius.
+   */
+  public double getRadius() {
+    return radius;
+  }
 
-	/**
-	 * Returns underlying model.
-	 *
-	 * @return Underlying circle model.
-	 */
-	public Node getModel() {
-		return circle;
-	}
-
-	/**
-	 * Return maintained radius.
-	 *
-	 * @return Maintained radius.
-	 */
-	public double getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Reassign this at given coordinates.
-	 *
-	 * @param newX
-	 *            x coordinate for this to be moved to.
-	 * @param newY
-	 *            y coordinate for this to be moved to.
-	 * @postcondition This updates all of its data according to new coordinates.
-	 */
-	public void move(double newX, double newY) {
-		if (newX - getRadius() < 0) {
-			newX = 0 + getRadius();
-		}
-		if (newY - getRadius() < 0) {
-			newY = 0 + getRadius();
-		}
-		circle.setCenterX(newX);
-		circle.setCenterY(newY);
-		super.move(newX, newY);
-	}
+  /**
+   * Reassign this at given coordinates.
+   * @param newX x coordinate for this to be moved to.
+   * @param newY y coordinate for this to be moved to.
+   * @postcondition This updates all of its data according to new coordinates.
+   */
+  public void move(double newX, double newY) {
+    if(newX - getRadius() < 0){
+      newX = 0 + getRadius();
+    }
+    if(newY - getRadius() < 0){
+      newY =  0 + getRadius();
+    }
+    circle.setCenterX(newX);
+    circle.setCenterY(newY);
+    super.move(newX, newY);
+  }
 
 	/**
 	 * Returns the x coordinate of the point to which a connector should anchor if
@@ -125,11 +92,11 @@ public class Point extends UMLNode {
 	public double getAnchorX(double startX, double startY) {
 		double actingRadius = radius;
 		double deltaX = startX - originX;
-		double deltaY = originY - startY;
-		double angle = Math.atan(deltaY / deltaX);
-		if (startX < originX) {
-			angle += Math.PI;
-		}
+ 	  double deltaY = originY - startY;
+		double angle = Math.atan(deltaY/deltaX);
+		if (startX<originX) {
+			angle+= Math.PI;
+    }
 		double xOffset = actingRadius * Math.cos(angle);
 		return originX + xOffset;
 	}
@@ -144,10 +111,10 @@ public class Point extends UMLNode {
 		double actingRadius = radius;
 		double deltaX = startX - originX;
 		double deltaY = originY - startY;
-		double angle = Math.atan(deltaY / deltaX);
-		if (startX < originX) {
-			angle += Math.PI;
-		}
+		double angle = Math.atan(deltaY/deltaX);
+		if (startX<originX) {
+			angle+= Math.PI;
+    }
 		double yOffset = -actingRadius * Math.sin(angle);
 		return originY + yOffset;
 	}

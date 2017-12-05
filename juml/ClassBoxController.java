@@ -1,10 +1,13 @@
 package juml;
 
 import java.io.IOException;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import umlobject.*;
 import umlaction.*;
@@ -26,6 +29,7 @@ public class ClassBoxController {
 	@FXML private TextArea classBoxMethods;
 	@FXML private TextField classBoxOriginX;
 	@FXML private TextField classBoxOriginY;
+	@FXML private Button applyButton;
 
 	//Base variables to pass in classBox object
 	UMLObject classBoxUML = null;
@@ -129,6 +133,31 @@ public class ClassBoxController {
 		}
 	}
 
+	/*
+	 * Combination of updateCoordinates and updateMethods, updateName, updateAttributes.
+	 * Activates when the user clicks the apply changes button
+	 * @param event is a ActionEvent used to listen for when the user clicks the button in the inspector
+	 * @postcondition sets the X and Y coordinates of the classBox to that of the inspector's textfield's X and Y values
+	 * @postcondition sets the text of all three fields of the classBox to that of the inspector's textfields
+	 */
+	public void applyChanges(ActionEvent event){
+		try{
+			controller.ACTIONS.push(new ChangeClassBoxName(classBox, classBoxName.getText()));
+			controller.ACTIONS.push(new ChangeClassBoxAttributes(classBox, classBoxAttributes.getText()));
+			controller.ACTIONS.push(new ChangeClassBoxMethods(classBox, classBoxMethods.getText()));
+			Double x = Double.parseDouble(classBoxOriginX.getText());
+			Double y = Double.parseDouble(classBoxOriginY.getText());
+			controller.ACTIONS.push(new MoveUMLNode(classBox, x, y));
+			event.consume();
+		} catch (Exception e){
+			controller.ACTIONS.push(new ChangeClassBoxName(classBox, classBoxName.getText()));
+			controller.ACTIONS.push(new ChangeClassBoxAttributes(classBox, classBoxAttributes.getText()));
+			controller.ACTIONS.push(new ChangeClassBoxMethods(classBox, classBoxMethods.getText()));
+			event.consume();
+		}
+		
+	}
+	
 	/*
 	 * This calls all fxml updating methods in classBoxController to update classBox.fxml with the variables from the object.
 	 * Makes it easier on the main controller to activate everything it needs by having this one method.

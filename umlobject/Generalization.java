@@ -1,14 +1,10 @@
 package umlobject;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Vector;
-
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import juml.Controller;
 
 /**
  * UML generalization representation.
@@ -21,55 +17,36 @@ import juml.Controller;
  */
 public class Generalization extends Relationship {
 
+  /**
+   * Explicit Constructor
+   * @param inStart starting UMLNode for Segment to be drawn between.
+   * @param inStop stopping UMLNode for Segment to be drawn between.
+   * @postcondition Generalization instance with given starting and stopping UMLNodes is created.
+   */
+  public Generalization(UMLNode inStart, UMLNode inStop) {
+    start = inStart;
+    stop = inStop;
+    originX = start.getOriginX();
+    originY = start.getOriginY();
+    segments = new ArrayList<>();
+    pivots = new ArrayList<>();
+    startText = new Note(0, 0, 20);
+    endText = new Note(0, 0, 20);
 
+    // Initial Segment and Shape drawing.
+    segments.add(new Segment(start, stop, false, true));
+    startLine = endLine = (Line) segments.get(0).getModel();
 
-	  /**
-	   * Build from string method
-	   * @param input The scanner from which the object can read in its save string
-	   * @param allNodes List of all nodes currently in the scene.
-	   * @param controller Master controller (needed for pivot construction)
-	   * @postcondition generates the connector from the save string
-	   */
-	public Generalization(Scanner input, Vector<UMLNode> allNodes, Controller controller) {
-		super(input, allNodes);
-		setUp();
-		readInPivots(input, controller);
-	}
+    shape = new Polygon();
+    reset();
+    shape.setStroke(Color.BLACK);
+    shape.setFill(Color.WHITE);
 
-
-	  /**
-	   * Explicit Constructor
-	   * @param inStart starting UMLNode for Segment to be drawn between.
-	   * @param inStop stopping UMLNode for Segment to be drawn between.
-	   * @postcondition Aggregation instance with given starting and stopping UMLNodes is created.
-	   */
-	public Generalization(UMLNode inStart, UMLNode inStop) {
-		super(inStart, inStop);
-		setUp();
-	}
-
-	/**
-	 * Sets up the Connector
-	 * @postcondition Connect initializes all remaining variables and draws itself
-	 */
-	private void setUp() {
-		 // Initial Segment and Shape drawing.
-	    segments.add(new Segment(start, stop, false, true));
-	    startLine = endLine = (Line) segments.get(0).getModel();
-
-	    shape = new Polygon();
-	    reset();
-	    shape.setStroke(Color.BLACK);
-	    shape.setFill(Color.WHITE);
-
-	    group = new Group();
-	    group.getChildren().addAll(endLine, shape);
-	    // Move segment to proper starting position.
-	    update();
-	}
-
-
-
+    group = new Group();
+    group.getChildren().addAll(endLine, shape);
+    // Move segment to proper starting position.
+    update();
+  }
 
   /**
    * Resets start and end Lines to be in default position so shape and note positions can be reset.
@@ -108,5 +85,9 @@ public class Generalization extends Relationship {
    */
   public void update(boolean isReset) {
     super.update(6.375, isReset);
+  }
+  
+  public String getLineType(){
+	  return "Generalization";
   }
 }

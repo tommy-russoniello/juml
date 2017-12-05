@@ -1,5 +1,7 @@
 package umlobject;
 
+import java.util.Scanner;
+
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
@@ -32,6 +34,51 @@ public class Note extends UMLNode {
    * Width of entire box, limits inner text length as well.
    */
   double width;
+
+
+	/**
+	 * Build from string method
+	 * @param input The scanner from which the object can read in its save string
+	 * @postcondition Object will have constructed itself from the information
+	 *                provided by input
+	 */
+public Note(Scanner input) {
+	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+	    text.setText(buildString(input, input.nextInt()));
+	}
+
+  /**
+   * Save method; stored as "delimiter x y (upper right corner) width, chacactersInText text\n"
+   * @postcondition generates a string with the necessary information for the object to rebuild itself.
+   */
+  public String saveAsString() {
+		int numTextChars = text.getText().length();
+		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + width+ " " + numTextChars + " "+text.getText();
+	}
+
+	/**
+	 * Build text
+	 * @precondition The text to read in will end with a \n character
+	 * @param input The scanner from which the text can be read
+     * @param numChars The number of chars to read in
+	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
+	 */
+	public String buildString(Scanner input, int numChars) {
+		String result = input.nextLine();
+		if (numChars==0) {
+			return "";
+		}
+		result = result.substring(1, result.length());
+		//System.out.println(result.length() + ","+result);
+		while(result.length() != numChars) {
+			result += "\n";
+			//System.out.println(result.length() + ","+result);
+			result += input.nextLine();
+
+		}
+		return result;
+	}
+
 
   /**
    * Basic Constructor

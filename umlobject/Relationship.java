@@ -1,7 +1,11 @@
 package umlobject;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Vector;
+
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
@@ -9,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
+import juml.Controller;
+import umlaction.SplitLine;
 
 /**
  * UML relationship representation.
@@ -50,6 +56,114 @@ public class Relationship extends UMLConnector {
    * The segments at the beginning and end of the Relationship.
    */
   public Line startLine, endLine;
+
+  /**
+   * Build from string method
+   * @param input The scanner from which the object can read in its save string
+   * @param allNodes List of all nodes currently in the scene.
+   * @postcondition generates a Relationship built off of its save string; stops BEFORE it reaches pivot information.
+   */
+  public Relationship(Scanner input, Vector<UMLNode> allNodes) {
+		start = allNodes.get(input.nextInt());
+		stop = allNodes.get(input.nextInt());
+		//connect();
+		originX = start.getOriginX();
+		originY = start.getOriginY();
+		segments = new ArrayList<>();
+		pivots = new ArrayList<>();
+		startText = new Note(0, 0, 20);
+		endText = new Note(0, 0, 20);
+		startText.setText(buildString(input, input.nextInt()));
+		endText.setText(buildString(input, input.nextInt()));
+	}
+
+	/**
+	 * Reads in just pivot information from a scanner, adding pivots in the order read
+	 * @precondition Pivots are listed in the correct order
+	 * @param input The scanner from which the text can be read
+     * @param Controler The main controller; needed for pivot construction
+	 * @postcondition All pivots will have been added to the relationship
+	 */
+	public void readInPivots(Scanner input, Controller controller) {
+		String nextToken = input.next();
+		while (nextToken.equals("Pivot:")){
+			double x = input.nextDouble();
+			double y = input.nextDouble();
+			// add pivots here
+			new SplitLine (this, segments.get(segments.size()-1), x, y, controller);
+			nextToken = input.next();
+		}
+		update(true);
+	}
+
+	/**
+	 * Build text
+	 * @precondition The text to read in will end with a \n character
+	 * @param input The scanner from which the text can be read
+     * @param numChars The number of chars to read in
+	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
+	 */
+	public String buildString(Scanner input, int numChars) {
+		String result = input.nextLine();
+		if (numChars==0) {
+			return "";
+		}
+		result = result.substring(1, result.length());
+		//System.out.println(result.length() + ","+result);
+		while(result.length() != numChars) {
+			result += "\n";
+			//System.out.println(result.length() + ","+result);
+			result += input.nextLine();
+		}
+		return result;
+	}
+
+
+	  /**
+	   * Basic Constructor.
+	   * @param inStart starting Node
+	   * @param inStop y ending Node
+	   * @postcondition Relationship between start and stop nodes.
+	   */
+	public Relationship(UMLNode inStart, UMLNode inStop) {
+		start = inStart;
+		stop = inStop;
+		originX = start.getOriginX();
+		originY = start.getOriginY();
+		segments = new ArrayList<>();
+		pivots = new ArrayList<>();
+		startText = new Note(0, 0, 20);
+		endText = new Note(0, 0, 20);
+	}
+
+	  /**
+	   * Save method. Adds onto UMLConnector save string. Stored as "chacactersInStartText startText\n chacactersInEndText endText\n
+	   * pivotInfo1 pivotInfo2 ... EndPivots"
+	   * @postcondition generates a string with the necessary information for the object to rebuild itself.
+	   */
+	public String saveAsString() {
+		String result = "";
+		int numStartTextChars = startText.getText().length();
+		int numEndTextChars = endText.getText().length();
+		result += numStartTextChars + " " + startText.getText() + "\n" + numEndTextChars + " " + endText.getText()+"\n";
+
+		/*
+		for (int i = pivots.size()-1; i>=0; i--) {
+			Pivot p  = pivots.get(i);
+			result += p.saveAsString() + " ";
+		}
+		*/
+		for (int i =0; i<pivots.size(); i++) {
+			Pivot p  = pivots.get(i);
+			result += p.saveAsString() + " ";
+		}
+
+
+		result += "EndPivots: ";
+		return result;
+	}
+
+
 
   /**
    * Resets start and end Lines to be in default position so shape and note positions can be reset.

@@ -1,5 +1,8 @@
 package umlobject;
 
+import java.util.Scanner;
+import java.util.Vector;
+
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -19,6 +22,24 @@ public class Segment extends UMLConnector {
    *The underlying model of the segment.
    */
   public Line line;
+
+  /**
+   * Build from string method
+   * @param input The scanner from which the object can read in its save string
+   * @param allNodes List of all nodes currently in the scene.
+   * @postcondition generates a Relationship built off of its save string; stops BEFORE it reaches pivot information.
+   */
+  public Segment(Scanner input, Vector<UMLNode> allNodes) {
+	  	start = allNodes.get(input.nextInt());
+	  	stop = allNodes.get(input.nextInt());
+	    line = new Line();
+	    originX = start.getOriginX();
+	    originY = start.getOriginY();
+	    // Set line to proper starting position.
+	    update();
+	    line.setStrokeWidth(2);
+	}
+
 
   /**
    * Explicit Constructor

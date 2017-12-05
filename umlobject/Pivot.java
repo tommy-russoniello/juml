@@ -24,7 +24,16 @@ public class Pivot extends UMLNode {
   /**
    * Parent UMLConnector of this.
    */
-  UMLConnector connector;
+  Relationship connector;
+
+  /**
+   * Save method; stored as "delimiter x y"
+   * @postcondition generates a string with the necessary information for the object to rebuild itself.
+   */
+  public String saveAsString() {
+	  return "Pivot: "+ originX +" "+ originY;
+  }
+
 
   /**
    * Basic Constructor
@@ -32,7 +41,7 @@ public class Pivot extends UMLNode {
    * @param y y coordinate for this to be made on.
    * @postcondition Pivot instance with given coordinates and default radius of 3 is created.
    */
-  public Pivot(UMLConnector inConnector, double x, double y) {
+  public Pivot(Relationship inConnector, double x, double y) {
     originX = x;
     originY = y;
     circle = new Circle(originX, originY, 2);
@@ -55,7 +64,7 @@ public class Pivot extends UMLNode {
    * * coordinates for their lines.
    */
   public void update() {
-    connector.update();
+    connector.update(true);
     super.update();
   }
 

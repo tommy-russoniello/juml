@@ -513,9 +513,9 @@ public class Controller {
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-        addObjects(new ClassBox(xClick, yClick));
+				addObjects(new ClassBox(xClick, yClick));
 
-        break;
+				break;
 
 			// Adds any UMLNode clicked to SELECTED
 			// If theres a UMLNode already in SELECTED, draws a line from it to currently clicked UMLNode.
@@ -643,36 +643,36 @@ public class Controller {
 				selectObject(node);
 			}
 		}
-  }
+ 	}
 
-  /*
+  	/*
 	 * Returns recognized UMLObject for given Object (typically one's underlying model).
 	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
 	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
-	 * * not recognized, but has an ancestor that is, that ancestor is the return.
+	 *  not recognized, but has an ancestor that is, that ancestor is the return.
 	 */
 	public UMLObject getObject (Object inModel) {
-      Node model = (Node) inModel;
-      UMLObject returnNode = NODES.get(model);
-			// If model is not a key in NODES (returns null to returnNode), it's UMLObject must be a
-			// * UMLConnector
-      if (returnNode == null) {
-        returnNode = CONNECTORS.get(model);
-      }
-			// Follow ancestry line until recognized UMLObject is found or until pane is reached or until
-			// * end of ancestry line is reached.
-      while (returnNode == null) {
-        if (model == pane || model == null) {
-          break;
-        }
-        model = model.getParent();
-        returnNode = NODES.get(model);
-        if (returnNode == null) {
-          returnNode = CONNECTORS.get(model);
-        }
-      }
-      return returnNode;
-    }
+	      Node model = (Node) inModel;
+	      UMLObject returnNode = NODES.get(model);
+				// If model is not a key in NODES (returns null to returnNode), it's UMLObject must be a
+				// * UMLConnector
+	      if (returnNode == null) {
+		returnNode = CONNECTORS.get(model);
+	      }
+				// Follow ancestry line until recognized UMLObject is found or until pane is reached or until
+				// * end of ancestry line is reached.
+	      while (returnNode == null) {
+		if (model == pane || model == null) {
+		  break;
+		}
+		model = model.getParent();
+		returnNode = NODES.get(model);
+		if (returnNode == null) {
+		  returnNode = CONNECTORS.get(model);
+		}
+	      }
+	      return returnNode;
+	    }
 
 		/* Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
 		 * * none of the given UMLConnector's Segments contain the given Line, returns null.

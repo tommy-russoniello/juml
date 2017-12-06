@@ -20,22 +20,6 @@ import juml.Controller;
  */
 public class Aggregation extends Relationship {
 
-  /**
-   * Explicit Constructor
-   * @param inStart starting UMLNode for Segment to be drawn between.
-   * @param inStop stopping UMLNode for Segment to be drawn between.
-   * @postcondition Aggregation instance with given starting and stopping UMLNodes is created.
-   */
-  public Aggregation(UMLNode inStart, UMLNode inStop) {
-    start = inStart;
-    stop = inStop;
-    originX = start.getOriginX();
-    originY = start.getOriginY();
-    segments = new ArrayList<>();
-    pivots = new ArrayList<>();
-    startText = new Note(0, 0, 20);
-    endText = new Note(0, 0, 20);
-
 	  /**
 	   * Build from string method
 	   * @param input The scanner from which the object can read in its save string

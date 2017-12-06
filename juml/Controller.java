@@ -1171,13 +1171,6 @@ public class Controller {
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
-<<<<<<< HEAD
-=======
-	}
-
-	// WIP Menu Bar Actions
-	public void menuCloseClicked() {
->>>>>>> rebase
 	}
 
 	public void menuCopyClicked() {

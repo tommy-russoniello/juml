@@ -3,7 +3,6 @@ package umlobject;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Vector;
-
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -21,7 +20,6 @@ import juml.Controller;
  */
 public class Aggregation extends Relationship {
 
-
 	  /**
 	   * Build from string method
 	   * @param input The scanner from which the object can read in its save string
@@ -34,7 +32,6 @@ public class Aggregation extends Relationship {
 		setUp();
 		readInPivots(input, controller);
 	}
-
 
 	  /**
 	   * Explicit Constructor
@@ -66,7 +63,6 @@ public class Aggregation extends Relationship {
 		// Move segment to proper starting position.
 		update();
 	}
-
 
   /**
    * Resets start and end Lines to be in default position so shape and note positions can be reset.

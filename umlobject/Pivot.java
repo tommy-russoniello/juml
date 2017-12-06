@@ -89,7 +89,7 @@ public class Pivot extends UMLNode {
   	if(newY < 0){
   		newY = 0;
     }
-	  circle.setCenterX(newX);
+	circle.setCenterX(newX);
     circle.setCenterY(newY);
     super.move(newX, newY);
   }

@@ -35,8 +35,6 @@ public class Note extends UMLNode {
    */
   double width;
 
-<<<<<<< HEAD
-
 	/**
 	 * Build from string method
 	 * @param input The scanner from which the object can read in its save string
@@ -80,9 +78,6 @@ public Note(Scanner input) {
 		return result;
 	}
 
-
-=======
->>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
   /**
    * Basic Constructor
    * @param x x coordinate for this to be made on.

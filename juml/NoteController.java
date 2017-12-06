@@ -32,9 +32,25 @@ public class NoteController extends UMLNodeController {
 	@FXML private Button applyButton;
 
 	//Base variables to pass in classBox object
+<<<<<<< HEAD
 	Note note = null;
 	Controller controller;
 
+=======
+	UMLObject noteUML = null;
+	Note note = null;
+	Controller controller;
+
+	/*
+	 * Basic Constructor
+	 * @param
+	 * @postcondition
+	 */
+	public NoteController() throws IOException{
+
+	}
+
+>>>>>>> Update inspector for new functionality
 	public String getOriginXText() {
 		return originX.getText();
 	}
@@ -54,7 +70,12 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getNote(UMLObject object){
+<<<<<<< HEAD
 		note = (Note) object;
+=======
+		noteUML = object;
+		note = (Note) noteUML;
+>>>>>>> Update inspector for new functionality
 	}
 
 	/*
@@ -70,7 +91,11 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition sets the text of the originY fx:id with the value of the Note Origin Y coordinate
 	 */
 	public void getOriginX(){
+<<<<<<< HEAD
 		originX.setText(Double.toString(note.getOriginX()));
+=======
+		originX.setText(Double.toString(noteUML.getOriginX()));
+>>>>>>> Update inspector for new functionality
 	}
 
 	/*
@@ -78,7 +103,11 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition sets the text of the originY fx:id with the value of the Note Origin Y coordinate
 	 */
 	public void getOriginY(){
+<<<<<<< HEAD
 		originY.setText(Double.toString(note.getOriginY()));
+=======
+		originY.setText(Double.toString(noteUML.getOriginY()));
+>>>>>>> Update inspector for new functionality
 	}
 
 	public void updateText(KeyEvent event){

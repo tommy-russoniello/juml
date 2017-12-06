@@ -132,6 +132,46 @@ public class Controller {
 		window = primaryStage;
 		scene = window.getScene();
 
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      public void handle(KeyEvent event) {
+	      if (System.getProperty("os.name").contains("Mac")) {
+        	if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
+            undo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
+            redo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
+            printState();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
+            refresh();
+            event.consume();
+          }
+        } else {
+          if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
+            undo();
+          	event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
+            redo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
+            printState();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
+            refresh();
+            event.consume();
+          }
+        }
+      }
+    });
+
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(MODE == Mode.SELECT){
 				if(e.isSecondaryButtonDown()){
@@ -400,6 +440,8 @@ public class Controller {
 			}
 		});
 	}
+
+
 
 	/*
 	 * Returns pane.
@@ -1067,11 +1109,6 @@ public class Controller {
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
-
-		catch (IOException ex) {
-			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
 	}
 
 	// WIP Menu Bar Actions

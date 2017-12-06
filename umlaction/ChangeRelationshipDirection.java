@@ -30,9 +30,11 @@ public class ChangeRelationshipDirection extends UMLAction {
 	Controller controller;
 	UMLObject oldConnector;
 	UMLObject newConnector;
+	Relationship relationship;
 
 
 	public ChangeRelationshipDirection(Relationship original, Controller c) {
+		relationship = original;
 		controller = c;
 		controller.deselectAll();
 		oldConnector = original;
@@ -79,6 +81,7 @@ public class ChangeRelationshipDirection extends UMLAction {
 	}
 
 	public void doAction() {
+		Collections.reverse(relationship.getPivots());
 		controller.deselectAll();
 		deleteOldLine.doAction();
 		addNewLine.doAction();
@@ -86,6 +89,7 @@ public class ChangeRelationshipDirection extends UMLAction {
 	}
 
 	public void undoAction() {
+		Collections.reverse(relationship.getPivots());
 		controller.deselectAll();
 		addNewLine.undoAction();
 		deleteOldLine.undoAction();

@@ -127,9 +127,13 @@ public Note(Scanner input) {
    * @postcondition This updates all of its data according to new coordinates.
    */
   public void move(double newX, double newY) {
-	if(newX - (getWidth()/2) < 0 || newY - (getHeight()/2) < 0)
-	   return;
-	box.setLayoutX(newX - (width / 2));
+-    if(newX - (getWidth()/2) < 0) {
+ -  		newX = 0 + (getWidth()/2);
+ -    }
+ -  	if (newY - (getHeight()/2) < 0) {
+ -  		newY = 0 + (getHeight()/2);
+ -    }
+    box.setLayoutX(newX - (width / 2));
     box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }

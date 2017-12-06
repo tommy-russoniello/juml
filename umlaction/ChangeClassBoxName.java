@@ -36,6 +36,7 @@ public class ChangeClassBoxName extends UMLAction {
     String temp = alt;
     alt = classBox.getName();
     classBox.setName(temp);
+    classBox.trim();
   }
 
   public void undoAction() {
@@ -45,5 +46,6 @@ public class ChangeClassBoxName extends UMLAction {
     String temp = alt;
     alt = classBox.getName();
     classBox.setName(temp);
+    classBox.trim();
   }
 }

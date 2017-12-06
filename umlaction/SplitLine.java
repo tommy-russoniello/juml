@@ -42,14 +42,12 @@ public class SplitLine extends UMLConnectorAction {
   public void doAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
     connectToPivots(splitSegment);
     int pos = relationship.segments.indexOf(splitSegment);
     relationship.pivots.add(pos, pivot);
     relationship.segments.add(pos, newSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
     connectToPivots(newSegment);
     if((Line) splitSegment.getModel() == relationship.startLine) {
       relationship.startLine = (Line) newSegment.getModel();
@@ -68,7 +66,6 @@ public class SplitLine extends UMLConnectorAction {
     relationship.group.getChildren().remove(pivot.getModel());
     splitSegment.disconnect();
     splitSegment.start = newSegment.getStart();
-    //splitSegment.connect();
     connectToPivots(newSegment);
     relationship.update();
   }
@@ -86,11 +83,9 @@ public class SplitLine extends UMLConnectorAction {
   public void doInitialAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
     connectToPivots(splitSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
     if (!(splitSegment.start instanceof Pivot)) {
     	Vector<UMLConnector> connections = splitSegment.start.getConnections();
     	for (int i=0; i<connections.size(); i++) {

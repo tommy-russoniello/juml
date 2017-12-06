@@ -17,6 +17,7 @@ public class ChangeNoteText extends UMLNodeAction {
   NoteController noteController;
   Note note;
   String altText;
+  double width;
 
   public ChangeNoteText(Note inNote, String newText) {
     noteController = null;
@@ -36,6 +37,7 @@ public class ChangeNoteText extends UMLNodeAction {
     if (noteController != null) {
       noteController.noteText.setText(altText);
     }
+    width = note.getWidth();
     String temp = altText;
     altText = note.getText();
     note.setText(temp);
@@ -48,5 +50,6 @@ public class ChangeNoteText extends UMLNodeAction {
     String temp = altText;
     altText = note.getText();
     note.setText(temp);
+    note.setWidth(width);
   }
 }

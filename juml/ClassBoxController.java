@@ -32,18 +32,8 @@ public class ClassBoxController extends UMLNodeController {
 	@FXML private Button applyButton;
 
 	//Base variables to pass in classBox object
-	UMLObject classBoxUML = null;
 	ClassBox classBox = null;
 	Controller controller;
-
-    /*
-	 * Basic Constructor
-	 * @param
-	 * @postcondition
-	 */
-	public ClassBoxController() throws IOException{
-
-	}
 
 	public String getOriginXText() {
 		return classBoxOriginX.getText();
@@ -64,8 +54,7 @@ public class ClassBoxController extends UMLNodeController {
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getClassBox(UMLObject object){
-		classBoxUML = object;
-		classBox = (ClassBox)classBoxUML;
+		classBox = (ClassBox) object;
 
 	}
 
@@ -98,7 +87,7 @@ public class ClassBoxController extends UMLNodeController {
 	 * @postcondition sets the text of the classBoxOriginX fx:id with the value of the classBox Origin X coordinate
 	 */
 	public void classBoxOriginXSetText(){
-		classBoxOriginX.setText(Double.toString(classBoxUML.getOriginX()));
+		classBoxOriginX.setText(Double.toString(classBox.getOriginX()));
 	}
 
 	/*
@@ -106,7 +95,7 @@ public class ClassBoxController extends UMLNodeController {
 	 * @postcondition sets the text of the classBoxOriginY fx:id with the value of the classBox Origin Y coordinate
 	 */
 	public void classBoxOriginYSetText(){
-		classBoxOriginY.setText(Double.toString(classBoxUML.getOriginY()));
+		classBoxOriginY.setText(Double.toString(classBox.getOriginY()));
 	}
 
 	public void updateName(KeyEvent event) {

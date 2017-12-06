@@ -24,8 +24,8 @@ public class UpdateNote extends UMLNodeAction {
   }
 
   public UpdateNote(Note note, String newText, double newX, double newY,
-    NoteController inController) {
-    noteController = inController;
+    NoteController inNoteController) {
+    noteController = inNoteController;
     text = new ChangeNoteText(note, newText, noteController);
     move = new MoveUMLNode(note, newX, newY, noteController);
   }

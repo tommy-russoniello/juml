@@ -39,18 +39,7 @@ public class RelationshipController {
 
 	//Base variables to pass in Relationship object
 	Relationship relationship = null;
-	UMLObject objectID = null;
 	Controller controller;
-	Boolean activateChoiceBox = false;
-
-	/*
-	 * Basic Constructor
-	 * @param
-	 * @postcondition
-	 */
-	public RelationshipController() throws IOException{
-
-	}
 
 	/*
 	 * Basic Getter to receive the UMLObject
@@ -58,7 +47,6 @@ public class RelationshipController {
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getRelationship(UMLObject object){
-		objectID = object;
 		relationship = (Relationship)object;
 	}
 
@@ -164,39 +152,16 @@ public class RelationshipController {
 	 * @postcondition activates when user clicks the Flip Direction button
 	 */
 	public void flipDirection(ActionEvent event){
+		controller.ACTIONS.push(new ChangeRelationshipDirection(relationship, controller));
 		event.consume();
 	}
 
 
 	public void changeLineType(ActionEvent event){
-		Relationship newRelationship = null;
-		if (relationshipType.getValue() == "Aggregation"){
-			newRelationship = new Aggregation(relationship.start,relationship.stop);
-		} else if (relationshipType.getValue() == "Association"){
-			newRelationship = new Association(relationship.start,relationship.stop);
-		} else if (relationshipType.getValue() == "Composition"){
-			newRelationship = new Composition(relationship.start,relationship.stop);
-		} else if (relationshipType.getValue() == "Dependency"){
-			newRelationship = new Dependency(relationship.start,relationship.stop);
-		} else if (relationshipType.getValue() == "Generalization"){
-			newRelationship = new Generalization(relationship.start,relationship.stop);
-		}
-
-		controller.ACTIONS.push(new DeleteUMLConnector(relationship, controller));
-		controller.ACTIONS.push(new AddUMLConnector(newRelationship, controller));
-		try {
-			// lineType.hideText();
-			relationship.showText();
-			controller.ACTIONS.push(new ChangeRelationshipEndText(relationship, endText.getText(), controller));
-			controller.ACTIONS.push(new ChangeRelationshipStartText(relationship, startText.getText(), controller));
-		} catch (ClassCastException e){
-
-		}
-		getStartText();
-		getEndText();
-
-		System.out.println(relationshipType.getValue());
+		controller.ACTIONS.push(new ChangeRelationshipType(relationship, relationshipType.getValue(), controller));
+		event.consume();
 	}
+
 	/*
 	 * This calls all fxml updating methods in RelationshipController to update Relationship.fxml
 	 * with the variables from the object. Makes it easier on the main controller to activate
@@ -216,15 +181,5 @@ public class RelationshipController {
 		getStartText();
 		getEndText();
 		relationshipType.setItems(FXCollections.observableArrayList("Aggregation","Association","Composition","Dependency","Generalization"));
-
-		/* this if else condition triggers the changeLineType event, I cant find a way have this code run without triggering the event
-		if(isNormalLine == true){
-			relationshipType.getSelectionModel().select("Line");
-		} else {
-			relationshipType.getSelectionModel().select(lineType.getLineType());
-		}
-		*/
-
 	}
-
 }

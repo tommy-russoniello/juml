@@ -24,17 +24,7 @@ public class SegmentController {
 
 	//Base variables to pass in Segment object
 	Segment connector = null;
-	UMLObject object = null;
 	Controller controller;
-
-	/*
-	 * Basic Constructor
-	 * @param
-	 * @postcondition
-	 */
-	public SegmentController() throws IOException{
-
-	}
 
 	/*
 	 * Basic Getter to receive the UMLObject
@@ -42,8 +32,7 @@ public class SegmentController {
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getSegment(UMLObject object){
-		object = object;
-		connector = (Segment)object;
+		connector = (Segment) object;
 	}
 
 	/*

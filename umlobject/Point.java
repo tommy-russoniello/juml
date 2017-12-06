@@ -36,7 +36,7 @@ public class Point extends UMLNode {
 	 *                provided by input
 	 */
 	public Point(Scanner input) {
-		this(input.nextDouble(), input.nextDouble(), input.nextInt());
+		this(input.nextDouble(), input.nextDouble(), input.nextDouble());
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Point extends UMLNode {
 	 *            Radius for underlying circle model to have.
 	 * @postcondition Point instance with given coordinates and radius is created.
 	 */
-	public Point(double x, double y, int inRadius) {
+	public Point(double x, double y, double inRadius) {
 		originX = x;
 		originY = y;
 		radius = inRadius;

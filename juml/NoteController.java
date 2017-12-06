@@ -32,18 +32,8 @@ public class NoteController extends UMLNodeController {
 	@FXML private Button applyButton;
 
 	//Base variables to pass in classBox object
-	UMLObject noteUML = null;
 	Note note = null;
 	Controller controller;
-
-	/*
-	 * Basic Constructor
-	 * @param
-	 * @postcondition
-	 */
-	public NoteController() throws IOException{
-
-	}
 
 	public String getOriginXText() {
 		return originX.getText();
@@ -64,8 +54,7 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getNote(UMLObject object){
-		noteUML = object;
-		note = (Note) noteUML;
+		note = (Note) object;
 	}
 
 	/*
@@ -81,7 +70,7 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition sets the text of the originY fx:id with the value of the Note Origin Y coordinate
 	 */
 	public void getOriginX(){
-		originX.setText(Double.toString(noteUML.getOriginX()));
+		originX.setText(Double.toString(note.getOriginX()));
 	}
 
 	/*
@@ -89,7 +78,7 @@ public class NoteController extends UMLNodeController {
 	 * @postcondition sets the text of the originY fx:id with the value of the Note Origin Y coordinate
 	 */
 	public void getOriginY(){
-		originY.setText(Double.toString(noteUML.getOriginY()));
+		originY.setText(Double.toString(note.getOriginY()));
 	}
 
 	public void updateText(KeyEvent event){

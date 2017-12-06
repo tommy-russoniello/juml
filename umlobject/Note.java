@@ -30,11 +30,6 @@ public class Note extends UMLNode {
   /** The text of the note. */
   public Text text;
 
-  /**
-   * Width of entire box, limits inner text length as well.
-   */
-  double width;
-
 	/**
 	 * Build from string method
 	 * @param input The scanner from which the object can read in its save string
@@ -52,7 +47,7 @@ public Note(Scanner input) {
    */
   public String saveAsString() {
 		int numTextChars = text.getText().length();
-		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + width+ " " + numTextChars + " "+text.getText();
+		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + getWidth() + " " + numTextChars + " "+text.getText();
 	}
 
 	/**
@@ -95,8 +90,7 @@ public Note(Scanner input) {
    * @param w Width that this will be created with.
    * @postcondition Note instance with given width and coordinates is created.
    */
-  public Note(double x, double y, double w) {
-    width = w;
+  public Note(double x, double y, double width) {
     box = new VBox();
     box.setLayoutX(x);
     box.setLayoutY(y);
@@ -128,12 +122,12 @@ public Note(Scanner input) {
    */
   public void move(double newX, double newY) {
     if(newX - (getWidth()/2) < 0) {
-   		newX = 0 + (getWidth()/2);
-     }
-   	if (newY - (getHeight()/2) < 0) {
-   		newY = 0 + (getHeight()/2);
-     }
-    box.setLayoutX(newX - (width / 2));
+  		newX = 0 + (getWidth()/2);
+    }
+  	if (newY - (getHeight()/2) < 0) {
+  		newY = 0 + (getHeight()/2);
+    }
+    box.setLayoutX(newX - (getWidth() / 2));
     box.setLayoutY(newY - (getHeight() / 2));
     super.move(newX, newY);
   }
@@ -155,7 +149,7 @@ public Note(Scanner input) {
    * @return maintained width.
    */
   public double getWidth() {
-    return width;
+    return box.getWidth();
   }
 
   /**
@@ -255,6 +249,7 @@ public Note(Scanner input) {
   public void setText(String newText){
     text.setWrappingWidth(0);
 	  text.setText(newText);
+    setWidth(text.getLayoutBounds().getWidth());
   }
 
   /**
@@ -263,10 +258,10 @@ public Note(Scanner input) {
    * @postcondition All of this's components are altered to match given width for this.
    */
   public void setWidth(double newWidth) {
-    width = newWidth;
-    text.setWrappingWidth(width);
-    originX = box.getLayoutX() + (width / 2);
-    originY = box.getLayoutY() + (getHeight() / 2);
+    newWidth = newWidth < 10 ? 10 : newWidth;
+    text.setWrappingWidth(newWidth);
+
+    move (originX, originY);
 
     for (UMLConnector connector : connections) {
       connector.update();

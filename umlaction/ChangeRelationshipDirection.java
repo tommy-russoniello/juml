@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Complete inspector functionality
 package umlaction;
 
 import java.util.Scanner;
@@ -31,11 +34,17 @@ public class ChangeRelationshipDirection extends UMLAction {
 	Controller controller;
 	UMLObject oldConnector;
 	UMLObject newConnector;
+<<<<<<< HEAD
 	Relationship relationship;
 
 
 	public ChangeRelationshipDirection(Relationship original, Controller c) {
 		relationship = original;
+=======
+
+
+	public ChangeRelationshipDirection(Relationship original, Controller c) {
+>>>>>>> Complete inspector functionality
 		controller = c;
 		controller.deselectAll();
 		oldConnector = original;
@@ -82,7 +91,10 @@ public class ChangeRelationshipDirection extends UMLAction {
 	}
 
 	public void doAction() {
+<<<<<<< HEAD
 		Collections.reverse(relationship.getPivots());
+=======
+>>>>>>> Complete inspector functionality
 		controller.deselectAll();
 		deleteOldLine.doAction();
 		addNewLine.doAction();
@@ -90,13 +102,17 @@ public class ChangeRelationshipDirection extends UMLAction {
 	}
 
 	public void undoAction() {
+<<<<<<< HEAD
 		Collections.reverse(relationship.getPivots());
+=======
+>>>>>>> Complete inspector functionality
 		controller.deselectAll();
 		addNewLine.undoAction();
 		deleteOldLine.undoAction();
 		controller.selectObject(oldConnector);
 	}
 }
+<<<<<<< HEAD
 =======
 // package umlaction;
 //
@@ -186,3 +202,5 @@ public class ChangeRelationshipDirection extends UMLAction {
 // 	}
 // }
 >>>>>>> Update inspector for new functionality
+=======
+>>>>>>> Complete inspector functionality

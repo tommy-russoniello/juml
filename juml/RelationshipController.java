@@ -40,6 +40,7 @@ public class RelationshipController {
 	//Base variables to pass in Relationship object
 	Relationship relationship = null;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Controller controller;
 =======
 	UMLObject objectID = null;
@@ -55,6 +56,9 @@ public class RelationshipController {
 
 	}
 >>>>>>> Update inspector for new functionality
+=======
+	Controller controller;
+>>>>>>> Complete inspector functionality
 
 	/*
 	 * Basic Getter to receive the UMLObject
@@ -63,9 +67,12 @@ public class RelationshipController {
 	 */
 	public void getRelationship(UMLObject object){
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		objectID = object;
 >>>>>>> Update inspector for new functionality
+=======
+>>>>>>> Complete inspector functionality
 		relationship = (Relationship)object;
 	}
 
@@ -172,14 +179,19 @@ public class RelationshipController {
 	 */
 	public void flipDirection(ActionEvent event){
 <<<<<<< HEAD
+<<<<<<< HEAD
 		controller.ACTIONS.push(new ChangeRelationshipDirection(relationship, controller));
 =======
 >>>>>>> Update inspector for new functionality
+=======
+		controller.ACTIONS.push(new ChangeRelationshipDirection(relationship, controller));
+>>>>>>> Complete inspector functionality
 		event.consume();
 	}
 
 
 	public void changeLineType(ActionEvent event){
+<<<<<<< HEAD
 <<<<<<< HEAD
 		controller.ACTIONS.push(new ChangeRelationshipType(relationship, relationshipType.getValue(), controller));
 		event.consume();
@@ -215,6 +227,12 @@ public class RelationshipController {
 		System.out.println(relationshipType.getValue());
 	}
 >>>>>>> Update inspector for new functionality
+=======
+		controller.ACTIONS.push(new ChangeRelationshipType(relationship, relationshipType.getValue(), controller));
+		event.consume();
+	}
+
+>>>>>>> Complete inspector functionality
 	/*
 	 * This calls all fxml updating methods in RelationshipController to update Relationship.fxml
 	 * with the variables from the object. Makes it easier on the main controller to activate
@@ -235,6 +253,7 @@ public class RelationshipController {
 		getEndText();
 		relationshipType.setItems(FXCollections.observableArrayList("Aggregation","Association","Composition","Dependency","Generalization"));
 <<<<<<< HEAD
+<<<<<<< HEAD
 	}
 =======
 
@@ -249,4 +268,7 @@ public class RelationshipController {
 	}
 
 >>>>>>> Update inspector for new functionality
+=======
+	}
+>>>>>>> Complete inspector functionality
 }

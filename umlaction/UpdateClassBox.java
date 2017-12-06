@@ -34,9 +34,13 @@ public class UpdateClassBox extends UMLNodeAction {
     methods = new ChangeClassBoxMethods(classBox, newMethods, classBoxController);
     move = new MoveUMLNode(classBox, newX, newY, classBoxController);
 <<<<<<< HEAD
+<<<<<<< HEAD
     System.out.println("box width: " + classBox.getWidth() + ", text width: " + classBox.name.getLayoutBounds().getWidth());
 =======
 >>>>>>> Update inspector for new functionality
+=======
+    System.out.println("box width: " + classBox.getWidth() + ", text width: " + classBox.name.getLayoutBounds().getWidth());
+>>>>>>> Complete inspector functionality
   }
 
   public void doAction() {

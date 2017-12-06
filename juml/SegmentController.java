@@ -25,6 +25,7 @@ public class SegmentController {
 	//Base variables to pass in Segment object
 	Segment connector = null;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Controller controller;
 
 	/*
@@ -43,17 +44,26 @@ public class SegmentController {
 
 	/*
 >>>>>>> Update inspector for new functionality
+=======
+	Controller controller;
+
+	/*
+>>>>>>> Complete inspector functionality
 	 * Basic Getter to receive the UMLObject
 	 * @param object the UMLObject that is being observed and changed
 	 * @postcondition assigns the UMLObject and its underlying model to variables
 	 */
 	public void getSegment(UMLObject object){
 <<<<<<< HEAD
+<<<<<<< HEAD
 		connector = (Segment) object;
 =======
 		object = object;
 		connector = (Segment)object;
 >>>>>>> Update inspector for new functionality
+=======
+		connector = (Segment) object;
+>>>>>>> Complete inspector functionality
 	}
 
 	/*

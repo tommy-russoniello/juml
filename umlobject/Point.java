@@ -152,29 +152,6 @@ public class Point extends UMLNode {
 		return originY + yOffset;
 	}
 
-    }
-		double xOffset = actingRadius * Math.cos(angle);
-		return originX + xOffset;
-	}
-
-	/**
-	 * Returns the y coordinate of the point to which a connector should anchor if
-	 * joined to this node.
-	 *
-	 * @return returns the calculated y coordinate.
-	 */
-	public double getAnchorY(double startX, double startY) {
-		double actingRadius = radius;
-		double deltaX = startX - originX;
-		double deltaY = originY - startY;
-		double angle = Math.atan(deltaY/deltaX);
-		if (startX<originX) {
-			angle+= Math.PI;
-    }
-		double yOffset = -actingRadius * Math.sin(angle);
-		return originY + yOffset;
-	}
-
   /**
    * Reassign this at given radius.
    * @param newRadius reassigned for this.

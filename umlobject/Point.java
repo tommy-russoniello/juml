@@ -153,11 +153,6 @@ public class Point extends UMLNode {
 		return originY + yOffset;
 	}
 
-=======
- 	  double deltaY = originY - startY;
-		double angle = Math.atan(deltaY/deltaX);
-		if (startX<originX) {
-			angle+= Math.PI;
     }
 		double xOffset = actingRadius * Math.cos(angle);
 		return originX + xOffset;

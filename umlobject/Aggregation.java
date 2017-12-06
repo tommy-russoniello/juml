@@ -1,14 +1,20 @@
 package umlobject;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Scanner;
 import java.util.Vector;
 
+=======
+>>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+<<<<<<< HEAD
 import juml.Controller;
+=======
+>>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
 
 /**
  * UML aggregation representation.
@@ -20,6 +26,25 @@ import juml.Controller;
  * @since 0.3
  */
 public class Aggregation extends Relationship {
+<<<<<<< HEAD
+=======
+
+  /**
+   * Explicit Constructor
+   * @param inStart starting UMLNode for Segment to be drawn between.
+   * @param inStop stopping UMLNode for Segment to be drawn between.
+   * @postcondition Aggregation instance with given starting and stopping UMLNodes is created.
+   */
+  public Aggregation(UMLNode inStart, UMLNode inStop) {
+    start = inStart;
+    stop = inStop;
+    originX = start.getOriginX();
+    originY = start.getOriginY();
+    segments = new ArrayList<>();
+    pivots = new ArrayList<>();
+    startText = new Note(0, 0, 20);
+    endText = new Note(0, 0, 20);
+>>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
 
 
 	  /**
@@ -36,6 +61,7 @@ public class Aggregation extends Relationship {
 	}
 
 
+<<<<<<< HEAD
 	  /**
 	   * Explicit Constructor
 	   * @param inStart starting UMLNode for Segment to be drawn between.
@@ -68,6 +94,8 @@ public class Aggregation extends Relationship {
 	}
 
 
+=======
+>>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
   /**
    * Resets start and end Lines to be in default position so shape and note positions can be reset.
    *  Used to line all shapes back up with each other after a bad movement (NaN delta).

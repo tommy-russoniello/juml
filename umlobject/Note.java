@@ -82,7 +82,7 @@ public Note(Scanner input) {
 
 
 =======
->>>>>>> Comment Updates
+>>>>>>> d2f977cf557eca2b793717effd7b8e1033836966
   /**
    * Basic Constructor
    * @param x x coordinate for this to be made on.

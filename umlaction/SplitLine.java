@@ -110,7 +110,7 @@ public class SplitLine extends UMLConnectorAction {
     relationship.update();
 
 
-    class DragSource { double x, y; }
+    class DragSource { double x, y; boolean ifDragged;}
 		final DragSource dragSource = new DragSource();
     final DragSource originalPosition = new DragSource();
 		// Records dragging coordinate information
@@ -146,6 +146,7 @@ public class SplitLine extends UMLConnectorAction {
 				  } else {
 					  pivot.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }
+          dragSource.ifDragged = true;
 				  pivot.update();
 			  }
 		  }
@@ -155,10 +156,13 @@ public class SplitLine extends UMLConnectorAction {
 		pivot.getModel().setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (controller.MODE == Controller.Mode.SELECT) {
-          controller.UNDONE_ACTIONS.clear();
-          controller.ACTIONS.push(
-            new MoveUMLNode(pivot, originalPosition.x, originalPosition.y, false));
-				  pivot.getModel().getScene().setCursor(Cursor.HAND);
+          if (dragSource.ifDragged) {
+            controller.UNDONE_ACTIONS.clear();
+            controller.ACTIONS.push(
+              new MoveUMLNode(pivot, originalPosition.x, originalPosition.y, false));
+  				  pivot.getModel().getScene().setCursor(Cursor.HAND);
+            dragSource.ifDragged = false;
+          }
 				}
 			}
 		});

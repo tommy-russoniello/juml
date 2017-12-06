@@ -188,12 +188,48 @@ public class Relationship extends UMLConnector {
   }
 
   /**
+   * Removes start Note from group's children, effectively hiding it from the scene.
+   * @postcondition start Note is removed from group's children.
+   */
+  public void hideStartText() {
+    group.getChildren().remove(startText.getModel());
+  }
+
+  /**
+   * Removes end Note from group's children, effectively hiding it from the scene.
+   * @postcondition end Note is removed from group's children.
+   */
+  public void hideEndText() {
+    group.getChildren().remove(endText.getModel());
+  }
+
+  /**
    * Removes start and end Notes from group's children, effectively hiding them from the scene.
    * @postcondition start and end Notes are removed from group's children.
    */
   public void hideText() {
-    group.getChildren().remove(startText.getModel());
-    group.getChildren().remove(endText.getModel());
+    hideStartText();
+    hideEndText();
+  }
+
+  /**
+   * Adds start Note to group's children, effectively making it visible in the scene.
+   * @postcondition start Note is added to group's children.
+   */
+  public void showStartText() {
+    if (!group.getChildren().contains(startText.getModel())) {
+      group.getChildren().add(startText.getModel());
+    }
+  }
+
+  /**
+   * Adds end Note to group's children, effectively making it visible in the scene.
+   * @postcondition end Note is added to group's children.
+   */
+  public void showEndText() {
+    if (!group.getChildren().contains(endText.getModel())) {
+      group.getChildren().add(endText.getModel());
+    }
   }
 
   /**
@@ -201,8 +237,8 @@ public class Relationship extends UMLConnector {
    * @postcondition start and end Notes are added to group's children.
    */
   public void showText() {
-    group.getChildren().add(startText.getModel());
-    group.getChildren().add(endText.getModel());
+    showStartText();
+    showEndText();
   }
 
   /**
@@ -353,9 +389,13 @@ public class Relationship extends UMLConnector {
     shape.setRotate(-rotateAngle);
 
     // Reset Notes to be on top of lines if they were already visible.
-    if (textVisible()) {
-      hideText();
-      showText();
+    if (startTextVisible()) {
+      hideStartText();
+      showStartText();
+    }
+    if (endTextVisible()) {
+      hideEndText();
+      showEndText();
     }
   }
 
@@ -382,8 +422,23 @@ public class Relationship extends UMLConnector {
    * @return Boolean value for whether or not this's note are hidden.
    */
   public boolean textVisible() {
-    return group.getChildren().contains(startText.getModel()) ||
-      group.getChildren().contains(startText.getModel());
+    return ( startTextVisible() || endTextVisible() );
+  }
+
+  /**
+   * Returns whether or not this's start note is hidden.
+   * @return Boolean value for whether or not this's start note is hidden.
+   */
+  public boolean startTextVisible() {
+   return group.getChildren().contains(startText.getModel());
+  }
+
+  /**
+   * Returns whether or not this's end note is hidden.
+   * @return Boolean value for whether or not this's end note is hidden.
+   */
+  public boolean endTextVisible() {
+   return group.getChildren().contains(endText.getModel());
   }
 
   /**

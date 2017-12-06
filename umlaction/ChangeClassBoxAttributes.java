@@ -13,22 +13,35 @@ import umlobject.*;
  * @since 0.3
  */
 public class ChangeClassBoxAttributes extends UMLAction {
+  ClassBoxController classBoxController;
   ClassBox classBox;
   String alt;
 
   public ChangeClassBoxAttributes(ClassBox inClassBox, String newValue) {
+    this(inClassBox, newValue, null);
+  }
+
+  public ChangeClassBoxAttributes(ClassBox inClassBox, String newValue,
+    ClassBoxController inClassBoxController) {
+    classBoxController = inClassBoxController;
     classBox = inClassBox;
     alt = newValue;
     doAction();
   }
 
   public void doAction() {
+    if (classBoxController != null) {
+      classBoxController.classBoxAttributes.setText(alt);
+    }
     String temp = alt;
     alt = classBox.getAttributes();
     classBox.setAttributes(temp);
   }
 
   public void undoAction() {
+    if (classBoxController != null) {
+      classBoxController.classBoxAttributes.setText(alt);
+    }
     String temp = alt;
     alt = classBox.getAttributes();
     classBox.setAttributes(temp);

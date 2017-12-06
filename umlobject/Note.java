@@ -102,7 +102,7 @@ public Note(Scanner input) {
     box.setLayoutY(y);
     box.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
-    text = new Text("text");
+    text = new Text();
     text.setWrappingWidth(width);
     text.setTextAlignment(TextAlignment.CENTER);
     text.setFont(Font.font("Verdana", 10));

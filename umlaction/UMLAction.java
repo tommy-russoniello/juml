@@ -13,6 +13,11 @@ import umlobject.*;
  * @since 0.3
  */
 public class UMLAction {
+
+  public enum RelationshipType {
+		ASSOCIATION, DEPENDENCY, AGGREGATION, COMPOSITION, GENERALIZATION,
+	}
+  
   public Controller controller;
 
   public void doAction(){}

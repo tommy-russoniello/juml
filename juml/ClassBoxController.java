@@ -1,11 +1,14 @@
 package juml;
 
 import java.io.IOException;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.control.TextArea;
+
 import umlobject.*;
 import umlaction.*;
 
@@ -18,14 +21,15 @@ import umlaction.*;
  * @version 0.3
  * @since 0.3
  */
-public class ClassBoxController {
+public class ClassBoxController extends UMLNodeController {
 
 	//ClassBox.fxml IDs
-	@FXML private TextField classBoxName;
-	@FXML private TextArea classBoxAttributes;
-	@FXML private TextArea classBoxMethods;
+	@FXML public TextField classBoxName;
+	@FXML public TextArea classBoxAttributes;
+	@FXML public TextArea classBoxMethods;
 	@FXML private TextField classBoxOriginX;
 	@FXML private TextField classBoxOriginY;
+	@FXML private Button applyButton;
 
 	//Base variables to pass in classBox object
 	UMLObject classBoxUML = null;
@@ -39,6 +43,19 @@ public class ClassBoxController {
 	 */
 	public ClassBoxController() throws IOException{
 
+	}
+
+	public String getOriginXText() {
+		return classBoxOriginX.getText();
+	}
+
+	public String getOriginYText() {
+		return classBoxOriginY.getText();
+	}
+
+	public void setOriginCoordinatesText(double x, double y) {
+		classBoxOriginX.setText(Double.toString(x));
+		classBoxOriginY.setText(Double.toString(y));
 	}
 
 	/*
@@ -124,6 +141,37 @@ public class ClassBoxController {
 				controller.ACTIONS.push(new MoveUMLNode(classBox, x, y));
 		    event.consume();
 			} catch (Exception e) {
+				event.consume();
+			}
+		}
+	}
+
+	/*
+	 * Combination of updateCoordinates and updateMethods, updateName, updateAttributes.
+	 * Activates when the user clicks the apply changes button
+	 * @param event is a ActionEvent used to listen for when the user clicks the button in the inspector
+	 * @postcondition sets the X and Y coordinates of the classBox to that of the inspector's textfield's X and Y values
+	 * @postcondition sets the text of all three fields of the classBox to that of the inspector's textfields
+	 */
+	public void applyChanges(ActionEvent event) {
+		String name = classBoxName.getText();
+		String attributes = classBoxAttributes.getText();
+		String methods = classBoxMethods.getText();
+		double x = Double.parseDouble(classBoxOriginX.getText());
+		double y = Double.parseDouble(classBoxOriginY.getText());
+
+		if ((!name.equals(classBox.getName())) ||
+				(!attributes.equals(classBox.getAttributes())) ||
+				(!methods.equals(classBox.getMethods())) ||
+				x != classBox.getOriginX() ||
+				y != classBox.getOriginY()
+				) {
+			try{
+				controller.ACTIONS.push(new UpdateClassBox(classBox, name, attributes, methods, x, y, this));
+				event.consume();
+			} catch (Exception e){
+				controller.ACTIONS.push(new UpdateClassBox(classBox, name, attributes, methods,
+					classBox.getOriginX(), classBox.getOriginY(), this));
 				event.consume();
 			}
 		}

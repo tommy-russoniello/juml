@@ -454,11 +454,13 @@ public class Controller {
 	 * @postcondition MODE is updated according to button that received event triggering this method.
 	 */
 	public void modeClick(ActionEvent event) {
-		deselectAll();
-		String newMode = ((Button) event.getSource()).getId();
-		newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
-		MODE = Mode.valueOf(newMode);
-		SELECTED.clear();
+		String newModeString = ((Button) event.getSource()).getId();
+		newModeString = newModeString.substring(0, newModeString.length() - 4).toUpperCase();
+		Mode newMode = Mode.valueOf(newModeString);
+		if (newMode != MODE && newMode != Mode.SELECT) {
+			deselectAll();
+		}
+		MODE = newMode;
 		System.out.println("Draw mode changed to \"" + MODE + "\"");
 	}
 
@@ -711,12 +713,16 @@ public class Controller {
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
 			object.highlight();
-			if (object instanceof UMLConnector) {
-				loadUMLConnectorFXML(object);
+			if (object instanceof Segment) {
+				loadSegmentFXML(object);
+			} else if (object instanceof Relationship) {
+				loadRelationshipFXML(object);
 			} else if (object instanceof Point) {
 				loadPointFXML(object);
 			} else if (object instanceof ClassBox) {
 				loadClassBoxFXML(object);
+			} else if (object instanceof Note) {
+				loadNoteFXML(object);
 			} else if (inspectorObject != null) {
 				inspectorObject.getChildren().clear();
 			}
@@ -731,6 +737,10 @@ public class Controller {
 			while (!SELECTED.isEmpty()) {
 				SELECTED.peekLast().unhighlight();
 				SELECTED.removeLast();
+			}
+
+			if (inspectorObject != null) {
+				inspectorObject.getChildren().clear();
 			}
 		}
 
@@ -1145,20 +1155,56 @@ public class Controller {
 		}
 	}
 
-    /*
+  /**
 	 * loads inspector fxml and allows user to change properties.
 	 * @param line instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
 	 * the inspector/circle properties.
 	 */
-	public void loadUMLConnectorFXML(UMLObject connector){
-		try{
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("UMLConnector.fxml"));
+	public void loadSegmentFXML(UMLObject connector){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Segment.fxml"));
 			Parent root = loader.load();
-			UMLConnectorController UMLConnectorFXML = loader.getController();
+			SegmentController segmentFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
-			UMLConnectorFXML.loadInspectorInfo(connector, this);
+			segmentFXML.loadInspectorInfo(connector, this);
 		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * loads inspector fxml and allows user to change properties.
+	 * @param line instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+	 * the inspector/circle properties.
+	 */
+	public void loadRelationshipFXML(UMLObject connector){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Relationship.fxml"));
+			Parent root = loader.load();
+			RelationshipController relationshipFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			relationshipFXML.loadInspectorInfo(connector, this);
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * loads inspector fxml and allows user to change properties.
+	 * @param line instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+	 * the inspector/Note properties.
+	 */
+	public void loadNoteFXML(UMLObject Note) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Note.fxml"));
+			Parent root = loader.load();
+			NoteController NoteFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			NoteFXML.loadInspectorInfo(Note, this);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

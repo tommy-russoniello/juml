@@ -399,6 +399,7 @@ public class Controller {
 				}
 			}
 		});
+	}
 
 	/*
 	 * Returns pane.
@@ -512,7 +513,7 @@ public class Controller {
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-        addObjects(new ClassBox(xClick, yClick);
+        addObjects(new ClassBox(xClick, yClick));
 
         break;
 

@@ -125,7 +125,6 @@ public class Point extends UMLNode {
 	public double getAnchorX(double startX, double startY) {
 		double actingRadius = radius;
 		double deltaX = startX - originX;
-<<<<<<< HEAD
 		double deltaY = originY - startY;
 		double angle = Math.atan(deltaY / deltaX);
 		if (startX < originX) {
@@ -176,7 +175,6 @@ public class Point extends UMLNode {
 		return originY + yOffset;
 	}
 
->>>>>>> Comment Updates
   /**
    * Reassign this at given radius.
    * @param newRadius reassigned for this.

@@ -51,6 +51,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -130,96 +131,273 @@ public class Controller {
 		window = primaryStage;
 		scene = window.getScene();
 
-		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-			try{
-			UMLObject node = getObject(e.getTarget());
-			if(node instanceof UMLNode){
-				if(node.originX > scrollPane.getViewportBounds().getWidth()){
-					scrollPane.setHvalue(1);
+		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+			if(MODE == Mode.SELECT){
+				if(e.isSecondaryButtonDown()){
+					scrollPane.setPannable(true);
 				}
-				if(node.originY > scrollPane.getViewportBounds().getHeight()){
-					scrollPane.setVvalue(1);
-				}
-			}else if (node instanceof Relationship && e.getTarget() instanceof Circle){
-				Relationship relationship = (Relationship) node;
-				Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
-				if(pivot.originX > scrollPane.getViewportBounds().getWidth()){
-					scrollPane.setHvalue(1);
-				}
-				if(pivot.originY > scrollPane.getViewportBounds().getHeight()){
-					scrollPane.setVvalue(1);
+				else{
+					scrollPane.setPannable(false);
+					try{
+						UMLObject node = getObject(e.getTarget());
+						double rightBound = scrollPane.getContent().getLayoutBounds().getWidth()*scrollPane.getHvalue();
+						if (rightBound < 604){
+							rightBound = 604;
+						}
+						double leftBound = rightBound - 604;
+						double bottomBound = scrollPane.getContent().getLayoutBounds().getHeight()*scrollPane.getVvalue();
+						if (bottomBound < 460){
+							bottomBound = 460;
+						}
+						double topBound = bottomBound - 460;
+						if(node instanceof UMLNode){
+							if(node instanceof ClassBox){
+								double width = node.getOriginX() + (((ClassBox) node).getWidth()/2);
+								double height = node.getOriginY() + (((ClassBox) node).getHeight()/2);
+								if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+								}
+								else {
+									if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+										scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+									}
+									if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+										scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+									}
+								}
+							}
+							else if(node instanceof Note){
+								double width = node.getOriginX() + (((Note) node).getWidth()/2);
+								double height = node.getOriginY() + (((Note) node).getHeight()/2);
+								if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+								}
+								else {
+									if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+										scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+									}
+									if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+										scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+									}
+								}
+							}
+							else if(node instanceof Point){
+								double radius = ((Point) node).getRadius();
+								double width = ((Point) node).getOriginX() + radius;
+								double height = ((Point) node).getOriginY() + radius;
+								if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+								}
+								else{
+									if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+										scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+									}
+									if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+										scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+									}
+								}
+							}
+						}
+						else if (node instanceof Relationship && e.getTarget() instanceof Circle){
+							Relationship relationship = (Relationship) node;
+							Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
+							double width = pivot.getOriginX();
+							double height = pivot.getOriginY();
+							if((((leftBound < width) && ( width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+							}
+							else{
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(pivot.getOriginX() / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(pivot.getOriginY() / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+					}
+					catch(NullPointerException npe){
+					}
 				}
 			}
-			}catch(NullPointerException npe){
+			else{
+				scrollPane.setPannable(false);
+			}
+		});
 
+		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+			if(MODE == Mode.SELECT){
+				try{
+					UMLObject node = getObject(e.getTarget());
+					double rightBound = scrollPane.getContent().getLayoutBounds().getWidth()*scrollPane.getHvalue();
+					if (rightBound < 604){
+						rightBound = 604;
+					}
+					double leftBound = rightBound - 604;
+					double bottomBound = scrollPane.getContent().getLayoutBounds().getHeight()*scrollPane.getVvalue();
+					if (bottomBound < 460){
+						bottomBound = 460;
+					}
+					double topBound = bottomBound - 460;
+					if(node instanceof UMLNode){
+						if(node instanceof ClassBox){
+							double width = node.getOriginX() + (((ClassBox) node).getWidth()/2);
+							double height = node.getOriginY() + (((ClassBox) node).getHeight()/2);
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+								scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+							}
+							else{
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+						else if(node instanceof Note){
+							double width = node.getOriginX() + (((Note) node).getWidth()/2);
+							double height = node.getOriginY() + (((Note) node).getHeight()/2);
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+								scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+							}
+							else {
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+						else if(node instanceof Point){
+							double radius = ((Point) node).getRadius();
+							double width = ((Point) node).getOriginX() + radius;
+							double height = ((Point) node).getOriginY() + radius;
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+								scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+							}
+							else {
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+					}
+					else if (node instanceof Relationship && e.getTarget() instanceof Circle){
+						Relationship relationship = (Relationship) node;
+						Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
+						double width = pivot.getOriginX();
+						double height = pivot.getOriginY();
+						if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+							scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+							scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+						}
+						else{
+							if((pivot.getOriginX() > scrollPane.getViewportBounds().getWidth()) || (pivot.getOriginX() > 0)){
+								scrollPane.setHvalue(pivot.getOriginX() / scrollPane.getContent().getLayoutBounds().getWidth());
+							}
+							if((pivot.getOriginY() > scrollPane.getViewportBounds().getHeight()) || (pivot.getOriginY() > 0)){
+								scrollPane.setVvalue(pivot.getOriginY() / scrollPane.getContent().getLayoutBounds().getHeight());
+							}
+						}
+					}
+				}
+				catch(NullPointerException npe){
+				}
 			}
 		});
 
 		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-			try{
-				UMLObject node = getObject(e.getTarget());
-				if(node instanceof UMLNode){
-					if(node.originX > scrollPane.getViewportBounds().getWidth()){
-						scrollPane.setHvalue(1);
+			if(MODE == Mode.SELECT){
+				try{
+					UMLObject node = getObject(e.getTarget());
+					double rightBound = scrollPane.getContent().getLayoutBounds().getWidth()*scrollPane.getHvalue();
+					if (rightBound < 604){
+						rightBound = 604;
 					}
-					if(node.originY > scrollPane.getViewportBounds().getHeight()){
-						scrollPane.setVvalue(1);
+					double leftBound = rightBound - 604;
+					double bottomBound = scrollPane.getContent().getLayoutBounds().getHeight()*scrollPane.getVvalue();
+					if (bottomBound < 460){
+						bottomBound = 460;
 					}
-				}else if (node instanceof Relationship && e.getTarget() instanceof Circle){
-					Relationship relationship = (Relationship) node;
-					Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
-					if(pivot.originX > scrollPane.getViewportBounds().getWidth()){
-						scrollPane.setHvalue(1);
-					}
-					if(pivot.originY > scrollPane.getViewportBounds().getHeight()){
-						scrollPane.setVvalue(1);
-					}
-				}
-				}catch(NullPointerException npe){
+					double topBound = bottomBound - 460;
+					if(node instanceof UMLNode){
+						 if(node instanceof ClassBox){
+							double width = node.getOriginX() + (((ClassBox) node).getWidth()/2);
+							double height = node.getOriginY() + (((ClassBox) node).getHeight()/2);
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
 
+							}
+							else{
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+						else if(node instanceof Note){
+							double width = node.getOriginX() + (((Note) node).getWidth()/2);
+							double height = node.getOriginY() + (((Note) node).getHeight()/2);
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+							}
+							else{
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+						else if(node instanceof Point){
+							double radius = ((Point) node).getRadius();
+							double width = ((Point) node).getOriginX() + radius;
+							double height = ((Point) node).getOriginY() + radius;
+							if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+							}
+							else{
+								if((width > scrollPane.getViewportBounds().getWidth()) || (width > 0)){
+									scrollPane.setHvalue(width / scrollPane.getContent().getLayoutBounds().getWidth());
+								}
+								if((height > scrollPane.getViewportBounds().getHeight()) || (height > 0)){
+									scrollPane.setVvalue(height / scrollPane.getContent().getLayoutBounds().getHeight());
+								}
+							}
+						}
+					}
+					else if (node instanceof Relationship && e.getTarget() instanceof Circle){
+						Relationship relationship = (Relationship) node;
+						Pivot pivot = getPivot(relationship, (Circle) e.getTarget());
+						double width = pivot.getOriginX();
+						double height = pivot.getOriginY();
+						if((((leftBound < width) && (width < rightBound)) || ((topBound < height) && (height < bottomBound)))){
+
+						}
+						else{
+							if((pivot.getOriginX() > scrollPane.getViewportBounds().getWidth()) || (pivot.getOriginX() > 0)){
+								scrollPane.setHvalue(pivot.getOriginX() / scrollPane.getContent().getLayoutBounds().getWidth());
+							}
+							if((pivot.getOriginY() > scrollPane.getViewportBounds().getHeight()) || (pivot.getOriginY() > 0)){
+								scrollPane.setVvalue(pivot.getOriginY() / scrollPane.getContent().getLayoutBounds().getHeight());
+							}
+						}
+					}
 				}
+				catch(NullPointerException npe){
+				}
+			}
 		});
-
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      public void handle(KeyEvent event) {
-				if (System.getProperty("os.name").contains("Mac")) {
-	        if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
-	          undo();
-						event.consume();
-	        }
-					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
-	          redo();
-						event.consume();
-	        }
-					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
-						printState();
-						event.consume();
-					}
-					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
-						refresh();
-						event.consume();
-					}
-				} else {
-					if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
-	          undo();
-						event.consume();
-	        }
-					if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
-	          redo();
-						event.consume();
-	        }
-					if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
-						printState();
-						event.consume();
-					}
-					if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
-						refresh();
-						event.consume();
-					}
-				}
-      }
-  	});
-	}
 
 	/*
 	 * Returns pane.
@@ -291,15 +469,10 @@ public class Controller {
 	public void paneClick(MouseEvent event) throws IOException {
 		double xOff = getXOffset();
 		double yOff = getYOffset();
+		double xClick = xOff + event.getX();
+		double yClick = yOff + event.getY();
 
-		if(event.getX() < scrollPane.getLayoutBounds().getWidth())
-			System.out.print("Pane clicked at " + event.getX() + " ");
-		else
-			System.out.print(xOff + " ");
-		if(event.getY() < scrollPane.getLayoutBounds().getHeight())
-			System.out.println(event.getY());
-		else
-			System.out.println(yOff);
+		System.out.println("Pane clicked at " + xClick + " " + yClick);
 
 		switch (MODE) {
 			// Displays information of any UMLObject clicked on in the Inspector.
@@ -332,13 +505,13 @@ public class Controller {
 
 			// Adds Point UMLNode to pane coordinates that were clicked on.
 			case POINT:
-				addObjects(new Point(xOff + event.getX(), yOff + event.getY()));
+				addObjects(new Point(xClick, yClick));
 
 				break;
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-        addObjects(new ClassBox(xOff + event.getX(), yOff + event.getY()));
+        addObjects(new ClassBox(xClick, yClick);
 
         break;
 
@@ -399,7 +572,7 @@ public class Controller {
 						Segment segment = getSegment(relationship, line);
 						if (segment != null) {
 							UNDONE_ACTIONS.clear();
-							ACTIONS.push(new SplitLine(relationship, segment, event.getX(), event.getY(), this));
+							ACTIONS.push(new SplitLine(relationship, segment, xClick, yClick, this));
 							deselectAll();
 							selectObject(relationship);
 						}
@@ -412,7 +585,7 @@ public class Controller {
 
 			case NOTE:
 				deselectAll();
-				Note note = new Note(xOff + event.getX(), yOff + event.getY());
+				Note note = new Note(xClick, yClick);
 				addObjects(note);
 				selectObject(note);
 
@@ -590,21 +763,27 @@ public class Controller {
 
 		public double getXOffset(){
 			double viewWidth = scrollPane.getViewportBounds().getWidth();
-			double contentWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
+			double contentWidth = scrollPane.getContent().getLayoutBounds().getWidth();
 			double hValue = scrollPane.getHvalue();
 			double hMax= scrollPane.getHmax();
 			double hValueRel = hValue / hMax;
 			double xLoc = (contentWidth - viewWidth) * hValueRel;
+			if(xLoc < 0){
+				xLoc = 0;
+			}
 			return xLoc;
 		}
 
 		public double getYOffset(){
 			double viewHeight = scrollPane.getViewportBounds().getHeight();
-			double contentHeight = scrollPane.getContent().getBoundsInLocal().getHeight();
+			double contentHeight = scrollPane.getContent().getLayoutBounds().getHeight();
 			double vValue = scrollPane.getVvalue();
 			double vMax = scrollPane.getVmax();
 			double vValueRel = vValue / vMax;
 			double yLoc = (contentHeight - viewHeight) * vValueRel;
+			if(yLoc < 0){
+				yLoc = 0;
+			}
 			return yLoc;
 		}
 
@@ -857,18 +1036,20 @@ public class Controller {
 		}
 		BufferedImage image;
 		image = SwingFXUtils.fromFXImage(snapshot, null);
-		PDPage page = new PDPage();
+		PDPage page = new PDPage(new PDRectangle (image.getWidth(),image.getHeight()));
 
-	    try
-	    {
-	    	doc.addPage(page);
-	    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
-	    	try(PDPageContentStream contents = new PDPageContentStream(doc, page)){
-	    		contents.drawImage(img, 20, 20);
-	        //Every document requires at least one page, so we will add one
-	        //blank page.
-	        doc.save(fileName);
-	    	} catch (FileNotFoundException fnfe){
+    try {
+    	doc.addPage(page);
+    	PDImageXObject img = LosslessFactory.createFromImage(doc, image);
+
+    	try {
+				PDPageContentStream contents = new PDPageContentStream(doc, page);
+    		contents.drawImage(img, 0, 0);
+				contents.close();
+        doc.save(fileName);
+    	}
+
+			catch (FileNotFoundException fnfe) {
 				System.out.println("Cancelled");
 			}
 		} catch (IOException ex) {

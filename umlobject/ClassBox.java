@@ -120,7 +120,7 @@ public class ClassBox extends UMLNode {
 		int numAttributesChars = attributes.getText().length();
 		int numMethodsChars = methods.getText().length();
 		return "ClassBox: " + (box.getLayoutX()) + " " + (box.getLayoutY()) + " " + width+ " "+numNameChars + " "+name.getText()
-			+"\n"+numAttributesChars + " "+attributes.getText()+"\n"+numMethodsChars + " "+methods.getText();
+			+"\n"+numAttributesChars + " "+attributes.getText()+"\n"+numMethodsChars + " "+methods.getText() + "\n";
 	}
 
 	/**

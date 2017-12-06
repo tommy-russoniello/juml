@@ -47,7 +47,7 @@ public Note(Scanner input) {
    */
   public String saveAsString() {
 		int numTextChars = text.getText().length();
-		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + getWidth() + " " + numTextChars + " "+text.getText();
+		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + getWidth() + " " + numTextChars + " " + text.getText() + "\n";
 	}
 
 	/**

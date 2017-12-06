@@ -13,10 +13,12 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -118,6 +120,8 @@ public class Controller {
 	public Stack<UMLAction> ACTIONS = new Stack<>();
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
+	public Set<String> CLIP_BOARD = new HashSet<>();
+
 
 	Stage window;
 	Scene scene;
@@ -151,6 +155,14 @@ public class Controller {
             refresh();
             event.consume();
           }
+					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.META_DOWN)).match(event)) {
+            copy();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN)).match(event)) {
+            paste();
+            event.consume();
+          }
         } else {
           if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
             undo();
@@ -168,7 +180,20 @@ public class Controller {
             refresh();
             event.consume();
           }
+					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN)).match(event)) {
+            copy();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)).match(event)) {
+            paste();
+            event.consume();
+          }
         }
+				if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+					UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
+					deselectAll();
+					deleteObjects(selected);
+				}
       }
     });
 
@@ -487,6 +512,35 @@ public class Controller {
 		CONNECTORS = new HashMap<>();
 		ACTIONS.clear();
 		UNDONE_ACTIONS.clear();
+	}
+
+	public void copy() {
+		CLIP_BOARD.clear();
+		for (UMLObject object : SELECTED) {
+			CLIP_BOARD.add(object.saveAsString());
+		}
+	}
+
+	public void paste() {
+		for (String string : CLIP_BOARD) {
+			Scanner scanner = new Scanner(string);
+			if (scanner.hasNextLine()) {
+				String nextNode = scanner.next();
+				UMLNode node = null;
+				if (nextNode.equals("Point:")) {
+					node = new Point(scanner);
+				} else if (nextNode.equals("ClassBox:")) {
+					node = new ClassBox(scanner);
+				} else if (nextNode.equals("Note:")) {
+					node = new Note(scanner);
+				} else {
+					System.out.println("Error! Unknown object type: " + nextNode);
+					return;
+				}
+				node.move(0, 0);
+				addObjects(node);
+			}
+		}
 	}
 
 	/*
@@ -850,6 +904,10 @@ public class Controller {
 			System.out.println("\nSCENE: " + scene);
 			System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
 			System.out.println("\nFILE CHOOSER: " + fileChooser);
+			System.out.println("\nCLIP BOARD:      size: " + CLIP_BOARD.size());
+			for (String string : CLIP_BOARD) {
+				System.out.println("\n" + string);
+			}
 			System.out.println("\nSELECTED:     size: " + SELECTED.size());
 			for (UMLObject node : SELECTED) {
 				System.out.println(node);
@@ -945,7 +1003,7 @@ public class Controller {
 				} else if (nextNode.equals("Connectors:")){
 					input.nextLine();
 					break;
-				}else {
+				} else {
 					System.out.println("Error! Unknown object type: " + nextNode);
 					return;
 				}
@@ -1111,20 +1169,29 @@ public class Controller {
 		}
 	}
 
-	// WIP Menu Bar Actions
-	public void menuCloseClicked() {
-	}
-
 	public void menuCopyClicked() {
+		copy();
 	}
 
 	public void menuPasteClicked() {
+		paste();
 	}
 
 	public void menuDeleteClicked() {
+		UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
+		deselectAll();
+		deleteObjects(selected);
 	}
 
 	public void menuSelectAllClicked() {
+	}
+
+	public void menuMoveToFrontClicked() {
+		ACTIONS.push(new MoveToFront(this, SELECTED.toArray(new UMLObject [0])));
+	}
+
+	public void menuMoveToBackClicked() {
+		ACTIONS.push(new MoveToBack(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
 	public void menuUndoClicked() {

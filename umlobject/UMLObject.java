@@ -35,6 +35,10 @@ public class UMLObject {
     update();
   }
 
+  public String saveAsString() {
+    return "";
+  }
+
   /**
    * Update values to reflect changes made to them.
    * @postcondition All data is updated (refreshed).

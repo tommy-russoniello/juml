@@ -4,36 +4,50 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import java.util.Vector;
-import java.util.Arrays;
 import java.util.Map;
 import umlobject.*;
 import static org.junit.Assert.*;
 import javafx.collections.*;
 import org.junit.*;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Tests.
+ * Class for testing the program.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
  */
 public class Tests {
 	
-	/** The pane. */
+	/** 
+	 * The pane. 
+	 */
 	Pane pane;
 	
-	/** The juml. */
+	/** 
+	 * The standard controller. 
+	 */
 	Controller juml;
 	
-	/** The p 3. */
+	/** 
+	 * Three points. 
+	 */
 	Point p1, p2, p3;
 	
-	/** The cb 3. */
+	/** 
+	 * Three classboxes. 
+	 */
 	ClassBox cb1, cb2, cb3;
 	
-	/** The c 6. */
+	/** 
+	 * Six UMLConnectors.
+	 */
 	UMLConnector c1, c2, c3, c4, c5, c6;
 
 	/**
-	 * Sets the up.
+	 * Sets up the pane and places the objects on it.
 	 */
 	@Before
 	public void setUp() {
@@ -52,7 +66,7 @@ public class Tests {
 	}
 
 	/**
-	 * Adds the points.
+	 * Adds points to the pane.
 	 */
 	@Test
 	public void addPoints(){
@@ -63,7 +77,7 @@ public class Tests {
 	}
 
 	/**
-	 * Adds the class boxes.
+	 * Adds class boxes to the pane.
 	 */
 	@Test
 	public void addClassBoxes(){
@@ -97,7 +111,7 @@ public class Tests {
 	 * Adds the connectors between class boxes.
 	 */
 	@Test
-  public void addConnectorsBetweenClassBoxes() {
+  	public void addConnectorsBetweenClassBoxes() {
 		juml.addObjects(cb1, cb2, cb3);
 
 		c1 = new Association(cb1, cb2);
@@ -238,8 +252,6 @@ public class Tests {
 
 	/**
 	 * Gets the points.
-	 *
-	 * @return the points
 	 */
 	@Test
 	public void getPoints() {
@@ -259,8 +271,6 @@ public class Tests {
 
 	/**
 	 * Gets the connectors.
-	 *
-	 * @return the connectors
 	 */
 	@Test
 	public void getConnectors() {
@@ -280,8 +290,6 @@ public class Tests {
 
 	/**
 	 * Gets the class boxes.
-	 *
-	 * @return the class boxes
 	 */
 	@Test
 	public void getClassBoxes() {
@@ -306,13 +314,12 @@ public class Tests {
 // ---------------------------------------------------------------------------------------------- \\
 
 	/**
- * Assert map.
- *
- * @param <T> the generic type
- * @param map the map
- * @param objects the objects
- */
-@SafeVarargs
+	 * Checks if the map contains all the objects in the pane
+	 *
+	 * @param map the map of objects
+	 * @param objects the objects in the pane
+	 */
+	@SafeVarargs
 	public static <T> void assertMap (Map<Node, T> map, T... objects) {
 		assertEquals(objects.length, map.size());
 		for (T object : objects) {
@@ -321,10 +328,10 @@ public class Tests {
 	}
 
 	/**
-	 * Assert connections.
+	 * Checks if the passed in node has all the connections it should.
 	 *
 	 * @param node the node
-	 * @param actual the actual
+	 * @param actual the actual connectors that should be attached to the node
 	 */
 	public static void assertConnections (UMLNode node, UMLConnector... actual) {
 		Vector<UMLConnector> expected = node.getConnections();

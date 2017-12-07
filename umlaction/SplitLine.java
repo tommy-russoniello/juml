@@ -42,14 +42,12 @@ public class SplitLine extends UMLConnectorAction {
   public void doAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
     connectToPivots(splitSegment);
     int pos = relationship.segments.indexOf(splitSegment);
     relationship.pivots.add(pos, pivot);
     relationship.segments.add(pos, newSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
     connectToPivots(newSegment);
     if((Line) splitSegment.getModel() == relationship.startLine) {
       relationship.startLine = (Line) newSegment.getModel();
@@ -68,7 +66,6 @@ public class SplitLine extends UMLConnectorAction {
     relationship.group.getChildren().remove(pivot.getModel());
     splitSegment.disconnect();
     splitSegment.start = newSegment.getStart();
-    //splitSegment.connect();
     connectToPivots(newSegment);
     relationship.update();
   }
@@ -86,11 +83,9 @@ public class SplitLine extends UMLConnectorAction {
   public void doInitialAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
-    //splitSegment.connect();
     connectToPivots(splitSegment);
     relationship.group.getChildren().add(newSegment.getModel());
     relationship.group.getChildren().add(pivot.getModel());
-    //newSegment.connect();
     if (!(splitSegment.start instanceof Pivot)) {
     	Vector<UMLConnector> connections = splitSegment.start.getConnections();
     	for (int i=0; i<connections.size(); i++) {
@@ -110,7 +105,7 @@ public class SplitLine extends UMLConnectorAction {
     relationship.update();
 
 
-    class DragSource { double x, y; }
+    class DragSource { double x, y; boolean ifDragged;}
 		final DragSource dragSource = new DragSource();
     final DragSource originalPosition = new DragSource();
 		// Records dragging coordinate information
@@ -146,6 +141,7 @@ public class SplitLine extends UMLConnectorAction {
 				  } else {
 					  pivot.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }
+          dragSource.ifDragged = true;
 				  pivot.update();
 			  }
 		  }
@@ -155,10 +151,13 @@ public class SplitLine extends UMLConnectorAction {
 		pivot.getModel().setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (controller.MODE == Controller.Mode.SELECT) {
-          controller.UNDONE_ACTIONS.clear();
-          controller.ACTIONS.push(
-            new MoveUMLNode(pivot, originalPosition.x, originalPosition.y, false));
-				  pivot.getModel().getScene().setCursor(Cursor.HAND);
+          if (dragSource.ifDragged) {
+            controller.UNDONE_ACTIONS.clear();
+            controller.ACTIONS.push(
+              new MoveUMLNode(pivot, originalPosition.x, originalPosition.y, false));
+  				  pivot.getModel().getScene().setCursor(Cursor.HAND);
+            dragSource.ifDragged = false;
+          }
 				}
 			}
 		});

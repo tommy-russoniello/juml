@@ -40,7 +40,7 @@ public class AddUMLNode extends UMLNodeAction {
 		controller.pane.getChildren().add(model);
     controller.NODES.put(model, node);
 		// Records mouse drag source coordinates across handlers.
-		class DragSource { double x, y; }
+		class DragSource { double x, y; boolean ifDragged;}
 		final DragSource dragSource = new DragSource();
     final DragSource originalPosition = new DragSource();
 		// Records dragging coordinate information
@@ -76,6 +76,7 @@ public class AddUMLNode extends UMLNodeAction {
 				  } else {
 					  node.move(mouseEvent.getX() + dragSource.x, mouseEvent.getY() + dragSource.y);
 				  }
+          dragSource.ifDragged = true;
 				  node.update();
 			  }
 		  }
@@ -85,10 +86,13 @@ public class AddUMLNode extends UMLNodeAction {
 		model.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent mouseEvent) {
 				if (controller.MODE == Controller.Mode.SELECT) {
-          controller.UNDONE_ACTIONS.clear();
-          controller.ACTIONS.push(
-            new MoveUMLNode(node, originalPosition.x, originalPosition.y, false));
-				  model.getScene().setCursor(Cursor.HAND);
+          if (dragSource.ifDragged) {
+            controller.UNDONE_ACTIONS.clear();
+            controller.ACTIONS.push(
+              new MoveUMLNode(node, originalPosition.x, originalPosition.y, false));
+  				  model.getScene().setCursor(Cursor.HAND);
+            dragSource.ifDragged = false;
+          }
 				}
 			}
 		});

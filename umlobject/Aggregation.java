@@ -59,7 +59,7 @@ public class Aggregation extends Relationship {
 		shape.setFill(Color.WHITE);
 
 		group = new Group();
-		group.getChildren().addAll(endLine, shape, startText.getModel(), endText.getModel());
+		group.getChildren().addAll(endLine, shape);
 		// Move segment to proper starting position.
 		update();
 	}

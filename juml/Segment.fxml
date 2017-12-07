@@ -3,14 +3,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 
-<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.UMLConnectorController">
+<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="juml.SegmentController">
 	<Label prefHeight="29.0" prefWidth="100.0" text=" Start Origin X" />
-	<TextField fx:id="UMLConnectorStartOriginX" layoutX="100.0" layoutY="-1.0" />
+	<TextField fx:id="segmentStartOriginX" layoutX="100.0" layoutY="-1.0" />
 	<Label layoutY="29.0" prefHeight="32.0" prefWidth="100.0" text=" Start Origin Y" />
-	<TextField fx:id="UMLConnectorStartOriginY" layoutX="100.0" layoutY="30.0" />
+	<TextField fx:id="segmentStartOriginY" layoutX="100.0" layoutY="30.0" />
 	<Label layoutY="61.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin X" />
-	<TextField fx:id="UMLConnectorEndOriginX" layoutX="100.0" layoutY="61.0" />
+	<TextField fx:id="segmentEndOriginX" layoutX="100.0" layoutY="61.0" />
 	<Label layoutY="92.0" prefHeight="32.0" prefWidth="100.0" text=" End Origin Y" />
-	<TextField fx:id="UMLConnectorEndOriginY" layoutX="100.0" layoutY="92.0" />
+	<TextField fx:id="segmentEndOriginY" layoutX="100.0" layoutY="92.0" />
 	<Separator layoutY="125.0" prefHeight="3.0" prefWidth="298.0" />
 </Pane>

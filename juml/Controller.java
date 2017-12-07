@@ -13,10 +13,12 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -118,6 +120,8 @@ public class Controller {
 	public Stack<UMLAction> ACTIONS = new Stack<>();
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
+	public Set<String> CLIP_BOARD = new HashSet<>();
+
 
 	Stage window;
 	Scene scene;
@@ -131,6 +135,67 @@ public class Controller {
 	public void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
 		scene = window.getScene();
+
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      public void handle(KeyEvent event) {
+	      if (System.getProperty("os.name").contains("Mac")) {
+        	if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
+            undo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
+            redo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
+            printState();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
+            refresh();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.META_DOWN)).match(event)) {
+            copy();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN)).match(event)) {
+            paste();
+            event.consume();
+          }
+        } else {
+          if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
+            undo();
+          	event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
+            redo();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
+            printState();
+            event.consume();
+          }
+          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
+            refresh();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN)).match(event)) {
+            copy();
+            event.consume();
+          }
+					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)).match(event)) {
+            paste();
+            event.consume();
+          }
+        }
+				if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+					UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
+					deselectAll();
+					deleteObjects(selected);
+				}
+      }
+    });
 
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(MODE == Mode.SELECT){
@@ -401,6 +466,8 @@ public class Controller {
 		});
 	}
 
+
+
 	/*
 	 * Returns pane.
 	 * @return Main pane being used for application instance.
@@ -447,6 +514,35 @@ public class Controller {
 		UNDONE_ACTIONS.clear();
 	}
 
+	public void copy() {
+		CLIP_BOARD.clear();
+		for (UMLObject object : SELECTED) {
+			CLIP_BOARD.add(object.saveAsString());
+		}
+	}
+
+	public void paste() {
+		for (String string : CLIP_BOARD) {
+			Scanner scanner = new Scanner(string);
+			if (scanner.hasNextLine()) {
+				String nextNode = scanner.next();
+				UMLNode node = null;
+				if (nextNode.equals("Point:")) {
+					node = new Point(scanner);
+				} else if (nextNode.equals("ClassBox:")) {
+					node = new ClassBox(scanner);
+				} else if (nextNode.equals("Note:")) {
+					node = new Note(scanner);
+				} else {
+					System.out.println("Error! Unknown object type: " + nextNode);
+					return;
+				}
+				node.move(0, 0);
+				addObjects(node);
+			}
+		}
+	}
+
 	/*
 	 * Changes mode according to event source.
 	 * @precondition Called by event on object builder button.
@@ -454,11 +550,13 @@ public class Controller {
 	 * @postcondition MODE is updated according to button that received event triggering this method.
 	 */
 	public void modeClick(ActionEvent event) {
-		deselectAll();
-		String newMode = ((Button) event.getSource()).getId();
-		newMode = newMode.substring(0, newMode.length() - 4).toUpperCase();
-		MODE = Mode.valueOf(newMode);
-		SELECTED.clear();
+		String newModeString = ((Button) event.getSource()).getId();
+		newModeString = newModeString.substring(0, newModeString.length() - 4).toUpperCase();
+		Mode newMode = Mode.valueOf(newModeString);
+		if (newMode != MODE && newMode != Mode.SELECT) {
+			deselectAll();
+		}
+		MODE = newMode;
 		System.out.println("Draw mode changed to \"" + MODE + "\"");
 	}
 
@@ -711,12 +809,16 @@ public class Controller {
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
 			object.highlight();
-			if (object instanceof UMLConnector) {
-				loadUMLConnectorFXML(object);
+			if (object instanceof Segment) {
+				loadSegmentFXML(object);
+			} else if (object instanceof Relationship) {
+				loadRelationshipFXML(object);
 			} else if (object instanceof Point) {
 				loadPointFXML(object);
 			} else if (object instanceof ClassBox) {
 				loadClassBoxFXML(object);
+			} else if (object instanceof Note) {
+				loadNoteFXML(object);
 			} else if (inspectorObject != null) {
 				inspectorObject.getChildren().clear();
 			}
@@ -731,6 +833,10 @@ public class Controller {
 			while (!SELECTED.isEmpty()) {
 				SELECTED.peekLast().unhighlight();
 				SELECTED.removeLast();
+			}
+
+			if (inspectorObject != null) {
+				inspectorObject.getChildren().clear();
 			}
 		}
 
@@ -798,6 +904,10 @@ public class Controller {
 			System.out.println("\nSCENE: " + scene);
 			System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
 			System.out.println("\nFILE CHOOSER: " + fileChooser);
+			System.out.println("\nCLIP BOARD:      size: " + CLIP_BOARD.size());
+			for (String string : CLIP_BOARD) {
+				System.out.println("\n" + string);
+			}
 			System.out.println("\nSELECTED:     size: " + SELECTED.size());
 			for (UMLObject node : SELECTED) {
 				System.out.println(node);
@@ -851,12 +961,16 @@ public class Controller {
 	 * @postcondition all maintained variables are reset.
 	 */
 	public void menuNewClicked() {
+		deselectAll();
 		pane.getChildren().clear();
 		if (inspectorObject != null) {
 			inspectorObject.getChildren().clear();
 		}
 		NODES = new HashMap<>();
 		CONNECTORS = new HashMap<>();
+		CLIP_BOARD.clear();
+		ACTIONS.clear();
+		UNDONE_ACTIONS.clear();
 	}
 
 	/*
@@ -893,7 +1007,7 @@ public class Controller {
 				} else if (nextNode.equals("Connectors:")){
 					input.nextLine();
 					break;
-				}else {
+				} else {
 					System.out.println("Error! Unknown object type: " + nextNode);
 					return;
 				}
@@ -1057,27 +1171,31 @@ public class Controller {
 		} catch (IOException ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
-
-		catch (IOException ex) {
-			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-	}
-
-	// WIP Menu Bar Actions
-	public void menuCloseClicked() {
 	}
 
 	public void menuCopyClicked() {
+		copy();
 	}
 
 	public void menuPasteClicked() {
+		paste();
 	}
 
 	public void menuDeleteClicked() {
+		UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
+		deselectAll();
+		deleteObjects(selected);
 	}
 
 	public void menuSelectAllClicked() {
+	}
+
+	public void menuMoveToFrontClicked() {
+		ACTIONS.push(new MoveToFront(this, SELECTED.toArray(new UMLObject [0])));
+	}
+
+	public void menuMoveToBackClicked() {
+		ACTIONS.push(new MoveToBack(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
 	public void menuUndoClicked() {
@@ -1145,20 +1263,56 @@ public class Controller {
 		}
 	}
 
-    /*
+  /**
 	 * loads inspector fxml and allows user to change properties.
 	 * @param line instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
 	 * the inspector/circle properties.
 	 */
-	public void loadUMLConnectorFXML(UMLObject connector){
-		try{
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("UMLConnector.fxml"));
+	public void loadSegmentFXML(UMLObject connector){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Segment.fxml"));
 			Parent root = loader.load();
-			UMLConnectorController UMLConnectorFXML = loader.getController();
+			SegmentController segmentFXML = loader.getController();
 			inspectorObject.getChildren().setAll(root);
-			UMLConnectorFXML.loadInspectorInfo(connector, this);
+			segmentFXML.loadInspectorInfo(connector, this);
 		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * loads inspector fxml and allows user to change properties.
+	 * @param line instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+	 * the inspector/circle properties.
+	 */
+	public void loadRelationshipFXML(UMLObject connector){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Relationship.fxml"));
+			Parent root = loader.load();
+			RelationshipController relationshipFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			relationshipFXML.loadInspectorInfo(connector, this);
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * loads inspector fxml and allows user to change properties.
+	 * @param line instance of current event target.
+	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+	 * the inspector/Note properties.
+	 */
+	public void loadNoteFXML(UMLObject Note) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Note.fxml"));
+			Parent root = loader.load();
+			NoteController NoteFXML = loader.getController();
+			inspectorObject.getChildren().setAll(root);
+			NoteFXML.loadInspectorInfo(Note, this);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

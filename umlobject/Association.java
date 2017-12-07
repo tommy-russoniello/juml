@@ -63,7 +63,7 @@ public class Association extends Relationship {
 	    shape.setStroke(Color.BLACK);
 
 	    group = new Group();
-	    group.getChildren().addAll(endLine, shape, startText.getModel(), endText.getModel());
+	    group.getChildren().addAll(endLine, shape);
 	    // Move components to proper starting position.
 	    update();
 	}

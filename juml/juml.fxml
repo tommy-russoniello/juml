@@ -27,8 +27,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuSaveClicked" text="Save" />
                   <MenuItem mnemonicParsing="false" onAction="#menuExportClicked" text="Export" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuCloseClicked" text="Close" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuExitClicked" text="Exit" />
             </items>
           </Menu>
@@ -37,7 +35,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuCopyClicked" text="Copy" />
                   <MenuItem mnemonicParsing="false" onAction="#menuPasteClicked" text="Paste" />
                   <MenuItem mnemonicParsing="false" onAction="#menuDeleteClicked" text="Delete" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuSelectAllClicked" text="SelectAll" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuMoveToFrontClicked" text="Move To Front" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuMoveToBackClicked" text="Move To Back" />
                   <MenuItem mnemonicParsing="false" onAction="#menuUndoClicked" text="Undo" />
                   <MenuItem mnemonicParsing="false" onAction="#menuRedoClicked" text="Redo" />
             </items>

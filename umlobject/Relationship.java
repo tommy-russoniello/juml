@@ -43,6 +43,11 @@ public class Relationship extends UMLConnector {
   public Note startText, endText;
 
   /**
+   * Booleans representing whether or not beginning/end Notes are currently visible
+   */
+  public boolean startTextVisible, endTextVisible;
+
+  /**
    * The list of segments in the Relationship.
    */
   public List<Segment> segments;
@@ -64,6 +69,8 @@ public class Relationship extends UMLConnector {
    * @postcondition generates a Relationship built off of its save string; stops BEFORE it reaches pivot information.
    */
   public Relationship(Scanner input, Vector<UMLNode> allNodes) {
+    startTextVisible = false;
+    endTextVisible = false;
 		start = allNodes.get(input.nextInt());
 		stop = allNodes.get(input.nextInt());
 		//connect();
@@ -73,8 +80,19 @@ public class Relationship extends UMLConnector {
 		pivots = new ArrayList<>();
 		startText = new Note(0, 0, 20);
 		endText = new Note(0, 0, 20);
+    int show = -1;
+    show = input.nextInt();
 		startText.setText(buildString(input, input.nextInt()));
+    if (show == 1) {
+      startTextVisible = true;
+    }
+
+    show = -1;
+    show = input.nextInt();
 		endText.setText(buildString(input, input.nextInt()));
+    if (show == 1) {
+      endTextVisible = true;
+    }
 	}
 
 	/**
@@ -126,6 +144,8 @@ public class Relationship extends UMLConnector {
 	   * @postcondition Relationship between start and stop nodes.
 	   */
 	public Relationship(UMLNode inStart, UMLNode inStop) {
+    startTextVisible = false;
+    endTextVisible = false;
 		start = inStart;
 		stop = inStop;
 		originX = start.getOriginX();
@@ -145,17 +165,18 @@ public class Relationship extends UMLConnector {
 		String result = "";
 		int numStartTextChars = startText.getText().length();
 		int numEndTextChars = endText.getText().length();
-		result += numStartTextChars + " " + startText.getText() + "\n" + numEndTextChars + " " + endText.getText()+"\n";
+    int showStartText = 0, showEndText = 0;
+    if (startTextVisible()) {
+      showStartText = 1;
+    }
+    if (endTextVisible()) {
+      showEndText = 1;
+    }
+		result += + showStartText + " " + numStartTextChars + " " + startText.getText() + "\n" +
+      showEndText + " " + numEndTextChars + " " + endText.getText() + "\n";
 
-		/*
-		for (int i = pivots.size()-1; i>=0; i--) {
-			Pivot p  = pivots.get(i);
-			result += p.saveAsString() + " ";
-		}
-		*/
-		for (int i =0; i<pivots.size(); i++) {
-			Pivot p  = pivots.get(i);
-			result += p.saveAsString() + " ";
+		for (Pivot pivot : pivots) {
+			result += pivot.saveAsString() + " ";
 		}
 
 
@@ -188,12 +209,52 @@ public class Relationship extends UMLConnector {
   }
 
   /**
+   * Removes start Note from group's children, effectively hiding it from the scene.
+   * @postcondition start Note is removed from group's children.
+   */
+  public void hideStartText() {
+    group.getChildren().remove(startText.getModel());
+    startTextVisible = false;
+  }
+
+  /**
+   * Removes end Note from group's children, effectively hiding it from the scene.
+   * @postcondition end Note is removed from group's children.
+   */
+  public void hideEndText() {
+    group.getChildren().remove(endText.getModel());
+    endTextVisible = false;
+  }
+
+  /**
    * Removes start and end Notes from group's children, effectively hiding them from the scene.
    * @postcondition start and end Notes are removed from group's children.
    */
   public void hideText() {
-    group.getChildren().remove(startText.getModel());
-    group.getChildren().remove(endText.getModel());
+    hideStartText();
+    hideEndText();
+  }
+
+  /**
+   * Adds start Note to group's children, effectively making it visible in the scene.
+   * @postcondition start Note is added to group's children.
+   */
+  public void showStartText() {
+    if (!group.getChildren().contains(startText.getModel())) {
+      group.getChildren().add(startText.getModel());
+      startTextVisible = true;
+    }
+  }
+
+  /**
+   * Adds end Note to group's children, effectively making it visible in the scene.
+   * @postcondition end Note is added to group's children.
+   */
+  public void showEndText() {
+    if (!group.getChildren().contains(endText.getModel())) {
+      group.getChildren().add(endText.getModel());
+      endTextVisible = true;
+    }
   }
 
   /**
@@ -201,8 +262,8 @@ public class Relationship extends UMLConnector {
    * @postcondition start and end Notes are added to group's children.
    */
   public void showText() {
-    group.getChildren().add(startText.getModel());
-    group.getChildren().add(endText.getModel());
+    showStartText();
+    showEndText();
   }
 
   /**
@@ -353,9 +414,13 @@ public class Relationship extends UMLConnector {
     shape.setRotate(-rotateAngle);
 
     // Reset Notes to be on top of lines if they were already visible.
-    if (textVisible()) {
-      hideText();
-      showText();
+    if (startTextVisible()) {
+      hideStartText();
+      showStartText();
+    }
+    if (endTextVisible()) {
+      hideEndText();
+      showEndText();
     }
   }
 
@@ -382,8 +447,23 @@ public class Relationship extends UMLConnector {
    * @return Boolean value for whether or not this's note are hidden.
    */
   public boolean textVisible() {
-    return group.getChildren().contains(startText.getModel()) ||
-      group.getChildren().contains(startText.getModel());
+    return ( startTextVisible() || endTextVisible() );
+  }
+
+  /**
+   * Returns whether or not this's start note is hidden.
+   * @return Boolean value for whether or not this's start note is hidden.
+   */
+  public boolean startTextVisible() {
+   return startTextVisible;
+  }
+
+  /**
+   * Returns whether or not this's end note is hidden.
+   * @return Boolean value for whether or not this's end note is hidden.
+   */
+  public boolean endTextVisible() {
+   return endTextVisible;
   }
 
   /**
@@ -391,12 +471,8 @@ public class Relationship extends UMLConnector {
    * @postcondition all segments in the Relationship update the coordinates of their lines.
    */
   public void updateSegments() {
-    if (pivots.isEmpty()) {
-      segments.get(0).update();
-    } else {
-      for(Pivot pivot : pivots) {
-        pivot.updateSegments();
-      }
+    for (Segment segment : segments) {
+      segment.update();
     }
   }
 

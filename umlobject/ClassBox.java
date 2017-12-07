@@ -1,13 +1,15 @@
 package umlobject;
 
-import javafx.scene.shape.Rectangle;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import java.util.Scanner;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.VBox;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * UML class box representation.
@@ -67,6 +69,7 @@ public class ClassBox extends UMLNode {
     box.setLayoutY(y);
     box.setStyle("-fx-border-color: black;");
     box.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+    box.setAlignment(Pos.CENTER);
 
     separator1 = new Rectangle(width, 1);
     separator1.setFill(Color.BLACK);
@@ -89,6 +92,58 @@ public class ClassBox extends UMLNode {
     originX = x + (width / 2);
     originY = y + (getHeight() / 2);
   }
+
+  /**
+	 * Build from string method
+	 * @param input The scanner from which the object can read in its save string
+	 * @postcondition Object will have constructed itself from the information
+	 *                provided by input
+	 */
+  public ClassBox(Scanner input) {
+	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+	    //System.out.println("Base construction");
+	    name.setText(buildString(input, input.nextInt()));
+	    //System.out.println("Name construction");
+	    attributes.setText(buildString(input, input.nextInt()));
+	    //System.out.println("Attributes construction");
+	    methods.setText(buildString(input, input.nextInt()));
+	   // System.out.println("Methods construction");
+	}
+
+  /**
+   * Save method; stored as "delimiter x y (upper right corner) width, chacactersInName nameText\n
+   * chacactersInAttributes attributeText\n chacactersInMethods methodsText\n"
+   * @postcondition generates a string with the necessary information for the object to rebuild itself.
+   */
+  public String saveAsString() {
+		int numNameChars = name.getText().length();
+		int numAttributesChars = attributes.getText().length();
+		int numMethodsChars = methods.getText().length();
+		return "ClassBox: " + (box.getLayoutX()) + " " + (box.getLayoutY()) + " " + width+ " "+numNameChars + " "+name.getText()
+			+"\n"+numAttributesChars + " "+attributes.getText()+"\n"+numMethodsChars + " "+methods.getText() + "\n";
+	}
+
+	/**
+	 * Build text
+	 * @precondition The text to read in will end with a \n character
+	 * @param input The scanner from which the text can be read
+     * @param numChars The number of chars to read in
+	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
+	 */
+	public String buildString(Scanner input, int numChars) {
+		String result = input.nextLine();
+		if (numChars==0) {
+			return "";
+		}
+		result = result.substring(1, result.length());
+		//System.out.println(result.length() + ","+result);
+		while(result.length() != numChars) {
+			result += "\n";
+			//System.out.println(result.length() + ","+result);
+			result += input.nextLine();
+		}
+		return result;
+	}
 
   /**
    * Returns underlying model.
@@ -317,12 +372,7 @@ public class ClassBox extends UMLNode {
     separator1.setWidth(width);
     separator2.setWidth(width);
 
-    name.setWrappingWidth(width);
-    attributes.setWrappingWidth(width);
-    methods.setWrappingWidth(width);
-
-    originX = box.getLayoutX() + (width / 2);
-    originY = box.getLayoutY() + (getHeight() / 2);
+    move (originX, originY);
 
     for (UMLConnector connector : connections) {
       connector.update();

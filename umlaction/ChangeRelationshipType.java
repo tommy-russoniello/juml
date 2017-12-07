@@ -45,13 +45,13 @@ public class ChangeRelationshipType extends UMLAction {
 	/**
 	 * Instantiates a new change relationship type.
 	 *
-	 * @param original the original
-	 * @param inNewRelationship the in new relationship
-	 * @param c the c
+	 * @param original the original relationship
+	 * @param inNewRelationship the string containing the new desired relationship
+	 * @param c the controller being used
 	 */
 	public ChangeRelationshipType(Relationship original, String inNewRelationship, Controller c) {
 		inNewRelationship = inNewRelationship.toUpperCase();
-    RelationshipType newRelationship = RelationshipType.valueOf(inNewRelationship);
+    		RelationshipType newRelationship = RelationshipType.valueOf(inNewRelationship);
 		controller = c;
 		controller.deselectAll();
 		oldConnector = original;

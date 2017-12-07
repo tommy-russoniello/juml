@@ -961,12 +961,16 @@ public class Controller {
 	 * @postcondition all maintained variables are reset.
 	 */
 	public void menuNewClicked() {
+		deselectAll();
 		pane.getChildren().clear();
 		if (inspectorObject != null) {
 			inspectorObject.getChildren().clear();
 		}
 		NODES = new HashMap<>();
 		CONNECTORS = new HashMap<>();
+		CLIP_BOARD.clear();
+		ACTIONS.clear();
+		UNDONE_ACTIONS.clear();
 	}
 
 	/*

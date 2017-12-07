@@ -20,7 +20,7 @@ public class MoveUMLNode extends UMLNodeAction {
   double originalX, originalY, movedX, movedY;
   
   /** 
-   * Boolean representing whether move at first is true or false. 
+   * If true, a move is done with original coordinates instead of new coordinates.
    */
   boolean moveAtFirst;
   
@@ -33,9 +33,9 @@ public class MoveUMLNode extends UMLNodeAction {
    * Instantiates a new move UML node.
    *
    * @param inNode the in node
-   * @param inOriginalX the in original X
-   * @param inOriginalY the in original Y
-   * @param inUMLNodeController the in UML node controller
+   * @param inOriginalX the original X coordinate
+   * @param inOriginalY the original Y coordinate
+   * @param inUMLNodeController the UML node controller
    */
   public MoveUMLNode(UMLNode inNode, double inOriginalX, double inOriginalY,
     UMLNodeController inUMLNodeController) {
@@ -46,8 +46,8 @@ public class MoveUMLNode extends UMLNodeAction {
    * Instantiates a new move UML node.
    *
    * @param inNode the in node
-   * @param inOriginalX the in original X
-   * @param inOriginalY the in original Y
+   * @param inOriginalX the original X coordinate
+   * @param inOriginalY the original Y coordinate
    */
   public MoveUMLNode(UMLNode inNode, double inOriginalX, double inOriginalY) {
     this(inNode, inOriginalX, inOriginalY, null, true);
@@ -57,9 +57,9 @@ public class MoveUMLNode extends UMLNodeAction {
    * Instantiates a new move UML node.
    *
    * @param inNode the in node
-   * @param inOriginalX the in original X
-   * @param inOriginalY the in original Y
-   * @param inMoveAtFirst the in move at first
+   * @param inOriginalX the original X coordinate
+   * @param inOriginalY the original Y coordinate
+   * @param inMoveAtFirst boolean representing whether the original or new coordinates should be used.
    */
   public MoveUMLNode(UMLNode inNode, double inOriginalX, double inOriginalY, boolean inMoveAtFirst) {
     this(inNode, inOriginalX, inOriginalY, null, inMoveAtFirst);
@@ -69,10 +69,10 @@ public class MoveUMLNode extends UMLNodeAction {
    * Instantiates a new move UML node.
    *
    * @param inNode the in node
-   * @param inOriginalX the in original X
-   * @param inOriginalY the in original Y
-   * @param inUMLNodeController the in UML node controller
-   * @param inMoveAtFirst the in move at first
+   * @param inOriginalX the original X coordinate
+   * @param inOriginalY the original Y coordinate
+   * @param inUMLNodeController the UML node controller
+   * @param inMoveAtFirst boolean representing whether the original or new coordinates should be used.
    */
   public MoveUMLNode(UMLNode inNode, double inOriginalX, double inOriginalY, UMLNodeController inUMLNodeController, boolean inMoveAtFirst) {
     if (inNode != null) {

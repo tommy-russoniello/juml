@@ -8,9 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * The main class that launches the application.
- */
-/*
  * Main class for Application.
  * @author Samuel Carroll
  * @author Torrance Graham

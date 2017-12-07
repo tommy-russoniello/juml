@@ -37,8 +37,6 @@ public class UpdateRelationship extends UMLConnectorAction {
 
     if (origStartText.equals(relationship.getStartText()) &&
       origEndText.equals(relationship.getEndText())) {
-      if (relationship.getStartText().isEmpty()) {
-      }
       noChange = true;
     }
   }

@@ -271,7 +271,7 @@ public class Relationship extends UMLConnector {
    * @return contents of startText Note as String.
    */
   public String getStartText() {
-    return startText.getText().trim();
+    return startText.getText();
   }
 
   /**
@@ -279,7 +279,7 @@ public class Relationship extends UMLConnector {
    * @return contents of startText Note as String.
    */
   public String getEndText() {
-    return endText.getText().trim();
+    return endText.getText();
   }
 
   /**

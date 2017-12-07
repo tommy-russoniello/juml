@@ -27,15 +27,6 @@ public class SegmentController {
 	Controller controller;
 
 	/*
-	 * Basic Constructor
-	 * @param
-	 * @postcondition
-	 */
-	public SegmentController() throws IOException{
-
-	}
-
-	/*
 	 * Basic Getter to receive the UMLObject
 	 * @param object the UMLObject that is being observed and changed
 	 * @postcondition assigns the UMLObject and its underlying model to variables

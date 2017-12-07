@@ -19,7 +19,7 @@ import javafx.scene.Cursor;
 public class AddUMLNode extends UMLNodeAction {
   
   /**
-   * Instantiates a new adds the UML node.
+   * The action of adding a UMLNode
    *
    * @param inNode the object being added.
    * @param inController the controller being used based on the object type.

@@ -1,7 +1,13 @@
 package juml;
 
 /**
- * The Class UMLNodeController.
+ * Controller for UMLNodes.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
  */
 public class UMLNodeController extends ObjectController {
   

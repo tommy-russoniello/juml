@@ -19,7 +19,7 @@ public class UMLAction {
   public enum RelationshipType {
 		
 		/** 
-		 * The association realationship type. 
+		 * The association relationship type. 
 		 */
 		ASSOCIATION, 
 		

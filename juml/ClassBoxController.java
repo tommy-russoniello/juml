@@ -48,19 +48,6 @@ public class ClassBoxController extends UMLNodeController {
 		classBoxOriginY.setText(Double.toString(y));
 	}
 
-	public String getOriginXText() {
-		return classBoxOriginX.getText();
-	}
-
-	public String getOriginYText() {
-		return classBoxOriginY.getText();
-	}
-
-	public void setOriginCoordinatesText(double x, double y) {
-		classBoxOriginX.setText(Double.toString(x));
-		classBoxOriginY.setText(Double.toString(y));
-	}
-
 	/*
 	 * Basic Getter to receive the UMLObject
 	 * @param object the UMLObject that is being observed and changed

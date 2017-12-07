@@ -1,9 +1,8 @@
 package umlaction;
 
 import juml.*;
-import umlobject.*;
 
-/*
+/**
  * Class for encapsulating actions in the program.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -14,15 +13,54 @@ import umlobject.*;
  */
 public class UMLAction {
 
+  /**
+   * The Enum RelationshipType.
+   */
   public enum RelationshipType {
-		ASSOCIATION, DEPENDENCY, AGGREGATION, COMPOSITION, GENERALIZATION,
+		
+		/** 
+		 * The association realationship type. 
+		 */
+		ASSOCIATION, 
+		
+		/** 
+		 * The dependency relationship type. 
+		 */
+		DEPENDENCY, 
+		
+		/** 
+		 * The aggregation relationship type. 
+		 */
+		AGGREGATION,
+		
+		/** 
+		 * The composition relationship type. 
+		 */
+		COMPOSITION, 
+		
+		/** 
+		 * The generalization relationship type. 
+		 */
+		GENERALIZATION,
 	}
   
+  /** 
+   * The controller. 
+   */
   public Controller controller;
 
+  /**
+   * Does the specified action.
+   */
   public void doAction(){}
 
+  /**
+   * Undoes the specified action.
+   */
   public void undoAction(){}
 
+  /**
+   * Does the initial action.
+   */
   public void doInitialAction(){}
 }

@@ -1,14 +1,12 @@
 package umlaction;
 
 import juml.*;
-import javafx.scene.Node;
 import umlobject.*;
-import javafx.scene.layout.Pane;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 
-/*
+/**
  * Action class for adding UMLConnectors.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -18,6 +16,13 @@ import javafx.scene.Cursor;
  * @since 0.3
  */
 public class AddUMLConnector extends UMLConnectorAction {
+	
+	/**
+	 * Instantiates a new adds the UML connector.
+	 *
+	 * @param inConnector the in connector
+	 * @param inController the in controller
+	 */
 	public AddUMLConnector(UMLConnector inConnector, Controller inController) {
 		if (inConnector != null && inController != null) {
 			controller = inController;
@@ -26,24 +31,29 @@ public class AddUMLConnector extends UMLConnectorAction {
 			doInitialAction();
 		}
 	}
-/*
-*Adds the specified connector between two UMLNodes.
-*/
+
+
+	  /**
+	   * @see umlaction.UMLAction#doAction()
+	   */
 	public void doAction() {
 		controller.pane.getChildren().add(model);
 		controller.CONNECTORS.put(model, connector);
 		connector.connect();
 	}
 
-/*
-*Undoes adding a connector between two UMLNodes.
-*/
+	  /**
+	   * @see umlaction.UMLAction#undoAction()
+	   */
 	public void undoAction() {
 		controller.CONNECTORS.remove(model);
-    controller.pane.getChildren().remove(model);
+		controller.pane.getChildren().remove(model);
 		connector.disconnect();
 	}
 
+	  /**
+	   * @see umlaction.UMLAction#doInitialAction()
+	   */
 	public void doInitialAction() {
 		controller.pane.getChildren().add(model);
 		controller.CONNECTORS.put(model, connector);

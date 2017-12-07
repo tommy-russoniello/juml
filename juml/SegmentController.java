@@ -1,11 +1,10 @@
 package juml;
 
-import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import umlobject.*;
 
-/*
+/**
  * Controller class for Segment FXML.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -16,17 +15,37 @@ import umlobject.*;
  */
 public class SegmentController {
 
-	//UMLConnector.fxml IDs
+	/** 
+	 * The segment start origin X.
+	 */
 	@FXML TextField segmentStartOriginX;
+	
+	/** 
+	 * The segment start origin Y. 
+	 */
 	@FXML TextField segmentStartOriginY;
+	
+	/** 
+	 * The segment end origin X. 
+	 */
 	@FXML TextField segmentEndOriginX;
+	
+	/** 
+	 * The segment end origin Y. 
+	 */
 	@FXML TextField segmentEndOriginY;
 
-	//Base variables to pass in Segment object
+	/** 
+	 * The connector. 
+	 */
 	Segment connector = null;
+	
+	/** 
+	 * The controller. 
+	 */
 	Controller controller;
 
-	/*
+	/**
 	 * Basic Getter to receive the UMLObject
 	 * @param object the UMLObject that is being observed and changed
 	 * @postcondition assigns the UMLObject and its underlying model to variables
@@ -35,7 +54,7 @@ public class SegmentController {
 		connector = (Segment) object;
 	}
 
-	/*
+	/**
 	 * Updates the Segment.fxml file with the start Origin X coordinate of the Segment
 	 * @postcondition sets the text of the segmentStartOriginX fx:id with the value of the
 	 * Segment start Origin X coordinate
@@ -45,7 +64,7 @@ public class SegmentController {
 		segmentStartOriginX.setDisable(true);
 	}
 
-	/*
+	/**
 	 * Updates the Segment.fxml file with the start Origin Y coordinate of the Segment
 	 * @postcondition sets the text of the segmentStartOriginY fx:id with the value of the
 	 * Segment start Origin Y coordinate
@@ -55,7 +74,7 @@ public class SegmentController {
 		segmentStartOriginY.setDisable(true);
 	}
 
-	/*
+	/**
 	 * Updates the Segment.fxml file with the end Origin X coordinate of the Segment
 	 * @postcondition sets the text of the segmentEndOriginX fx:id with the value of the
 	 * Segment end Origin X coordinate
@@ -65,7 +84,7 @@ public class SegmentController {
 		segmentEndOriginX.setDisable(true);
 	}
 
-	/*
+	/**
 	 * Updates the Segment.fxml file with the end Origin Y coordinate of the Segment
 	 * @postcondition sets the text of the segmentEndOriginY fx:id with the value of the
 	 * Segment end Origin Y coordinate
@@ -75,12 +94,13 @@ public class SegmentController {
 		segmentEndOriginY.setDisable(true);
 	}
 
-	/*
+	/**
 	 * This calls all fxml updating methods in SegmentController to update Segment.fxml
 	 * with the variables from the object. Makes it easier on the main controller to activate
 	 * everything it needs by having this one method.
 	 * @param object the UMLObject that is being taken in from the main controller to then be passed
 	 * * to getSegment
+	 * @param inController the controller being used to change the segment fields
 	 * @postcondition methods are called and Segment.fxml holds all the up to date information
 	 * * given the object that is passed through.
 	 */

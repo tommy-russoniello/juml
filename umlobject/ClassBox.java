@@ -94,11 +94,12 @@ public class ClassBox extends UMLNode {
   }
 
   /**
-	 * Build from string method
-	 * @param input The scanner from which the object can read in its save string
-	 * @postcondition Object will have constructed itself from the information
-	 *                provided by input
-	 */
+   * Build from string method.
+   *
+   * @param input The scanner from which the object can read in its save string
+   * @postcondition Object will have constructed itself from the information
+   *                provided by input
+   */
   public ClassBox(Scanner input) {
 	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
 	    //System.out.println("Base construction");
@@ -112,7 +113,9 @@ public class ClassBox extends UMLNode {
 
   /**
    * Save method; stored as "delimiter x y (upper right corner) width, chacactersInName nameText\n
-   * chacactersInAttributes attributeText\n chacactersInMethods methodsText\n"
+   * chacactersInAttributes attributeText\n chacactersInMethods methodsText\n".
+   *
+   * @return the string
    * @postcondition generates a string with the necessary information for the object to rebuild itself.
    */
   public String saveAsString() {
@@ -124,10 +127,12 @@ public class ClassBox extends UMLNode {
 	}
 
 	/**
-	 * Build text
+	 * Build text.
+	 *
 	 * @precondition The text to read in will end with a \n character
 	 * @param input The scanner from which the text can be read
-     * @param numChars The number of chars to read in
+	 * @param numChars The number of chars to read in
+	 * @return the string
 	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
 	 */
 	public String buildString(Scanner input, int numChars) {

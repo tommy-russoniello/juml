@@ -1,12 +1,10 @@
 package juml;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -54,19 +52,14 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import umlobject.*;
 import umlaction.*;
 
+// TODO: Auto-generated Javadoc
 // ---------------------------------------------------------------------------------------------- \\
 
-/*
+/**
  * MVC styled controller between model and view.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -77,126 +70,176 @@ import umlaction.*;
  */
 public class Controller {
 
+	/**
+	 * The different draw modes that the program can take on.
+	 */
 	// Draw modes
 	public enum Mode {
+		
 		SELECT,
+		
 		POINT,
+		
 		CLASSBOX,
+		
 		DELETE,
+		
 		ASSOCIATION,
+
 		DEPENDENCY,
+
 		AGGREGATION,
+
 		COMPOSITION,
+
 		GENERALIZATION,
+
 		LINESPLIT,
+
 		LINE,
+
 		NOTE
 	}
 
-	/*
+	/**
 	 * All UMLNodes currently on the pane.
 	 */
 	public Map<Node, UMLNode> NODES = new HashMap<>();
-	/*
+	
+	/**
 	 * All UMLConnectors currently on the pane
 	 */
 	public Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
-	// Main node that contains all drawn nodes as children.
+	/** 
+	 * Main pane that contains all drawn nodes as children. 
+	 */
 	@FXML public Pane pane;
+	
+	/**
+	 * Overarching pane that defines the layout for the program.
+	 */
 	@FXML public AnchorPane inspectorObject;
+	
+	/** 
+	 * The scroll pane that allows the pane to be scrolled. 
+	 */
 	@FXML public ScrollPane scrollPane;
 
-	/*
+	/**
 	 * Current mode. Defaulted to SELECT.
 	 */
 	public Mode MODE = Mode.SELECT;
-	/*
+
+	/**
 	 * Collection of all "selected" UMLNodes
 	 */
 	Deque<UMLObject> SELECTED = new LinkedList<>();
+	
+	/** 
+	 * The file chooser. 
+	 */
 	FileChooser fileChooser = new FileChooser();
 
+	/** 
+	 * The stack of actions that have been performed.
+	 */
 	public Stack<UMLAction> ACTIONS = new Stack<>();
+	
+	/** 
+	 * The undone actions. 
+	 */
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
+	/** 
+	 * The clip board. 
+	 */
 	public Set<String> CLIP_BOARD = new HashSet<>();
 
 
+	/** 
+	 * The window. 
+	 */
 	Stage window;
+	
+	/** 
+	 * The scene. 
+	 */
 	Scene scene;
 
 // ---------------------------------------------------------------------------------------------- \\
 
-	/*
+	/**
 	 * Sets the Primary Stage. Called from Main.
 	 * @param primaryStage Primary stage of application instance.
 	 */
 	public void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
 		scene = window.getScene();
-
+		
+		//Handles keyboard shortcut and performs corresponding action.
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      public void handle(KeyEvent event) {
-	      if (System.getProperty("os.name").contains("Mac")) {
-        	if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
-            undo();
-            event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
-            redo();
-            event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
-            printState();
-            event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
-            refresh();
-            event.consume();
-          }
-					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.META_DOWN)).match(event)) {
-            copy();
-            event.consume();
-          }
-					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN)).match(event)) {
-            paste();
-            event.consume();
-          }
-        } else {
-          if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
-            undo();
-          	event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
-            redo();
-            event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
-            printState();
-            event.consume();
-          }
-          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
-            refresh();
-            event.consume();
-          }
-					if ((new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN)).match(event)) {
-            copy();
-            event.consume();
-          }
-					if ((new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)).match(event)) {
-            paste();
-            event.consume();
-          }
-        }
-				if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
-					UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
-					deselectAll();
-					deleteObjects(selected);
-				}
-      }
-    });
-
+	      public void handle(KeyEvent event) {
+		      if (System.getProperty("os.name").contains("Mac")) {
+	        	if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN)).match(event)) {
+	            undo();
+	            event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.META_DOWN)).match(event)) {
+	            redo();
+	            event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.META_DOWN)).match(event)) {
+	            printState();
+	            event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN)).match(event)) {
+	            refresh();
+	            event.consume();
+	          }
+						if ((new KeyCodeCombination(KeyCode.C, KeyCombination.META_DOWN)).match(event)) {
+	            copy();
+	            event.consume();
+	          }
+						if ((new KeyCodeCombination(KeyCode.V, KeyCombination.META_DOWN)).match(event)) {
+	            paste();
+	            event.consume();
+	          }
+	        } else {
+	          if ((new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            undo();
+	          	event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            redo();
+	            event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            printState();
+	            event.consume();
+	          }
+	          if ((new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            refresh();
+	            event.consume();
+	          }
+						if ((new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            copy();
+	            event.consume();
+	          }
+						if ((new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)).match(event)) {
+	            paste();
+	            event.consume();
+	          }
+	        }
+					if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+						UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
+						deselectAll();
+						deleteObjects(selected);
+					}
+	      }
+	    });
+		
+		//Handles a mouse pressed event and either sets the pane to be pannable, or handles scrolling the pane.
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(MODE == Mode.SELECT){
 				if(e.isSecondaryButtonDown()){
@@ -291,6 +334,7 @@ public class Controller {
 			}
 		});
 
+		//Handles scrolling the pane as the mouse is dragged.
 		scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
 			if(MODE == Mode.SELECT){
 				try{
@@ -380,6 +424,7 @@ public class Controller {
 			}
 		});
 
+		//Handles setting the scrollbars in the correct position after an object is released from dragging
 		scene.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
 			if(MODE == Mode.SELECT){
 				try{
@@ -466,9 +511,7 @@ public class Controller {
 		});
 	}
 
-
-
-	/*
+	/**
 	 * Returns pane.
 	 * @return Main pane being used for application instance.
 	 */
@@ -476,13 +519,18 @@ public class Controller {
 		return pane;
 	}
 
-	/*
-	 * Sets pane.
+	/**
+	 * Sets the pane.
+	 *
+	 * @param p the new pane
 	 */
 	public void setPane(Pane p) {
 		pane = p;
 	}
 
+	/**
+	 * Undo.
+	 */
 	public void undo() {
 		if (!ACTIONS.isEmpty()) {
 			deselectAll();
@@ -495,6 +543,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Redo.
+	 */
 	public void redo() {
 		if (!UNDONE_ACTIONS.isEmpty()) {
 			deselectAll();
@@ -507,6 +558,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		NODES = new HashMap<>();
 		CONNECTORS = new HashMap<>();
@@ -514,6 +568,9 @@ public class Controller {
 		UNDONE_ACTIONS.clear();
 	}
 
+	/**
+	 * Copy.
+	 */
 	public void copy() {
 		CLIP_BOARD.clear();
 		for (UMLObject object : SELECTED) {
@@ -521,6 +578,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Paste.
+	 */
 	public void paste() {
 		for (String string : CLIP_BOARD) {
 			Scanner scanner = new Scanner(string);
@@ -543,7 +603,7 @@ public class Controller {
 		}
 	}
 
-	/*
+	/**
 	 * Changes mode according to event source.
 	 * @precondition Called by event on object builder button.
 	 * @param event Event triggering this method.
@@ -560,7 +620,7 @@ public class Controller {
 		System.out.println("Draw mode changed to \"" + MODE + "\"");
 	}
 
-	/*
+	/**
 	 * Performs draw action relative to current draw mode.
 	 * @precondition Called by a MouseEvent on the pane.
 	 * @param event Event triggering this method.
@@ -697,7 +757,7 @@ public class Controller {
 
 // ---------------------------------------------------------------------------------------------- \\
 
-	/*
+	/**
 	 * Removes given UMLObject from pane.
 	 * @precondition target is recognized UMLObject that is a child of the pane.
 	 * @param target UMLObject to be removed.
@@ -720,7 +780,7 @@ public class Controller {
 		}
 	}
 
-	/*
+	/**
 	 * Adds already instantiated UMLObject to pane.
 	 * @precondition obj is instantiated UMLObject.
 	 * @param obj UMLObject to be added.
@@ -743,7 +803,7 @@ public class Controller {
 		}
  	}
 
-  	/*
+	/**
 	 * Returns recognized UMLObject for given Object (typically one's underlying model).
 	 * @param inModel Object that will have its UMLObject (if it has one) searched for.
 	 * @return UMLObject that contains inModel as part of its underlying model. If given Object is
@@ -772,13 +832,14 @@ public class Controller {
 	      return returnNode;
 	    }
 
-		/* Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
-		 * * none of the given UMLConnector's Segments contain the given Line, returns null.
+		/** 
+		 * Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
+		 *  none of the given UMLConnector's Segments contain the given Line, returns null.
 		 * @param connector UMLConnector that's Segments will be searched through for containing given
-		 * * Line.
+		 *  Line.
 		 * @param model Line that's corresponding Segment is being searched for.
 		 * @return Segment containing the given Line out all Segments in given UMLConnector. If none of
-		 * * the given UMLConnector's Segments contain the given Line, then null.
+		 *  the given UMLConnector's Segments contain the given Line, then null.
 		 */
 		public Segment getSegment(Relationship relationship, Line model) {
 			for(Segment segment : relationship.getSegments()) {
@@ -789,13 +850,14 @@ public class Controller {
 			return null;
 		}
 
-		/* Finds the Pivot containing the given Circle out of all Pivots in given UMLConnector. If
-		 * * none of the given UMLConnector's Pivots contain the given Circle, returns null.
+		/** 
+		 * Finds the Pivot containing the given Circle out of all Pivots in given UMLConnector. If
+		 *  none of the given UMLConnector's Pivots contain the given Circle, returns null.
 		 * @param connector UMLConnector that's Pivots will be searched through for containing given
-		 * * Circle.
+		 *  Circle.
 		 * @param model Circle that's corresponding Pivot is being searched for.
 		 * @return Pivot containing the given Circle out all Pivots in given UMLConnector. If none of
-		 * * the given UMLConnector's Pivots contain the given Circle, then null.
+		 *  the given UMLConnector's Pivots contain the given Circle, then null.
 		 */
 		public Pivot getPivot(Relationship relationship, Circle model) {
 			for(Pivot pivot : relationship.getPivots()) {
@@ -806,6 +868,11 @@ public class Controller {
 			return null;
 		}
 
+		/**
+		 * Select object.
+		 *
+		 * @param object the object
+		 */
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
 			object.highlight();
@@ -824,11 +891,19 @@ public class Controller {
 			}
 		}
 
+		/**
+		 * Deselect object.
+		 *
+		 * @param object the object
+		 */
 		public void deselectObject(UMLObject object) {
 			SELECTED.remove(object);
 			object.unhighlight();
 		}
 
+		/**
+		 * Deselect all.
+		 */
 		public void deselectAll() {
 			while (!SELECTED.isEmpty()) {
 				SELECTED.peekLast().unhighlight();
@@ -840,6 +915,9 @@ public class Controller {
 			}
 		}
 
+		/**
+		 * Deselect all nodes.
+		 */
 		public void deselectAllNodes() {
 			for (UMLObject object : SELECTED) {
 				if (object instanceof UMLNode) {
@@ -849,6 +927,9 @@ public class Controller {
 			}
 		}
 
+		/**
+		 * Deselect all connectors.
+		 */
 		public void deselectAllConnectors() {
 			for (UMLObject object : SELECTED) {
 				if (object instanceof UMLConnector) {
@@ -858,6 +939,9 @@ public class Controller {
 			}
 		}
 
+		/**
+		 * Refresh.
+		 */
 		public void refresh() {
 			Iterator iter = CONNECTORS.entrySet().iterator();
 			while (iter.hasNext()) {
@@ -869,6 +953,11 @@ public class Controller {
 			}
 		}
 
+		/**
+		 * Gets the x offset.
+		 *
+		 * @return the x offset
+		 */
 		public double getXOffset(){
 			double viewWidth = scrollPane.getViewportBounds().getWidth();
 			double contentWidth = scrollPane.getContent().getLayoutBounds().getWidth();
@@ -882,6 +971,11 @@ public class Controller {
 			return xLoc;
 		}
 
+		/**
+		 * Gets the y offset.
+		 *
+		 * @return the y offset
+		 */
 		public double getYOffset(){
 			double viewHeight = scrollPane.getViewportBounds().getHeight();
 			double contentHeight = scrollPane.getContent().getLayoutBounds().getHeight();
@@ -895,6 +989,9 @@ public class Controller {
 			return yLoc;
 		}
 
+		/**
+		 * Prints the state.
+		 */
 		public void printState() {
 			Iterator iter;
 			System.out.println("--------------------------\nPRINTING STATE");
@@ -948,7 +1045,8 @@ public class Controller {
 // ---------------------------------------------------------------------------------------------- \\
 	// MenuBar Action Controller
 
-	/*
+
+	/**
 	 *  Action used to Close the program: assigned to Exit.
 	 * @postcondition Application is exited.
 	 */
@@ -956,7 +1054,7 @@ public class Controller {
 		window.close();
 	}
 
-	/*
+	/**
 	 * Opens new window with blank file.
 	 * @postcondition all maintained variables are reset.
 	 */
@@ -973,8 +1071,8 @@ public class Controller {
 		UNDONE_ACTIONS.clear();
 	}
 
-	/*
-	 * Action to Open file WIP.
+	/**
+	 * Action to Open file while in progress.
 	 */
 	public void menuOpenClicked() {
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JUML txt files", "*.juml"));
@@ -1057,8 +1155,10 @@ public class Controller {
 	}
 
 
-	/*
-	 * Action to Save File WIP.
+	/**
+	 * Menu save clicked.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void menuSaveClicked() throws IOException {
 		System.out.println("Save Called");
@@ -1128,6 +1228,13 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Prints the save string.
+	 *
+	 * @param output the output
+	 * @param saveString the save string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void printSaveString(BufferedWriter output, String saveString) throws IOException {
 		Scanner s = new Scanner(saveString);
 		while (s.hasNextLine()) {
@@ -1136,6 +1243,13 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Menu export clicked.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NullPointerException the null pointer exception
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	public void menuExportClicked() throws IOException, NullPointerException, FileNotFoundException{
 
 		deselectAll();
@@ -1160,9 +1274,9 @@ public class Controller {
 
     	try {
 				PDPageContentStream contents = new PDPageContentStream(doc, page);
-    		contents.drawImage(img, 0, 0);
+				contents.drawImage(img, 0, 0);
 				contents.close();
-        doc.save(fileName);
+				doc.save(fileName);
     	}
 
 			catch (FileNotFoundException fnfe) {
@@ -1173,47 +1287,77 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Menu copy clicked.
+	 */
 	public void menuCopyClicked() {
 		copy();
 	}
 
+	/**
+	 * Menu paste clicked.
+	 */
 	public void menuPasteClicked() {
 		paste();
 	}
 
+	/**
+	 * Menu delete clicked.
+	 */
 	public void menuDeleteClicked() {
 		UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
 		deselectAll();
 		deleteObjects(selected);
 	}
 
+	/**
+	 * Menu select all clicked.
+	 */
 	public void menuSelectAllClicked() {
 	}
 
+	/**
+	 * Menu move to front clicked.
+	 */
 	public void menuMoveToFrontClicked() {
 		ACTIONS.push(new MoveToFront(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
+	/**
+	 * Menu move to back clicked.
+	 */
 	public void menuMoveToBackClicked() {
 		ACTIONS.push(new MoveToBack(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
+	/**
+	 * Menu undo clicked.
+	 */
 	public void menuUndoClicked() {
 		undo();
 	}
 
+	/**
+	 * Menu redo clicked.
+	 */
 	public void menuRedoClicked() {
 		redo();
 	}
 
+	/**
+	 * Menu specifications clicked.
+	 */
 	public void menuSpecificationsClicked() {
 		File file = new File("https://github.com/tommy-russoniello/juml/Iteration1Specifications.docx");
 		// HostServices hostServices = Main.getHostServices();
 		// hostServices.showDocument(file.getAbsolutePath());
 	}
 
-	/*
-	 * Function to Save a Hashmap to a txt file WIP.
+	/**
+	 * Save file.
+	 *
+	 * @param NODES the nodes
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void saveFile(Map<Node, UMLNode> NODES) throws IOException {
 		ObjectOutputStream outputStream = new ObjectOutputStream(
@@ -1222,13 +1366,8 @@ public class Controller {
 		outputStream.close();
 	}
 
-	/*
-	 * Inspector Properties WIP.
-	 */
-
-
-    /*
-	 * loads inspector fxml and allows user to change properties.
+	/**
+	 * Loads inspector fxml and allows user to change properties.
 	 * @param point instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given circle fxml and listens to given key/mouse events to change
 	 * the inspector/circle properties.
@@ -1245,11 +1384,11 @@ public class Controller {
 		}
 	}
 
-    /*
-	 * loads inspector fxml and allows user to change properties.
+    /**
+	 * Loads inspector fxml and allows user to change properties.
 	 * @param classBox instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given classBox fxml and listens to given key/mouse events to change
-	 * the inspector/circle properties.
+	 * the inspector/vbox properties.
 	 */
 	public void loadClassBoxFXML(UMLObject classBox){
 		try{
@@ -1264,11 +1403,12 @@ public class Controller {
 	}
 
   /**
-	 * loads inspector fxml and allows user to change properties.
-	 * @param line instance of current event target.
-	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
-	 * the inspector/circle properties.
-	 */
+   * Loads inspector fxml and allows user to change properties.
+   *
+   * @param connector instance of current event target.
+   * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
+   * the inspector/line properties.
+   */
 	public void loadSegmentFXML(UMLObject connector){
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Segment.fxml"));
@@ -1282,10 +1422,11 @@ public class Controller {
 	}
 
 	/**
-	 * loads inspector fxml and allows user to change properties.
-	 * @param line instance of current event target.
+	 * Loads inspector fxml and allows user to change properties.
+	 *
+	 * @param connector instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
-	 * the inspector/circle properties.
+	 * the inspector/line properties.
 	 */
 	public void loadRelationshipFXML(UMLObject connector){
 		try {
@@ -1299,9 +1440,10 @@ public class Controller {
 		}
 	}
 
-	/*
-	 * loads inspector fxml and allows user to change properties.
-	 * @param line instance of current event target.
+
+	/**
+	 * Loads inspector fxml and allows user to change properties.
+	 * @param note instance of current event target.
 	 * @postcondition This loads the dynamic instance of the given line fxml and listens to given key/mouse events to change
 	 * the inspector/Note properties.
 	 */

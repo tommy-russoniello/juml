@@ -27,7 +27,9 @@ public class Pivot extends UMLNode {
   Relationship connector;
 
   /**
-   * Save method; stored as "delimiter x y"
+   * Save method; stored as "delimiter x y".
+   *
+   * @return the string
    * @postcondition generates a string with the necessary information for the object to rebuild itself.
    */
   public String saveAsString() {
@@ -36,7 +38,9 @@ public class Pivot extends UMLNode {
 
 
   /**
-   * Basic Constructor
+   * Basic Constructor.
+   *
+   * @param inConnector the in connector
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
    * @postcondition Pivot instance with given coordinates and default radius of 3 is created.
@@ -98,6 +102,8 @@ public class Pivot extends UMLNode {
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
+   * @param startX the start X
+   * @param startY the start Y
    * @return returns the calculated x coordinate.
    */
   public double getAnchorX(double startX, double startY) {
@@ -116,6 +122,8 @@ public class Pivot extends UMLNode {
    * Returns the y coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
+   * @param startX the start X
+   * @param startY the start Y
    * @return returns the calculated y coordinate.
    */
   public double getAnchorY(double startX, double startY) {

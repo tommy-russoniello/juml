@@ -3,10 +3,33 @@ package umlaction;
 import umlobject.*;
 import juml.*;
 
+/**
+ * Action class for moving an object to the back of the pane.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class MoveToBack extends UMLAction {
+  
+  /** 
+   * The objects. 
+   */
   UMLObject [] objects;
+  
+  /** 
+   * The indexes. 
+   */
   int [] indexes;
 
+  /**
+   * Instantiates a new move to back.
+   *
+   * @param inController the in controller
+   * @param inObjects the in objects
+   */
   public MoveToBack(Controller inController, UMLObject... inObjects) {
     controller = inController;
     objects = inObjects;
@@ -19,6 +42,9 @@ public class MoveToBack extends UMLAction {
     doAction();
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     for (UMLObject object : objects) {
 			if (controller.getPane().getChildren().contains(object.getModel())) {
@@ -28,6 +54,9 @@ public class MoveToBack extends UMLAction {
 		}
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     int counter = 0;
     for (UMLObject object : objects) {

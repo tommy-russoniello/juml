@@ -2,12 +2,14 @@ package juml;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The main class that launches the application.
+ */
 /*
  * Main class for Application.
  * @author Samuel Carroll
@@ -19,17 +21,26 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
+    /** 
+     * The window.
+     */
     Stage window;
+    
+    /** 
+     * The layout. 
+     */
     BorderPane layout;
 
-    /*
-     * Launches application.
+    /**
+     * Launches the application.
+     *
+     * @param args the arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
 
-    /*
+    /**
      * Sets up initial state of application
      */
     @Override
@@ -43,8 +54,8 @@ public class Main extends Application {
       window.setTitle("Team Rocket UML Editor: " + fileName);
 
       Scene scene = new Scene(root, 1000, 500);
-      window.getIcons().add(new Image(Main.class.getResourceAsStream(
-        "/images/Team_Rocket_Logo.jpg")));
+      //window.getIcons().add(new Image(Main.class.getResourceAsStream(
+      //  "/images/Team_Rocket_Logo.jpg")));
       window.setScene(scene);
       window.show();
 

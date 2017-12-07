@@ -1,6 +1,5 @@
 package umlaction;
 
-import javafx.scene.text.Text;
 import umlobject.*;
 import juml.*;
 
@@ -14,11 +13,33 @@ import juml.*;
  * @since 0.3
  */
 public class ChangeNoteText extends UMLNodeAction {
+  
+  /** 
+   * The note controller. 
+   */
   NoteController noteController;
+  
+  /** 
+   * The note. 
+   */
   Note note;
+  
+  /** 
+   * The alt text. 
+   */
   String altText;
+  
+  /** 
+   * The width. 
+   */
   double width;
 
+  /**
+   * Instantiates a new change note text.
+   *
+   * @param inNote the in note
+   * @param newText the new text
+   */
   public ChangeNoteText(Note inNote, String newText) {
     noteController = null;
     note = inNote;
@@ -26,6 +47,13 @@ public class ChangeNoteText extends UMLNodeAction {
     doAction();
   }
 
+  /**
+   * Instantiates a new change note text.
+   *
+   * @param inNote the in note
+   * @param newText the new text
+   * @param inController the in controller
+   */
   public ChangeNoteText(Note inNote, String newText, NoteController inController) {
     noteController = inController;
     note = inNote;
@@ -33,6 +61,9 @@ public class ChangeNoteText extends UMLNodeAction {
     doAction();
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     if (noteController != null) {
       noteController.noteText.setText(altText);
@@ -43,6 +74,9 @@ public class ChangeNoteText extends UMLNodeAction {
     note.setText(temp);
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     if (noteController != null) {
       noteController.noteText.setText(altText);

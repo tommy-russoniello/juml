@@ -4,7 +4,7 @@ import umlobject.*;
 
 import javafx.scene.shape.Line;
 
-/*
+/**
  * Action class for deleting Relationship Pivots.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -14,11 +14,33 @@ import javafx.scene.shape.Line;
  * @since 0.3
  */
 public class DeletePivot extends UMLConnectorAction {
+  
+  /** 
+   * The relationship. 
+   */
   Relationship relationship;
+  
+  /** 
+   * The pivot. 
+   */
   Pivot pivot;
+  
+  /** 
+   * The post segment. 
+   */
   Segment preSegment, postSegment;
+  
+  /** 
+   * The position. 
+   */
   int pos;
 
+  /**
+   * Instantiates a new delete pivot.
+   *
+   * @param inRelationship the in relationship
+   * @param inPivot the in pivot
+   */
   public DeletePivot(Relationship inRelationship, Pivot inPivot) {
     if (inRelationship != null && inPivot != null) {
       relationship = inRelationship;
@@ -30,6 +52,9 @@ public class DeletePivot extends UMLConnectorAction {
     }
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     preSegment.disconnect();
 
@@ -50,6 +75,9 @@ public class DeletePivot extends UMLConnectorAction {
     relationship.update(true);
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     relationship.pivots.add(pos, pivot);
     relationship.segments.add(pos, preSegment);

@@ -1,11 +1,9 @@
 package umlaction;
 
 import juml.*;
-import javafx.scene.Node;
 import umlobject.*;
-import javafx.scene.layout.Pane;
 
-/*
+/**
  * Action class for deleting UMLConnectors.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -15,6 +13,13 @@ import javafx.scene.layout.Pane;
  * @since 0.3
  */
 public class DeleteUMLConnector extends UMLConnectorAction {
+	
+	/**
+	 * Instantiates a new delete UML connector.
+	 *
+	 * @param inConnector the in connector
+	 * @param inController the in controller
+	 */
 	public DeleteUMLConnector(UMLConnector inConnector, Controller inController) {
 		if (inConnector != null && inController != null) {
 			controller = inController;
@@ -24,12 +29,18 @@ public class DeleteUMLConnector extends UMLConnectorAction {
 		}
 	}
 
+	/**
+	 * @see umlaction.UMLAction#doAction()
+	 */
 	public void doAction() {
     controller.CONNECTORS.remove(model);
     controller.pane.getChildren().remove(model);
 		connector.disconnect();
 	}
 
+	/**
+	 * @see umlaction.UMLAction#undoAction()
+	 */
 	public void undoAction() {
     controller.pane.getChildren().add(model);
 		controller.CONNECTORS.put(model, connector);

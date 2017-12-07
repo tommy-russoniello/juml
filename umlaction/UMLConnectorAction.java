@@ -1,10 +1,9 @@
 package umlaction;
 
-import juml.*;
 import umlobject.*;
 import javafx.scene.Node;
 
-/*
+/**
  * Class for encapsulating actions on UMLConnectors.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -14,7 +13,19 @@ import javafx.scene.Node;
  * @since 0.3
  */
 public class UMLConnectorAction extends UMLAction {
+  
+  /** 
+   * The connector. 
+   */
   public UMLConnector connector;
+  
+  /** 
+   * The model. 
+   */
   public Node model;
+  
+  /** 
+   * The beginning and end UMLNodes. 
+   */
   public UMLNode start, stop;
 }

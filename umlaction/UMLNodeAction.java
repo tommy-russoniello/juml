@@ -1,10 +1,9 @@
 package umlaction;
 
-import juml.*;
 import umlobject.*;
 import javafx.scene.Node;
 
-/*
+/**
  * Class for encapsulating actions on UMLNode.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -14,6 +13,14 @@ import javafx.scene.Node;
  * @since 0.3
  */
 public class UMLNodeAction extends UMLAction {
+	
+	/** 
+	 * The node. 
+	 */
 	public UMLNode node;
+	
+	/**
+	 * The model. 
+	 */
 	public Node model;
 }

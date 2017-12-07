@@ -64,6 +64,9 @@ public class ChangeRelationshipEndText extends UMLAction {
     alt = relationship.getEndText();
     if (!relationship.setEndText(temp)) {
       System.out.println("New Relationship end text too long to update.");
+      if (relationship.getEndText().isEmpty()) {
+        relationship.hideEndText();
+      }
       if (controller.ACTIONS.peek() == this) {
         controller.ACTIONS.pop();
       }

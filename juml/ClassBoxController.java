@@ -155,6 +155,7 @@ public class ClassBoxController extends UMLNodeController {
 				x != classBox.getOriginX() ||
 				y != classBox.getOriginY()
 				) {
+			controller.UNDONE_ACTIONS.clear();
 			try{
 				controller.ACTIONS.push(new UpdateClassBox(classBox, name, attributes, methods, x, y, this));
 				event.consume();

@@ -37,8 +37,11 @@ public class Note extends UMLNode {
 	 *                provided by input
 	 */
 public Note(Scanner input) {
-	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+	    this(0, 0, 0);
+      double x = input.nextDouble(), y = input.nextDouble(), width = input.nextDouble();
+      setWidth(width);
 	    text.setText(buildString(input, input.nextInt()));
+      move(x, y);
 	}
 
   /**
@@ -47,7 +50,7 @@ public Note(Scanner input) {
    */
   public String saveAsString() {
 		int numTextChars = text.getText().length();
-		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + getWidth() + " " + numTextChars + " " + text.getText() + "\n";
+		return "Note: " + originX +" "+ originY + " " + getWidth() + " " + numTextChars + " " + text.getText() + "\n";
 	}
 
 	/**

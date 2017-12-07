@@ -119,6 +119,7 @@ public class NoteController extends UMLNodeController {
 		double x = Double.parseDouble(originX.getText()), y = Double.parseDouble(originY.getText());
 
 		if((!text.equals(note.getText())) || x != note.getOriginX() || y != note.getOriginY()) {
+			controller.UNDONE_ACTIONS.clear();
 			try {
 				controller.ACTIONS.push(new UpdateNote(note, text, x, y, this));
 				event.consume();

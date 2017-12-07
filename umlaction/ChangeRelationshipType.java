@@ -9,7 +9,6 @@ import umlobject.*;
 public class ChangeRelationshipType extends UMLAction {
 	DeleteUMLConnector deleteOldLine;
 	AddUMLConnector addNewLine;
-	Controller controller;
 	UMLObject oldConnector;
 	UMLObject newConnector;
 

@@ -859,13 +859,19 @@ public class Controller {
 		}
 
 		public void refresh() {
-			Iterator iter = CONNECTORS.entrySet().iterator();
+			Iterator iter = NODES.entrySet().iterator();
 			while (iter.hasNext()) {
-					Map.Entry pair = (Map.Entry) iter.next();
-					if (pair.getValue() instanceof Relationship) {
-						Relationship relationship = (Relationship) pair.getValue();
-						relationship.update(true);
-					}
+				Map.Entry pair = (Map.Entry) iter.next();
+				UMLNode node = (UMLNode) pair.getValue();
+				node.move(node.getOriginX(), node.getOriginY());
+			}
+			iter = CONNECTORS.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry pair = (Map.Entry) iter.next();
+				if (pair.getValue() instanceof Relationship) {
+					Relationship relationship = (Relationship) pair.getValue();
+					relationship.update(true);
+				}
 			}
 		}
 
@@ -904,7 +910,7 @@ public class Controller {
 			System.out.println("\nSCENE: " + scene);
 			System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
 			System.out.println("\nFILE CHOOSER: " + fileChooser);
-			System.out.println("\nCLIP BOARD:      size: " + CLIP_BOARD.size());
+			System.out.println("\nCLIP BOARD:   size: " + CLIP_BOARD.size());
 			for (String string : CLIP_BOARD) {
 				System.out.println("\n" + string);
 			}
@@ -1049,8 +1055,6 @@ public class Controller {
 			System.out.println("Got to the end of load");
 
 			input.close();
-			// TODO: Load file text as pane children.
-
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}

@@ -27,7 +27,6 @@ import umlobject.UMLObject;
 public class ChangeRelationshipDirection extends UMLAction {
 	DeleteUMLConnector deleteOldLine;
 	AddUMLConnector addNewLine;
-	Controller controller;
 	UMLObject oldConnector;
 	UMLObject newConnector;
 	Relationship relationship;

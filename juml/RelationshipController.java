@@ -163,14 +163,25 @@ public class RelationshipController {
 	 * @postcondition activates when user clicks the apply changes button
 	 */
 	public void applyChanges(ActionEvent event){
-		relationship.hideText();
-		relationship.showText();
+		if (relationship.startTextVisible()) {
+			relationship.hideStartText();
+			relationship.showStartText();
+		}
+		if (relationship.endTextVisible()) {
+			relationship.hideEndText();
+			relationship.showEndText();
+		}
 
 		if(!(startText.getText().equals(relationship.getStartText())) ||
 			 !(endText.getText().equals(relationship.getEndText()))) {
-			controller.ACTIONS.push(new UpdateRelationship(relationship, startText.getText(),
-				endText.getText(), this, controller));
+			controller.UNDONE_ACTIONS.clear();
+			UpdateRelationship action = new UpdateRelationship(relationship, startText.getText(),
+				endText.getText(), this, controller);
+			controller.ACTIONS.push(action);
+			if (action.noChange()) {
+				controller.ACTIONS.pop();
 			}
+		}
 	}
 
 	/*
@@ -180,10 +191,14 @@ public class RelationshipController {
 	public void flipDirection(ActionEvent event){
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		controller.ACTIONS.push(new ChangeRelationshipDirection(relationship, controller));
 =======
 >>>>>>> Update inspector for new functionality
 =======
+=======
+		controller.UNDONE_ACTIONS.clear();
+>>>>>>> Fixed a bunch of bugs
 		controller.ACTIONS.push(new ChangeRelationshipDirection(relationship, controller));
 >>>>>>> Complete inspector functionality
 		event.consume();
@@ -193,6 +208,10 @@ public class RelationshipController {
 	public void changeLineType(ActionEvent event){
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+		controller.UNDONE_ACTIONS.clear();
+>>>>>>> Fixed a bunch of bugs
 		controller.ACTIONS.push(new ChangeRelationshipType(relationship, relationshipType.getValue(), controller));
 		event.consume();
 	}

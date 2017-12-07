@@ -31,7 +31,6 @@ import umlobject.UMLObject;
 public class ChangeRelationshipDirection extends UMLAction {
 	DeleteUMLConnector deleteOldLine;
 	AddUMLConnector addNewLine;
-	Controller controller;
 	UMLObject oldConnector;
 	UMLObject newConnector;
 <<<<<<< HEAD
@@ -66,6 +65,8 @@ public class ChangeRelationshipDirection extends UMLAction {
 			thisRelationship = RelationshipType.DEPENDENCY;
 		} else if (original instanceof Generalization) {
 			thisRelationship = RelationshipType.GENERALIZATION;
+		} else {
+			System.out.println("FUCK");
 		}
 		Vector<UMLNode> allNodes = new Vector<UMLNode>();
 		allNodes.add(original.start);
@@ -90,6 +91,8 @@ public class ChangeRelationshipDirection extends UMLAction {
 			newConnector = new Dependency(input, allNodes, c);
 		} else if (thisRelationship == RelationshipType.GENERALIZATION) {
 			newConnector = new Generalization(input, allNodes, c);
+		} else {
+			System.out.println("FUCK");
 		}
 		this.newConnector = newConnector;
 		addNewLine = new AddUMLConnector(newConnector, c);

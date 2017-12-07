@@ -271,7 +271,7 @@ public class Relationship extends UMLConnector {
    * @return contents of startText Note as String.
    */
   public String getStartText() {
-    return startText.getText();
+    return startText.getText().trim();
   }
 
   /**
@@ -279,7 +279,7 @@ public class Relationship extends UMLConnector {
    * @return contents of startText Note as String.
    */
   public String getEndText() {
-    return endText.getText();
+    return endText.getText().trim();
   }
 
   /**
@@ -416,11 +416,15 @@ public class Relationship extends UMLConnector {
     // Reset Notes to be on top of lines if they were already visible.
     if (startTextVisible()) {
       hideStartText();
-      showStartText();
+      if (!getStartText().isEmpty()) {
+        showStartText();
+      }
     }
     if (endTextVisible()) {
       hideEndText();
-      showEndText();
+      if (!getEndText().isEmpty()) {
+        showEndText();
+      }
     }
   }
 

@@ -16,6 +16,7 @@ public class UpdateRelationship extends UMLConnectorAction {
   ChangeRelationshipStartText startText;
   ChangeRelationshipEndText endText;
   RelationshipController relationshipController;
+  boolean noChange;
 
   public UpdateRelationship(Relationship relationship, String newStartText, String newEndText,
     Controller inController) {
@@ -24,6 +25,7 @@ public class UpdateRelationship extends UMLConnectorAction {
 
   public UpdateRelationship(Relationship relationship, String newStartText, String newEndText,
     RelationshipController inRelationshipController, Controller inController) {
+    noChange = false;
     controller = inController;
     relationshipController = inRelationshipController;
     String origStartText = relationship.getStartText(), origEndText = relationship.getEndText();
@@ -35,10 +37,10 @@ public class UpdateRelationship extends UMLConnectorAction {
 
     if (origStartText.equals(relationship.getStartText()) &&
       origEndText.equals(relationship.getEndText())) {
-        if (controller.ACTIONS.peek() == this) {
-          controller.ACTIONS.pop();
-        }
+      if (relationship.getStartText().isEmpty()) {
       }
+      noChange = true;
+    }
   }
 
   public void doAction() {
@@ -49,5 +51,9 @@ public class UpdateRelationship extends UMLConnectorAction {
   public void undoAction() {
     startText.undoAction();
     endText.undoAction();
+  }
+
+  public boolean noChange() {
+    return noChange;
   }
 }

@@ -598,7 +598,9 @@ public class Controller {
 					return;
 				}
 				node.move(0, 0);
+				deselectAll();
 				addObjects(node);
+				selectObject(node);
 			}
 		}
 	}
@@ -665,13 +667,19 @@ public class Controller {
 
 			// Adds Point UMLNode to pane coordinates that were clicked on.
 			case POINT:
-				addObjects(new Point(xClick, yClick));
+				deselectAll();
+				Point newPoint = new Point(xClick, yClick);
+				addObjects(newPoint);
+				selectObject(newPoint);
 
 				break;
 
 			// Adds ClassBox UMLNode to pane coordinates that were clicked on.
 			case CLASSBOX:
-				addObjects(new ClassBox(xClick, yClick));
+				deselectAll();
+				ClassBox newClassBox = new ClassBox(xClick, yClick);
+				addObjects(newClassBox);
+				selectObject(newClassBox);
 
 				break;
 
@@ -691,28 +699,46 @@ public class Controller {
 						else if (node != SELECTED.getLast()) {
 							switch (MODE) {
 								case ASSOCIATION:
-									addObjects(new Association((UMLNode) SELECTED.getLast(), node));
+									Association newAssociation = new Association((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newAssociation);
+									selectObject(newAssociation);
 									break;
 
 								case DEPENDENCY:
-									addObjects(new Dependency((UMLNode) SELECTED.getLast(), node));
+									Dependency newDependency = new Dependency((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newDependency);
+									selectObject(newDependency);
 									break;
 
 								case AGGREGATION:
-									addObjects(new Aggregation((UMLNode) SELECTED.getLast(), node));
+									Aggregation newAggregation = new Aggregation((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newAggregation);
+									selectObject(newAggregation);
 									break;
 
 								case COMPOSITION:
-									addObjects(new Composition((UMLNode) SELECTED.getLast(), node));
+									Composition newComposition = new Composition((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newComposition);
+									selectObject(newComposition);
 									break;
 
 								case GENERALIZATION:
-									addObjects(new Generalization((UMLNode) SELECTED.getLast(), node));
+									Generalization newGeneralization = new Generalization((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newGeneralization);
+									selectObject(newGeneralization);
 									break;
 								case LINE:
-									addObjects(new Segment((UMLNode) SELECTED.getLast(), node));
+									Segment newSegment = new Segment((UMLNode) SELECTED.getLast(), node);
+									deselectAll();
+									addObjects(newSegment);
+									selectObject(newSegment);
 									break;
-							}
+							};
 						}
 					}
 
@@ -789,16 +815,13 @@ public class Controller {
 	 */
 	public void addObjects(UMLObject... objects) {
 		UNDONE_ACTIONS.clear();
-		deselectAll();
 		for (UMLObject object : objects) {
 			if (object instanceof UMLConnector) {
 				UMLConnector connector = (UMLConnector) object;
 				ACTIONS.push(new AddUMLConnector(connector, this));
-				selectObject(connector);
 			} else {
 				UMLNode node = (UMLNode) object;
 				ACTIONS.push(new AddUMLNode(node, this));
-				selectObject(node);
 			}
 		}
  	}
@@ -943,13 +966,19 @@ public class Controller {
 		 * Refresh.
 		 */
 		public void refresh() {
-			Iterator iter = CONNECTORS.entrySet().iterator();
+			Iterator iter = NODES.entrySet().iterator();
 			while (iter.hasNext()) {
-					Map.Entry pair = (Map.Entry) iter.next();
-					if (pair.getValue() instanceof Relationship) {
-						Relationship relationship = (Relationship) pair.getValue();
-						relationship.update(true);
-					}
+				Map.Entry pair = (Map.Entry) iter.next();
+				UMLNode node = (UMLNode) pair.getValue();
+				node.move(node.getOriginX(), node.getOriginY());
+			}
+			iter = CONNECTORS.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry pair = (Map.Entry) iter.next();
+				if (pair.getValue() instanceof Relationship) {
+					Relationship relationship = (Relationship) pair.getValue();
+					relationship.update(true);
+				}
 			}
 		}
 
@@ -1001,7 +1030,7 @@ public class Controller {
 			System.out.println("\nSCENE: " + scene);
 			System.out.println("\nINSPECTOR OBJECT: " + inspectorObject);
 			System.out.println("\nFILE CHOOSER: " + fileChooser);
-			System.out.println("\nCLIP BOARD:      size: " + CLIP_BOARD.size());
+			System.out.println("\nCLIP BOARD:   size: " + CLIP_BOARD.size());
 			for (String string : CLIP_BOARD) {
 				System.out.println("\n" + string);
 			}
@@ -1110,7 +1139,9 @@ public class Controller {
 					return;
 				}
 				allNodes.add(node);
+				deselectAll();
 				addObjects(node);
+				selectObject(node);
 			}
 			Vector <UMLConnector> allConnectors  = new Vector<UMLConnector>();
 			while (input.hasNextLine()) {
@@ -1134,7 +1165,9 @@ public class Controller {
 					connector = new Segment(input, allNodes);
 				}
 				allConnectors.add(connector);
+				deselectAll();
 				addObjects(connector);
+				selectObject(connector);
 				printState();
 				input.nextLine();
 			}
@@ -1147,8 +1180,6 @@ public class Controller {
 			System.out.println("Got to the end of load");
 
 			input.close();
-			// TODO: Load file text as pane children.
-
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}

@@ -101,14 +101,13 @@ public class ClassBox extends UMLNode {
    *                provided by input
    */
   public ClassBox(Scanner input) {
-	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
-	    //System.out.println("Base construction");
+	    this(0, 0, 0);
+      double x = input.nextDouble(), y = input.nextDouble();
+      setWidth(input.nextDouble());
 	    name.setText(buildString(input, input.nextInt()));
-	    //System.out.println("Name construction");
 	    attributes.setText(buildString(input, input.nextInt()));
-	    //System.out.println("Attributes construction");
 	    methods.setText(buildString(input, input.nextInt()));
-	   // System.out.println("Methods construction");
+      move(x, y);
 	}
 
   /**
@@ -122,8 +121,8 @@ public class ClassBox extends UMLNode {
 		int numNameChars = name.getText().length();
 		int numAttributesChars = attributes.getText().length();
 		int numMethodsChars = methods.getText().length();
-		return "ClassBox: " + (box.getLayoutX()) + " " + (box.getLayoutY()) + " " + width+ " "+numNameChars + " "+name.getText()
-			+"\n"+numAttributesChars + " "+attributes.getText()+"\n"+numMethodsChars + " "+methods.getText() + "\n";
+		return "ClassBox: " + originX + " " + originY + " " + width + " " + numNameChars + " " + name.getText()
+			+ "\n" + numAttributesChars + " " + attributes.getText() + "\n" + numMethodsChars + " " + methods.getText() + "\n";
 	}
 
 	/**

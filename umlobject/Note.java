@@ -39,9 +39,12 @@ public class Note extends UMLNode {
 	 * @postcondition Object will have constructed itself from the information
 	 *                provided by input
 	 */
-  	public Note(Scanner input) {
-	    this(input.nextDouble(), input.nextDouble(), input.nextDouble());
+  public Note(Scanner input) {
+	    this(0, 0, 0);
+      double x = input.nextDouble(), y = input.nextDouble(), width = input.nextDouble();
+      setWidth(width);
 	    text.setText(buildString(input, input.nextInt()));
+      move(x, y);
 	}
 
   /**
@@ -52,7 +55,7 @@ public class Note extends UMLNode {
    */
   public String saveAsString() {
 		int numTextChars = text.getText().length();
-		return "Note: " + box.getLayoutX() +" "+ box.getLayoutY() + " " + getWidth() + " " + numTextChars + " " + text.getText() + "\n";
+		return "Note: " + originX +" "+ originY + " " + getWidth() + " " + numTextChars + " " + text.getText() + "\n";
 	}
 
 	/**

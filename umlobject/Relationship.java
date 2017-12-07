@@ -422,11 +422,15 @@ public class Relationship extends UMLConnector {
     // Reset Notes to be on top of lines if they were already visible.
     if (startTextVisible()) {
       hideStartText();
-      showStartText();
+      if (!getStartText().isEmpty()) {
+        showStartText();
+      }
     }
     if (endTextVisible()) {
       hideEndText();
-      showEndText();
+      if (!getEndText().isEmpty()) {
+        showEndText();
+      }
     }
   }
 

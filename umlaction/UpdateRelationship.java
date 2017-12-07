@@ -28,6 +28,7 @@ public class UpdateRelationship extends UMLConnectorAction {
    * The relationship controller. 
    */
   RelationshipController relationshipController;
+  boolean noChange;
 
   /**
    * Instantiates a new update relationship.
@@ -53,6 +54,7 @@ public class UpdateRelationship extends UMLConnectorAction {
    */
   public UpdateRelationship(Relationship relationship, String newStartText, String newEndText,
     RelationshipController inRelationshipController, Controller inController) {
+    noChange = false;
     controller = inController;
     relationshipController = inRelationshipController;
     String origStartText = relationship.getStartText(), origEndText = relationship.getEndText();
@@ -64,10 +66,8 @@ public class UpdateRelationship extends UMLConnectorAction {
 
     if (origStartText.equals(relationship.getStartText()) &&
       origEndText.equals(relationship.getEndText())) {
-        if (controller.ACTIONS.peek() == this) {
-          controller.ACTIONS.pop();
-        }
-      }
+      noChange = true;
+    }
   }
 
   /**
@@ -84,5 +84,9 @@ public class UpdateRelationship extends UMLConnectorAction {
   public void undoAction() {
     startText.undoAction();
     endText.undoAction();
+  }
+
+  public boolean noChange() {
+    return noChange;
   }
 }

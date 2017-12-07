@@ -100,6 +100,9 @@ public class ChangeRelationshipStartText extends UMLAction {
     alt = relationship.getStartText();
     if (!relationship.setStartText(temp)) {
       System.out.println("New Relationship start text too long to update.");
+      if (relationship.getStartText().isEmpty()) {
+        relationship.hideStartText();
+      }
       if (controller.ACTIONS.peek() == this) {
         controller.ACTIONS.pop();
       }

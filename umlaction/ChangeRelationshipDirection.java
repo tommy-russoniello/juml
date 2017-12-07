@@ -60,8 +60,8 @@ public class ChangeRelationshipDirection extends UMLAction {
 	/**
 	 * Instantiates a new change relationship direction.
 	 *
-	 * @param original the original
-	 * @param c the c
+	 * @param original the original relationship
+	 * @param c the controller
 	 */
 	public ChangeRelationshipDirection(Relationship original, Controller c) {
 		relationship = original;

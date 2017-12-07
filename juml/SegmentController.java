@@ -35,14 +35,12 @@ public class SegmentController {
 	 */
 	@FXML TextField segmentEndOriginY;
 
+
 	/** 
 	 * The connector. 
 	 */
 	Segment connector = null;
-	
-	/** 
-	 * The controller. 
-	 */
+
 	Controller controller;
 
 	/**

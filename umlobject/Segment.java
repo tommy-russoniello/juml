@@ -89,7 +89,7 @@ public class Segment extends UMLConnector {
    *
    * @param inStart starting UMLNode for line to be drawn between.
    * @param inStop stopping UMLNode for line to be drawn between.
-   * @param isDotted the is dotted
+   * @param isDotted boolean determining whether the line should be dotted.
    * @postcondition Segment instance with given starting and stopping UMLNodes (solid or dotted
    * depending on isDotted boolean) is created.
    */

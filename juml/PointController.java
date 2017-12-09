@@ -2,13 +2,12 @@ package juml;
 
 import javafx.scene.input.KeyEvent;
 import umlobject.*;
-import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import umlaction.*;
 
-/*
+/**
  * Controller class for Point FXML.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -19,17 +18,37 @@ import umlaction.*;
  */
 public class PointController{
 
-	//Point.fxml IDs
+	/** 
+	 * The point origin X. 
+	 */
 	@FXML private TextField pointOriginX;
+	
+	/** 
+	 * The point origin Y. 
+	 */
 	@FXML private TextField pointOriginY;
+	
+	/** 
+	 * The point radius. 
+	 */
 	@FXML private TextField pointRadius;
 
-	//Base variables to pass in UMLConnector object
+	/** 
+	 * The point UML. 
+	 */
 	UMLObject pointUML;
+	
+	/** 
+	 * The point. 
+	 * */
 	Point point;
+	
+	/** 
+	 * The controller. 
+	 */
 	Controller controller;
 
-	/*
+	/**
 	 * Basic Getter to receive the UMLObject
 	 * @param object the UMLObject that is being observed and changed
 	 * @postcondition assigns the UMLObject and its underlying model to variables
@@ -40,7 +59,7 @@ public class PointController{
 
 	}
 
-	/*
+	/**
 	 * Updates the Point.fxml file with the Origin X coordinate of the Point
 	 * @postcondition sets the text of the pointOriginX fx:id with the value of the Point Origin X coordinate
 	 */
@@ -48,7 +67,7 @@ public class PointController{
 		pointOriginX.setText(Double.toString(pointUML.getOriginX()));
 	}
 
-	/*
+	/**
 	 * Updates the Point.fxml file with the Origin Y coordinate of the Point
 	 * @postcondition sets the text of the pointOriginY fx:id with the value of the Point Origin Y coordinate
 	 */
@@ -56,7 +75,7 @@ public class PointController{
 		pointOriginY.setText(Double.toString(pointUML.getOriginY()));
 	}
 
-	/*
+	/**
 	 * Updates the Point.fxml file with the radius of the Point
 	 * @postcondition sets the text of the pointRadius fx:id with the value of the Point radius
 	 */
@@ -65,7 +84,7 @@ public class PointController{
 		pointRadius.setDisable(true);
 	}
 
-	/*
+	/**
 	 * Moves the point to a new location based on the values entered into the inspector Object for X and Y coordinates.
 	 * Activates when the user presses Enter
 	 * @param event is a KeyEvent used to listen for when the user presses enter on the inspector textfields for X and Y coordinates
@@ -86,10 +105,11 @@ public class PointController{
 		}
 	}
 
-	/*
+	/**
 	 * This calls all fxml updating methods in PointController to update Cirle.fxml with the variables from the object.
 	 * Makes it easier on the main controller to activate everything it needs by having this one method.
 	 * @param point the UMLObject that is being taken in from the main controller to then be passed to getPoint
+	 * @param inController the controller being used to change the point fields
 	 * @postcondition methods are called and Point.fxml holds all the up to date information given the object that is passed through.
 	 */
 	public void loadInspectorInfo(UMLObject inPoint, Controller inController){

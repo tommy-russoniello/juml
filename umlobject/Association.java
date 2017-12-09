@@ -1,9 +1,7 @@
 package umlobject;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Vector;
-
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -24,12 +22,13 @@ public class Association extends Relationship {
 
 
 	  /**
-	   * Build from string method
-	   * @param input The scanner from which the object can read in its save string
-	   * @param allNodes List of all nodes currently in the scene.
-	   * @param controller Master controller (needed for pivot construction)
-	   * @postcondition generates the connector from the save string
-	   */
+  	 * Build from string method.
+  	 *
+  	 * @param input The scanner from which the object can read in its save string
+  	 * @param allNodes List of all nodes currently in the scene.
+  	 * @param controller Master controller (needed for pivot construction)
+  	 * @postcondition generates the connector from the save string
+  	 */
 	public Association(Scanner input, Vector<UMLNode> allNodes, Controller controller) {
 		super(input, allNodes);
 		setUp();
@@ -37,12 +36,13 @@ public class Association extends Relationship {
 	}
 
 
-	  /**
-	   * Explicit Constructor
-	   * @param inStart starting UMLNode for Segment to be drawn between.
-	   * @param inStop stopping UMLNode for Segment to be drawn between.
-	   * @postcondition Aggregation instance with given starting and stopping UMLNodes is created.
-	   */
+	/**
+  	 * Explicit Constructor.
+  	 *
+  	 * @param inStart starting UMLNode for Segment to be drawn between.
+  	 * @param inStop stopping UMLNode for Segment to be drawn between.
+  	 * @postcondition Aggregation instance with given starting and stopping UMLNodes is created.
+  	 */
 	public Association(UMLNode inStart, UMLNode inStop) {
 		super(inStart, inStop);
 		setUp();
@@ -50,7 +50,8 @@ public class Association extends Relationship {
 
 
 	/**
-	 * Sets up the Connector
+	 * Sets up the Connector.
+	 *
 	 * @postcondition Connect initializes all remaining variables and draws itself
 	 */
 	private void setUp() {
@@ -103,6 +104,8 @@ public class Association extends Relationship {
   }
 
   /**
+   * Update.
+   *
    * @param isReset is a boolean stating whether a reset needs to be done on the segments of the
    * relationship. This update is used after a pivot has been deleted.
    */

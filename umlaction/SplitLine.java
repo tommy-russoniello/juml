@@ -11,7 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.shape.Line;
 
-/*
+/**
  * Action class for splitting relationship lines with a pivot.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -21,10 +21,31 @@ import javafx.scene.shape.Line;
  * @since 0.3
  */
 public class SplitLine extends UMLConnectorAction {
+  
+  /** 
+   * The relationship. 
+   */
   Relationship relationship;
+  
+  /** 
+   * The new split segment and the current split segment. 
+   */
   Segment newSegment, splitSegment;
+  
+  /** 
+   * The pivot. 
+   */
   Pivot pivot;
 
+  /**
+   * Instantiates a new split line.
+   *
+   * @param inConnector the in connector
+   * @param inSegment the in segment
+   * @param x the x
+   * @param y the y
+   * @param inController the in controller
+   */
   public SplitLine(
     Relationship inConnector, Segment inSegment, double x, double y, Controller inController) {
     relationship = (Relationship) inConnector;
@@ -39,6 +60,9 @@ public class SplitLine extends UMLConnectorAction {
     doInitialAction();
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;
@@ -55,6 +79,9 @@ public class SplitLine extends UMLConnectorAction {
     relationship.update();
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     relationship.pivots.remove(pivot);
     relationship.segments.remove(newSegment);
@@ -70,6 +97,11 @@ public class SplitLine extends UMLConnectorAction {
     relationship.update();
   }
 
+ /**
+  * Connects the segment to any pivots it should be connected to.
+  *
+  * @param s the segment.
+  */
  public void connectToPivots(Segment s) {
 	    if (s.start instanceof Pivot) {
 	    	s.start.getConnections().addElement(s);
@@ -80,6 +112,9 @@ public class SplitLine extends UMLConnectorAction {
  }
 
 
+  /**
+   * @see umlaction.UMLAction#doInitialAction()
+   */
   public void doInitialAction() {
     splitSegment.disconnect();
     splitSegment.start = pivot;

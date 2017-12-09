@@ -3,7 +3,7 @@ package umlaction;
 import umlobject.*;
 import juml.*;
 
-/*
+/**
  * Action class for changing relationship start Note text.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -13,15 +13,42 @@ import juml.*;
  * @since 0.3
  */
 public class ChangeRelationshipStartText extends UMLAction {
+  
+  /** 
+   * The relationship. 
+   */
   Relationship relationship;
+  
+  /** 
+   * The alternative text. 
+   */
   String alt;
+  
+  /** 
+   * The relationship controller. 
+   */
   RelationshipController relationshipController;
 
+  /**
+   * Instantiates a new change relationship start text.
+   *
+   * @param inRelationship the in relationship
+   * @param newValue the new value
+   * @param inController the in controller
+   */
   public ChangeRelationshipStartText(Relationship inRelationship, String newValue,
     Controller inController) {
       this(inRelationship, newValue, null, inController);
     }
 
+  /**
+   * Instantiates a new change relationship start text.
+   *
+   * @param inRelationship the in relationship
+   * @param newValue the new value
+   * @param inRelationshipController the in relationship controller
+   * @param inController the in controller
+   */
   public ChangeRelationshipStartText(Relationship inRelationship, String newValue,
     RelationshipController inRelationshipController, Controller inController) {
     relationshipController = inRelationshipController;
@@ -31,6 +58,9 @@ public class ChangeRelationshipStartText extends UMLAction {
     doInitialAction();
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     if (relationshipController != null) {
       relationshipController.startText.setText(alt);
@@ -45,6 +75,9 @@ public class ChangeRelationshipStartText extends UMLAction {
     }
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     if (relationshipController != null) {
       relationshipController.startText.setText(alt);
@@ -59,6 +92,9 @@ public class ChangeRelationshipStartText extends UMLAction {
     }
   }
 
+  /**
+   * @see umlaction.UMLAction#doInitialAction()
+   */
   public void doInitialAction() {
     String temp = alt;
     alt = relationship.getStartText();

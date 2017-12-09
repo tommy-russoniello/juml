@@ -27,12 +27,12 @@ import umlaction.SplitLine;
  */
 public class Relationship extends UMLConnector {
 
-  /*
+  /**
    * The underlying model for Relationship.
    */
   public Group group;
 
-  /*
+  /**
    * The underlying model's children.
    */
   public Polygon shape;
@@ -42,8 +42,8 @@ public class Relationship extends UMLConnector {
    */
   public Note startText, endText;
 
-  /**
-   * Booleans representing whether or not beginning/end Notes are currently visible
+  /** 
+   * Booleans representing whether or not beginning/end Notes are currently visible. 
    */
   public boolean startTextVisible, endTextVisible;
 
@@ -63,7 +63,8 @@ public class Relationship extends UMLConnector {
   public Line startLine, endLine;
 
   /**
-   * Build from string method
+   * Build from string method.
+   *
    * @param input The scanner from which the object can read in its save string
    * @param allNodes List of all nodes currently in the scene.
    * @postcondition generates a Relationship built off of its save string; stops BEFORE it reaches pivot information.
@@ -96,10 +97,11 @@ public class Relationship extends UMLConnector {
 	}
 
 	/**
-	 * Reads in just pivot information from a scanner, adding pivots in the order read
+	 * Reads in just pivot information from a scanner, adding pivots in the order read.
+	 *
 	 * @precondition Pivots are listed in the correct order
 	 * @param input The scanner from which the text can be read
-     * @param Controler The main controller; needed for pivot construction
+	 * @param controller the controller
 	 * @postcondition All pivots will have been added to the relationship
 	 */
 	public void readInPivots(Scanner input, Controller controller) {
@@ -115,10 +117,12 @@ public class Relationship extends UMLConnector {
 	}
 
 	/**
-	 * Build text
+	 * Build text.
+	 *
 	 * @precondition The text to read in will end with a \n character
 	 * @param input The scanner from which the text can be read
-     * @param numChars The number of chars to read in
+	 * @param numChars The number of chars to read in
+	 * @return the string
 	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
 	 */
 	public String buildString(Scanner input, int numChars) {
@@ -156,11 +160,13 @@ public class Relationship extends UMLConnector {
 		endText = new Note(0, 0, 20);
 	}
 
-	  /**
-	   * Save method. Adds onto UMLConnector save string. Stored as "chacactersInStartText startText\n chacactersInEndText endText\n
-	   * pivotInfo1 pivotInfo2 ... EndPivots"
-	   * @postcondition generates a string with the necessary information for the object to rebuild itself.
-	   */
+	/**
+  	 * Save method. Adds onto UMLConnector save string. Stored as "chacactersInStartText startText\n chacactersInEndText endText\n
+  	 * pivotInfo1 pivotInfo2 ... EndPivots"
+  	 *
+  	 * @return the string
+  	 * @postcondition generates a string with the necessary information for the object to rebuild itself.
+  	 */
 	public String saveAsString() {
 		String result = "";
 		int numStartTextChars = startText.getText().length();
@@ -440,7 +446,8 @@ public class Relationship extends UMLConnector {
   /**
    * This is just so update can be called this way on any given relationship. This method should
    * be implemented in any direct subclasses of this Class.
-   * @param isReset
+   *
+   * @param isReset the is reset
    */
   public void update(boolean isReset) {
 

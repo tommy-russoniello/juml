@@ -5,7 +5,7 @@ import umlobject.*;
 import java.util.Vector;
 import java.util.Collections;
 
-/*
+/**
  * Action class for deleting UMLNodes.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -15,8 +15,18 @@ import java.util.Collections;
  * @since 0.3
  */
 public class DeleteUMLNode extends UMLNodeAction {
+  
+  /** 
+   * A vector of connection actions. 
+   */
   public Vector<DeleteUMLConnector> connectionActions;
 
+  /**
+   * Instantiates a new delete UML node.
+   *
+   * @param inNode the in node
+   * @param inController the in controller
+   */
   public DeleteUMLNode (UMLNode inNode, Controller inController) {
     if (inNode != null && inController != null) {
       controller = inController;
@@ -27,6 +37,9 @@ public class DeleteUMLNode extends UMLNodeAction {
     }
   }
 
+  /**
+   * @see umlaction.UMLAction#doAction()
+   */
   public void doAction() {
     Collections.reverse(connectionActions);
     for (DeleteUMLConnector connectionAction : connectionActions) {
@@ -36,6 +49,9 @@ public class DeleteUMLNode extends UMLNodeAction {
     controller.pane.getChildren().remove(model);
   }
 
+  /**
+   * @see umlaction.UMLAction#undoAction()
+   */
   public void undoAction() {
     controller.pane.getChildren().add(model);
 		controller.NODES.put(model, node);
@@ -45,6 +61,9 @@ public class DeleteUMLNode extends UMLNodeAction {
     }
   }
 
+  /**
+   * @see umlaction.UMLAction#doInitialAction()
+   */
   public void doInitialAction() {
     while (!node.getConnections().isEmpty()) {
       connectionActions.add(

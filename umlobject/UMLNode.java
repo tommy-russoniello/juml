@@ -40,6 +40,8 @@ public class UMLNode extends UMLObject {
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
+   * @param startX the start X
+   * @param startY the start Y
    * @return returns the calculated x coordinate.
    */
   public double getAnchorX(double startX, double startY) {
@@ -50,6 +52,8 @@ public class UMLNode extends UMLObject {
    * Returns the y coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
+   * @param startX the start X
+   * @param startY the start Y
    * @return returns the calculated y coordinate.
    */
   public double getAnchorY(double startX, double startY) {

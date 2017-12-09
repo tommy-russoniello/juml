@@ -24,7 +24,8 @@ public class Segment extends UMLConnector {
   public Line line;
 
   /**
-   * Build from string method
+   * Build from string method.
+   *
    * @param input The scanner from which the object can read in its save string
    * @param allNodes List of all nodes currently in the scene.
    * @postcondition generates a Relationship built off of its save string; stops BEFORE it reaches pivot information.
@@ -42,7 +43,8 @@ public class Segment extends UMLConnector {
 
 
   /**
-   * Explicit Constructor
+   * Explicit Constructor.
+   *
    * @param inStart starting UMLNode for line to be drawn between.
    * @param inStop stopping UMLNode for line to be drawn between.
    * @param isDotted flag determing whether Segment will contain a dotted line or not.
@@ -72,7 +74,8 @@ public class Segment extends UMLConnector {
    }
 
   /**
-   * Basic Constructor
+   * Basic Constructor.
+   *
    * @param inStart starting UMLNode for line to be drawn between.
    * @param inStop stopping UMLNode for line to be drawn between.
    * @postcondition Solid Segment instance with given starting and stopping UMLNodes is created.
@@ -82,10 +85,11 @@ public class Segment extends UMLConnector {
    }
 
   /**
-   * Standard Constructor
+   * Standard Constructor.
+   *
    * @param inStart starting UMLNode for line to be drawn between.
    * @param inStop stopping UMLNode for line to be drawn between.
-   * @param dotted flag determing whether Segment will contain a dotted line or not.
+   * @param isDotted boolean determining whether the line should be dotted.
    * @postcondition Segment instance with given starting and stopping UMLNodes (solid or dotted
    * depending on isDotted boolean) is created.
    */

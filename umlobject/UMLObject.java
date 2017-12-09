@@ -13,13 +13,13 @@ import javafx.scene.Node;
  */
 public class UMLObject {
 
-  /**
-   * The origin x coordinate
+  /** 
+   * The origin x coordinate. 
    */
   public double originX;
 
-  /**
-   * The origin y coordinate
+  /** 
+   * The origin y coordinate. 
    */
   public double originY;
 
@@ -35,6 +35,11 @@ public class UMLObject {
     update();
   }
 
+  /**
+   * Save as string.
+   *
+   * @return the string
+   */
   public String saveAsString() {
     return "";
   }

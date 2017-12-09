@@ -4,20 +4,51 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import java.util.Vector;
-import java.util.Arrays;
 import java.util.Map;
 import umlobject.*;
 import static org.junit.Assert.*;
 import javafx.collections.*;
 import org.junit.*;
 
+/**
+ * Class for testing the program.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class Tests {
+	
+	/** 
+	 * The pane. 
+	 */
 	Pane pane;
+	
+	/** 
+	 * The standard controller. 
+	 */
 	Controller juml;
+	
+	/** 
+	 * Three points. 
+	 */
 	Point p1, p2, p3;
+	
+	/** 
+	 * Three classboxes. 
+	 */
 	ClassBox cb1, cb2, cb3;
+	
+	/** 
+	 * Six UMLConnectors.
+	 */
 	UMLConnector c1, c2, c3, c4, c5, c6;
 
+	/**
+	 * Sets up the pane and places the objects on it.
+	 */
 	@Before
 	public void setUp() {
 		//Mimics controller
@@ -34,6 +65,9 @@ public class Tests {
 		cb3 = new ClassBox(6,7);
 	}
 
+	/**
+	 * Adds points to the pane.
+	 */
 	@Test
 	public void addPoints(){
 		juml.addObjects(p1, p2, p3);
@@ -42,6 +76,9 @@ public class Tests {
 		assertMap(juml.NODES, p1, p2, p3);
 	}
 
+	/**
+	 * Adds class boxes to the pane.
+	 */
 	@Test
 	public void addClassBoxes(){
 		juml.addObjects(cb1, cb2, cb3);
@@ -50,6 +87,9 @@ public class Tests {
 		assertMap(juml.NODES, cb1, cb2, cb3);
 	}
 
+	/**
+	 * Adds the connectors between points.
+	 */
 	@Test
 	public void addConnectorsBetweenPoints() {
 		juml.addObjects(p1, p2, p3);
@@ -67,8 +107,11 @@ public class Tests {
 		assertConnections(p3, c2, c3);
 	}
 
+	/**
+	 * Adds the connectors between class boxes.
+	 */
 	@Test
-  public void addConnectorsBetweenClassBoxes() {
+  	public void addConnectorsBetweenClassBoxes() {
 		juml.addObjects(cb1, cb2, cb3);
 
 		c1 = new Association(cb1, cb2);
@@ -85,6 +128,9 @@ public class Tests {
 		assertConnections(cb3, c2, c3);
   }
 
+	/**
+	 * Adds the connectors between points and class boxes.
+	 */
 	@Test
 	public void addConnectorsBetweenPointsAndClassBoxes() {
 		juml.addObjects(p1, p2, cb1, cb2);
@@ -108,6 +154,9 @@ public class Tests {
 		assertConnections(cb2, c3, c5, c6);
 	}
 
+  /**
+   * Delete points.
+   */
   @Test
   public void deletePoints(){
 		juml.addObjects(p1, p2);
@@ -122,7 +171,10 @@ public class Tests {
 		assertMap(juml.NODES, p2);
   }
 
- 	@Test
+ 	/**
+	  * Delete class boxes.
+	  */
+	 @Test
  	public void deleteClassBoxes(){
 		juml.addObjects(cb1, cb2);
 
@@ -137,6 +189,9 @@ public class Tests {
 
  	}
 
+	/**
+	 * Delete connectors.
+	 */
 	@Test
 	public void deleteConnectors() {
 		juml.addObjects(p1, p2);
@@ -161,6 +216,9 @@ public class Tests {
 		assertMap(juml.CONNECTORS);
 	}
 
+	/**
+	 * Delete points with connectors.
+	 */
 	@Test
 	public void deletePointsWithConnectors() {
 		assertTrue(pane.getChildren().isEmpty());
@@ -192,6 +250,9 @@ public class Tests {
 		assertConnections(p3);
 	}
 
+	/**
+	 * Gets the points.
+	 */
 	@Test
 	public void getPoints() {
 		//set up points and connectors
@@ -208,6 +269,9 @@ public class Tests {
 		assertEquals(p3, juml.getObject(p3.getModel()));
 	}
 
+	/**
+	 * Gets the connectors.
+	 */
 	@Test
 	public void getConnectors() {
 		//set up points and connectors
@@ -224,6 +288,9 @@ public class Tests {
 		assertEquals(c3, juml.getObject(c3.getModel()));
 	}
 
+	/**
+	 * Gets the class boxes.
+	 */
 	@Test
 	public void getClassBoxes() {
 		//set up points and connectors
@@ -246,6 +313,12 @@ public class Tests {
 
 // ---------------------------------------------------------------------------------------------- \\
 
+	/**
+	 * Checks if the map contains all the objects in the pane
+	 *
+	 * @param map the map of objects
+	 * @param objects the objects in the pane
+	 */
 	@SafeVarargs
 	public static <T> void assertMap (Map<Node, T> map, T... objects) {
 		assertEquals(objects.length, map.size());
@@ -254,6 +327,12 @@ public class Tests {
 		}
 	}
 
+	/**
+	 * Checks if the passed in node has all the connections it should.
+	 *
+	 * @param node the node
+	 * @param actual the actual connectors that should be attached to the node
+	 */
 	public static void assertConnections (UMLNode node, UMLConnector... actual) {
 		Vector<UMLConnector> expected = node.getConnections();
 		assertEquals(expected.size(), actual.length);

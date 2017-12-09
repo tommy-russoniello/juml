@@ -27,16 +27,19 @@ public class Note extends UMLNode {
    */
   public VBox box;
 
-  /** The text of the note. */
+  /** 
+   * The text of the note. 
+   */
   public Text text;
 
 	/**
-	 * Build from string method
+	 * Build from string method.
+	 *
 	 * @param input The scanner from which the object can read in its save string
 	 * @postcondition Object will have constructed itself from the information
 	 *                provided by input
 	 */
-public Note(Scanner input) {
+  public Note(Scanner input) {
 	    this(0, 0, 0);
       double x = input.nextDouble(), y = input.nextDouble(), width = input.nextDouble();
       setWidth(width);
@@ -45,7 +48,9 @@ public Note(Scanner input) {
 	}
 
   /**
-   * Save method; stored as "delimiter x y (upper right corner) width, chacactersInText text\n"
+   * Save method; stored as "delimiter x y (upper right corner) width, chacactersInText text\n".
+   *
+   * @return the string
    * @postcondition generates a string with the necessary information for the object to rebuild itself.
    */
   public String saveAsString() {
@@ -54,10 +59,12 @@ public Note(Scanner input) {
 	}
 
 	/**
-	 * Build text
+	 * Build text.
+	 *
 	 * @precondition The text to read in will end with a \n character
 	 * @param input The scanner from which the text can be read
-     * @param numChars The number of chars to read in
+	 * @param numChars The number of chars to read in
+	 * @return the string
 	 * @postcondition The method will read in lines until it has generated a string with the given number of chars
 	 */
 	public String buildString(Scanner input, int numChars) {
@@ -77,7 +84,8 @@ public Note(Scanner input) {
 	}
 
   /**
-   * Basic Constructor
+   * Basic Constructor.
+   *
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
    * @postcondition Note instance with width of 40 and the given coordinates is created.
@@ -87,10 +95,11 @@ public Note(Scanner input) {
   }
 
   /**
-   * Explicit Constructor
+   * Explicit Constructor.
+   *
    * @param x x coordinate for this to be made on.
    * @param y y coordinate for this to be made on.
-   * @param w Width that this will be created with.
+   * @param width the width
    * @postcondition Note instance with given width and coordinates is created.
    */
   public Note(double x, double y, double width) {
@@ -167,6 +176,8 @@ public Note(Scanner input) {
    * Returns the x coordinate of the point to which a connector should anchor if
    * joined to this node.
    *
+   * @param startX the start X
+   * @param startY the start Y
    * @return returns the calculated x coordinate.
    */
   public double getAnchorX(double startX, double startY) {
@@ -204,11 +215,13 @@ public Note(Scanner input) {
   }
 
 	/**
-  	 * Returns the y coordinate of the point to which a connector should anchor if
-  	 * joined to this node.
-  	 *
-  	 * @return returns the calculated y coordinate.
-  	 */
+	 * Returns the y coordinate of the point to which a connector should anchor if
+	 * joined to this node.
+	 *
+	 * @param startX the start X
+	 * @param startY the start Y
+	 * @return returns the calculated y coordinate.
+	 */
   	public double getAnchorY(double startX, double startY) {
   		double actinghalfWidth = (getWidth()) / 2;
   		double actinghalfHeight = (getHeight()) / 2;

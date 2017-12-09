@@ -2,13 +2,12 @@ package juml;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/*
+/**
  * Main class for Application.
  * @author Samuel Carroll
  * @author Torrance Graham
@@ -19,17 +18,26 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
+    /** 
+     * The window.
+     */
     Stage window;
+    
+    /** 
+     * The layout. 
+     */
     BorderPane layout;
 
-    /*
-     * Launches application.
+    /**
+     * Launches the application.
+     *
+     * @param args the arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
 
-    /*
+    /**
      * Sets up initial state of application
      */
     @Override

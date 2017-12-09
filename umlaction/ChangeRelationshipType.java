@@ -6,15 +6,52 @@ import java.util.Vector;
 import juml.*;
 import umlobject.*;
 
+/**
+ * Action class for changing relationship type.
+ * @author Samuel Carroll
+ * @author Torrance Graham
+ * @author Quinn Minnich
+ * @author Thomas Russoniello
+ * @version 0.3
+ * @since 0.3
+ */
 public class ChangeRelationshipType extends UMLAction {
+	
+	/** 
+	 * The delete old line. 
+	 */
 	DeleteUMLConnector deleteOldLine;
+	
+	/** 
+	 * The add new line. 
+	 */
 	AddUMLConnector addNewLine;
+	
+	/** 
+	 * The controller. 
+	 */
+	Controller controller;
+	
+	/** 
+	 * The old connector. 
+	 */
 	UMLObject oldConnector;
+	
+	/** 
+	 * The new connector. 
+	 */
 	UMLObject newConnector;
 
+	/**
+	 * Instantiates a new change relationship type.
+	 *
+	 * @param original the original relationship
+	 * @param inNewRelationship the string containing the new desired relationship
+	 * @param c the controller being used
+	 */
 	public ChangeRelationshipType(Relationship original, String inNewRelationship, Controller c) {
 		inNewRelationship = inNewRelationship.toUpperCase();
-    RelationshipType newRelationship = RelationshipType.valueOf(inNewRelationship);
+    		RelationshipType newRelationship = RelationshipType.valueOf(inNewRelationship);
 		controller = c;
 		controller.deselectAll();
 		oldConnector = original;
@@ -42,6 +79,9 @@ public class ChangeRelationshipType extends UMLAction {
 		controller.selectObject(newConnector);
 	}
 
+	/**
+	 * @see umlaction.UMLAction#doAction()
+	 */
 	public void doAction() {
 		controller.deselectAll();
 		deleteOldLine.doAction();
@@ -49,6 +89,9 @@ public class ChangeRelationshipType extends UMLAction {
 		controller.selectObject(newConnector);
 	}
 
+	/**
+	 * @see umlaction.UMLAction#undoAction()
+	 */
 	public void undoAction() {
 		controller.deselectAll();
 		addNewLine.undoAction();

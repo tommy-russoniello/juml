@@ -40,7 +40,9 @@ public class Point extends UMLNode {
 	}
 
 	/**
-	 * Save method
+	 * Save method.
+	 *
+	 * @return the string
 	 * @postcondition generates a string with the necessary information for the
 	 *                object to rebuild itself.
 	 */
@@ -49,7 +51,8 @@ public class Point extends UMLNode {
 	}
 
 	/**
-	 * Basic Constructor
+	 * Basic Constructor.
+	 *
 	 * @param x x coordinate for this to be made on.
 	 * @param y y coordinate for this to be made on.
 	 * @postcondition Point instance with given coordinates and default radius of 5
@@ -60,14 +63,11 @@ public class Point extends UMLNode {
 	}
 
 	/**
-	 * Explicit Constructor
+	 * Explicit Constructor.
 	 *
-	 * @param x
-	 *            x coordinate for this to be made on.
-	 * @param y
-	 *            y coordinate for this to be made on.
-	 * @param inRadius
-	 *            Radius for underlying circle model to have.
+	 * @param x            x coordinate for this to be made on.
+	 * @param y            y coordinate for this to be made on.
+	 * @param inRadius            Radius for underlying circle model to have.
 	 * @postcondition Point instance with given coordinates and radius is created.
 	 */
 	public Point(double x, double y, double inRadius) {
@@ -120,6 +120,8 @@ public class Point extends UMLNode {
 	 * Returns the x coordinate of the point to which a connector should anchor if
 	 * joined to this node.
 	 *
+	 * @param startX the start X
+	 * @param startY the start Y
 	 * @return returns the calculated x coordinate.
 	 */
 	public double getAnchorX(double startX, double startY) {
@@ -138,6 +140,8 @@ public class Point extends UMLNode {
 	 * Returns the y coordinate of the point to which a connector should anchor if
 	 * joined to this node.
 	 *
+	 * @param startX the start X
+	 * @param startY the start Y
 	 * @return returns the calculated y coordinate.
 	 */
 	public double getAnchorY(double startX, double startY) {

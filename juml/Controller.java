@@ -147,7 +147,7 @@ public class Controller {
 	public Stack<UMLAction> ACTIONS = new Stack<>();
 	
 	/** 
-	 * The undone actions. 
+	 * The stack of undone actions. 
 	 */
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
@@ -529,7 +529,8 @@ public class Controller {
 	}
 
 	/**
-	 * Undo.
+	 * Undoes actions by removing the most recent action from the ACTIONS stack and calling its undo action.
+	 *  The undone action is then pushed to the UNDONE_ACTIONS stack.
 	 */
 	public void undo() {
 		if (!ACTIONS.isEmpty()) {
@@ -544,7 +545,8 @@ public class Controller {
 	}
 
 	/**
-	 * Redo.
+	 * Redoes actions by removing the most recent action from the UNDONE_ACTIONS stack and calling its do action.
+	 *  The redone action is then pushed to the ACTIONS stack.
 	 */
 	public void redo() {
 		if (!UNDONE_ACTIONS.isEmpty()) {
@@ -559,7 +561,7 @@ public class Controller {
 	}
 
 	/**
-	 * Reset.
+	 * Resets the containers for all nodes, connectors, actions, and undone actions.
 	 */
 	public void reset() {
 		NODES = new HashMap<>();
@@ -569,7 +571,7 @@ public class Controller {
 	}
 
 	/**
-	 * Copy.
+	 * Saves the attributes of the selected object to a string that is added to the clipboard.
 	 */
 	public void copy() {
 		CLIP_BOARD.clear();
@@ -579,7 +581,7 @@ public class Controller {
 	}
 
 	/**
-	 * Paste.
+	 * Takes the string in the clipboard and places the appropriate object on the screen at coordinates 0,0
 	 */
 	public void paste() {
 		for (String string : CLIP_BOARD) {
@@ -892,9 +894,9 @@ public class Controller {
 		}
 
 		/**
-		 * Select object.
+		 * The passed in object is added to the SELECTED deque and is highlighted. The appropriate inspector is displayed.
 		 *
-		 * @param object the object
+		 * @param object the object to be selected
 		 */
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
@@ -915,9 +917,9 @@ public class Controller {
 		}
 
 		/**
-		 * Deselect object.
+		 * The passed in object is removed from the SELECTED deque and is unhighlighted.
 		 *
-		 * @param object the object
+		 * @param object the object to be deselected
 		 */
 		public void deselectObject(UMLObject object) {
 			SELECTED.remove(object);
@@ -925,7 +927,7 @@ public class Controller {
 		}
 
 		/**
-		 * Deselect all.
+		 * All objects in the SELECTED deque are removed. Any inspectors currently displayed are cleared.
 		 */
 		public void deselectAll() {
 			while (!SELECTED.isEmpty()) {
@@ -939,7 +941,7 @@ public class Controller {
 		}
 
 		/**
-		 * Deselect all nodes.
+		 * Any nodes in the SELECTED deque are deselected and unhighlighted.
 		 */
 		public void deselectAllNodes() {
 			for (UMLObject object : SELECTED) {
@@ -951,7 +953,7 @@ public class Controller {
 		}
 
 		/**
-		 * Deselect all connectors.
+		 * Any connectors in the SELECTED deque are deselected and unhighlighted.
 		 */
 		public void deselectAllConnectors() {
 			for (UMLObject object : SELECTED) {
@@ -963,7 +965,7 @@ public class Controller {
 		}
 
 		/**
-		 * Refresh.
+		 * Refreshes the values on a UMLNode to allow for relationships to update their coordinates.
 		 */
 		public void refresh() {
 			Iterator iter = NODES.entrySet().iterator();
@@ -983,8 +985,8 @@ public class Controller {
 		}
 
 		/**
-		 * Gets the x offset.
-		 *
+		 * Gets the difference between where the pane thinks the user clicked and where the user actually
+		 *  clicked along the x axis.
 		 * @return the x offset
 		 */
 		public double getXOffset(){
@@ -1001,8 +1003,8 @@ public class Controller {
 		}
 
 		/**
-		 * Gets the y offset.
-		 *
+		 * Gets the difference between where the pane thinks the user clicked and where the user actually
+		 *  clicked along the y axis.
 		 * @return the y offset
 		 */
 		public double getYOffset(){
@@ -1019,7 +1021,7 @@ public class Controller {
 		}
 
 		/**
-		 * Prints the state.
+		 * Prints the state of all the different types of objects in the scene.
 		 */
 		public void printState() {
 			Iterator iter;
@@ -1187,7 +1189,7 @@ public class Controller {
 
 
 	/**
-	 * Menu save clicked.
+	 * When the user clicks the save menu option, all objects in the scene have their attributes written to a file.
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -1262,7 +1264,7 @@ public class Controller {
 	/**
 	 * Prints the save string.
 	 *
-	 * @param output the output
+	 * @param output the BufferedWriter that prints each line of the save string
 	 * @param saveString the save string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -1275,7 +1277,8 @@ public class Controller {
 	}
 
 	/**
-	 * Menu export clicked.
+	 * When the user clicks the export menu option, a snapshot of the content of the pane and saves it as an image.
+	 *  This image is then saved to a pdf file.
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws NullPointerException the null pointer exception
@@ -1319,21 +1322,21 @@ public class Controller {
 	}
 
 	/**
-	 * Menu copy clicked.
+	 * When the user clicks the copy menu option, copy is called.
 	 */
 	public void menuCopyClicked() {
 		copy();
 	}
 
 	/**
-	 * Menu paste clicked.
+	 * When the user clicks the paste menu option, paste is called.
 	 */
 	public void menuPasteClicked() {
 		paste();
 	}
 
 	/**
-	 * Menu delete clicked.
+	 * When the user clicks the delete menu option, the selected object is deleted.
 	 */
 	public void menuDeleteClicked() {
 		UMLObject [] selected = SELECTED.toArray(new UMLObject [0]);
@@ -1342,41 +1345,41 @@ public class Controller {
 	}
 
 	/**
-	 * Menu select all clicked.
+	 * When the user clicks the select all menu option, all objects are selected.
 	 */
 	public void menuSelectAllClicked() {
 	}
 
 	/**
-	 * Menu move to front clicked.
+	 * When the user clicks the select all menu option, the selected object is moved in front of all other objects in the pane.
 	 */
 	public void menuMoveToFrontClicked() {
 		ACTIONS.push(new MoveToFront(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
 	/**
-	 * Menu move to back clicked.
+	 * When the user clicks the select all menu option, the selected object is moved behind all other objects in the pane.
 	 */
 	public void menuMoveToBackClicked() {
 		ACTIONS.push(new MoveToBack(this, SELECTED.toArray(new UMLObject [0])));
 	}
 
 	/**
-	 * Menu undo clicked.
+	 * When the user clicks the undo menu option, undo is called.
 	 */
 	public void menuUndoClicked() {
 		undo();
 	}
 
 	/**
-	 * Menu redo clicked.
+	 * When the user clicks the redo menu option, redo is called.
 	 */
 	public void menuRedoClicked() {
 		redo();
 	}
 
 	/**
-	 * Menu specifications clicked.
+	 * When the user clicks the specifications menu option, the specifications document is displayed.
 	 */
 	public void menuSpecificationsClicked() {
 		File file = new File("https://github.com/tommy-russoniello/juml/Iteration1Specifications.docx");
@@ -1385,9 +1388,9 @@ public class Controller {
 	}
 
 	/**
-	 * Save file.
+	 * Writes all the nodes to an output stream
 	 *
-	 * @param NODES the nodes
+	 * @param NODES the map of all nodes in the scene
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void saveFile(Map<Node, UMLNode> NODES) throws IOException {

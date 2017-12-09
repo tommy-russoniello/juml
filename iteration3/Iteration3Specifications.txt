@@ -1,0 +1,273 @@
+JUML
+
+	1.	Problem statement
+Create an editor that will allow the user to create and modify UML documents.
+	2.	System Personnel
+
+	2.1.	Description of Users
+The users will be anyone who wishes to build UML documents, including the developers
+	2.2.	Description of System Developers
+The developers will be Sam Carroll, Torrance Graham, Quinn Minnich, and Tommy Russoniello
+	3.	Operational Setting
+
+	3.1.	Target Platforms
+The application will be designed to be potable to many platforms, including Mac, Windows, and Linux
+
+	3.2.	Required Software Environment
+Java must be installed on any device that uses this program
+	3.3.	Useful Optional Software Environment
+None.
+	4.	Functional Requirements
+
+	4.1.	Functional Description
+	4.1.1.	Overview
+A graphical interface where the user can draw and remove points and class boxes. In addition, the
+user should be able to connect the objects.
+	4.1.2.	Feature List
+Ability to switch between several different “modes”
+Ability to draw points on the canvas
+Ability to draw class boxes on the canvas
+Ability to draw solid lines between existing points and or class boxes on the canvas
+Ability to draw all types of UML relationships between existing points and or class boxes.
+Ability to add notes on the canvas.
+Ability to edit attributes of a selected object in the inspector
+Ability to flip the direction of a line in the inspector
+Ability to split a relationship to add draggable pivots to create angled lines
+Ability to drag a node off-screen and create more workspace
+Ability to pan the pane.
+Ability to save and load a file
+Ability to export a file to pdf
+Ability to undo and redo actions
+The x and y coordinates of all mouse clicks are printed to the console
+Ability to delete an object or connector
+	4.2.	User Interface
+
+	4.2.1.	Overview
+On the left side of the screen will be a menu from which the user can select from several different
+drawing modes as well as a select and delete mode. On the right side of the screen will be an
+inspector to show details of currently selected items. The rest of the space in the middle of the
+screen is the canvas where the user can create objects and lines.
+	4.2.2.	Menus
+There will be a menu called the object builder on the left side of the screen which will allow the
+user to select what type of drawing mode they want (points, lines, class box, select, or delete mode).
+The menu will be collapsible. Additionally, there will be a toolbar at the top of the screen with
+file, edit, and help menus. The help menu is currently unsupported.
+	4.2.3.	Windows
+There will only be the main window, which will be divided into sections for a menu on the left, an
+inspector on the right, and a canvas in the middle. The middle canvas scrolls if the user needs more
+space to draw.
+	4.2.4.	Inspectors
+There will be one inspector on the right side of the screen. This will allow the user to edit the
+attributes of the currently selected object. 
+
+
+	4.3.	Use Cases
+
+	4.3.1.	Use Case 1: Draw a point on the canvas
+User clicks “Point” button in the object builder; system sets internal mode to POINT
+User clicks on canvas; system creates a circle on the canvas at the location of the click
+	4.3.2.	Use Case 2: Draw a class box on the canvas
+The user clicks the “Class Box” button in the object builder. The system sets its internal mode to CLASSBOX. The user clicks on the canvas and the system creates a v-box containing three text fields for the three sections of the UML class box as well as two small rectangles that act as separators between the sections.
+	4.3.3.	Use Case 3: Draw a note on the canvas
+The user clicks the “Note” button in the object builder. The system set its internal mode to NOTE. The user clicks on the canvas and the system creates a text field at the point of the click.
+	4.3.4.	Use Case 4: Draw a Line between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Case 1, 2, and 3).
+
+User clicks “Line” button in the object builder; system sets internal mode to LINE.
+User clicks an existing object on the canvas; system stores the coordinates of the object being clicked.
+User clicks on another object; system draws a line between the stored coordinates and the current coordinates of the second object.
+	4.3.5.	Use Case 5: Draw an Association between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Cases 1, 2, and 3).
+
+User clicks “Association” button in the object builder; system sets internal mode to ASSOCIATION.
+User clicks an existing point on the canvas; system stores the coordinates of the click.
+User clicks on another point; system draws an association between the stored coordinates and the coordinates of the second object.
+
+
+
+
+
+	4.3.6.	Use Case 6: Draw a Dependency between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Cases 1, 2, and 3).
+
+User clicks “Dependency” button in the object builder; system sets internal mode to DEPENDENCY.
+User clicks an existing point on the canvas; system stores the coordinates of the click.
+User clicks on another point; system draws a dependency between the stored coordinates and the coordinates of the second object.
+	4.3.7.	Use Case 7: Draw an Aggregation between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Cases 1, 2, and 3).
+
+User clicks “Aggregation” button in the object builder; system sets internal mode to AGGREGATION.
+User clicks an existing point on the canvas; system stores the coordinates of the click.
+User clicks on another point; system draws an aggregation between the stored coordinates and the coordinates of the second object.
+	4.3.8.	Use Case 8: Draw a Composition between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Cases 1, 2, and 3).
+
+User clicks “Composition” button in the object builder; system sets internal mode to COMPOSITION.
+User clicks an existing point on the canvas; system stores the coordinates of the click.
+User clicks on another point; system draws a composition between the stored coordinates and the coordinates of the second object.
+	4.3.9.	Use Case 9: Draw a Generalization between Existing Objects
+Preconditions: User has already placed at least two objects on the canvas (see Use Cases 1, 2, and 3).
+
+User clicks “Generalization” button in the object builder; system sets internal mode to GENERALIZATION.
+User clicks an existing point on the canvas; system stores the coordinates of the click.
+User clicks on another point; system draws a generalization between the stored coordinates and the coordinates of the second object.
+
+	4.3.10.Use Case 10: Delete an Existing Point
+Preconditions: User has already placed at least one point on the canvas (see Use Case 1).
+
+The User clicks “Delete” button in the object builder. The system then sets its internal mode to DELETE.
+The User clicks an existing point on the canvas. The system erases the point of the click from the canvas as well as any lines that were connected to the clicked point.
+	4.3.11.Use Case 11: Dragging an Existing Object
+Preconditions: User has at least object on the canvas (see Use Cases 1, 2, and 3)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks and does not release the click on the desired object to be dragged. The system recognizes the object has been selected.
+As the user moves the cursor, the object is dragged, as well as all lines connected to the object.
+The system continuously updates the coordinates of the object as it is being dragged.
+Once the user releases the click, the object is moved to that place.
+The system was continuously updating the coordinates and has the correct coordinates of the object.
+	4.3.12.Use Case 12: Displaying Object Information
+Preconditions: User has at least one point or class box on the canvas (see Use Cases 1 and 2)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on an existing objects and when the click is released, the system displays the inspector which holds the corresponding attributes to the object clicked.
+	4.3.13.Use Case 13: Changing Object Attributes
+Preconditions: User has at least one object on the canvas (see Use Cases 1, 2, or 3).
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on an existing object and when the click is released, the system displays the inspector which holds the corresponding attributes to the object clicked.
+The user then selects a field to change such as “origin x” and types the desired value in place of the current value. The system does nothing.
+After the user changes all the fields they desire, they click the “Apply Changes” button. The system takes the new value or values and updates the corresponding fields accordingly. The object is updated with its new values on the pane.
+
+	4.3.14.Use Case 14: Creating More Workspace
+Preconditions: User has at least one object on the canvas (see Use Cases 1, 2, or 3).
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks and does not release the click on the desired object to be dragged.
+The system recognizes the object has been selected.
+As the user moves the cursor, the object is dragged, as well as all lines connected to the object.
+The system continuously updates the coordinates of the object as it is being dragged.
+The user continues to drag the object right to increase the horizontal size of the pane and or drags the object downward to increase the vertical size of the pane. The system updates the coordinates as the object is dragged and increases the size of the pane until the click is released.
+The user releases the click
+The system sets the object at the place the click was released, and the pane is now sized to the furthest dragged node in each direction.
+	4.3.15.Use Case 15: Saving to a File
+The user clicks the file button in the top left corner of the program window followed by the save dropdown option. The system opens a dialog window asking the user for the location they want to store the file and the file name.
+The user inputs the desired file name and chooses the desired location and clicks the save button. The system stores both inputs and writes a file that can be o
+	4.3.16.Use Case 16: Loading a File
+The user clicks the file button in the top left corner of the program window followed by the open dropdown option. The system opens a dialog window asking the user for the location and file name of the desired file to be opened.
+The user chooses the desired file and clicks the open button. The system tries to open the file at that location with the desired name. If the file is a JUML file, the file is opened successfully and any objects and relationships that may have been in the scene when the file was saved are now visible.
+
+	4.3.17.Use Case 17: Exporting to PDF
+The user clicks the file button in the top left corner of the program window followed by the Export dropdown option. The system opens a dialog window asking the user for the location they want to store the file and the file name.
+The user inputs the desired file name and chooses the desired location and clicks the save button. The system stores both inputs and writes a file that can be opened in a pdf viewer.
+
+	4.3.18.Use Case 18: Panning the View of the Pane
+Preconditions: At least one object is out of view (see Use Case 14), such that at least one scroll bar is present (see Use Cases 1, 2, or 3).
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user right-clicks on an empty space in the pane and does not release the click.
+The system recognizes that the user is dragging and the cursor is replaced with move cursor, a pointer with four small arrows.
+The user moves the cursor without releasing the click. The system adjusts the view of the pane in accordance with the direction of the panning.
+The user releases the cursor. The system now displays the pane where the user released the click and the cursor is changed back to the normal select cursor.
+	4.3.19.Use Case 19: Add a Label to the Start of Relationship
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on a relationship. The system opens the inspector with the relationship’s attributes.
+The user clicks in the “Start Point Text” field to add text to the beginning of the line (up to 3 characters). The system does nothing.
+The user clicks the Update Text button. The system takes the input of the label and adds it to the pane if it is 3 characters or less.
+	4.3.20.Use Case 20: Add a Label to the Start of Relationship
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on a relationship. The system opens the inspector with the relationship’s attributes.
+The user clicks in the “End Point Text” field to add text to the end of the line (up to 2 characters). The system does nothing.
+The user clicks the Update Text button. The system takes the input of the label and adds it to the pane if it is 2 characters or less.
+
+
+
+	4.3.21.Use Case 21: Splitting a Relationship
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Line Split” button in the object builder. The system then sets its internal mode to LINESPLIT.
+The user clicks on the relationship between the two objects. The system sets the relationship as the selected object and highlights it in blue.
+The user clicks once again on the relationship in the place where they want the split to be. The system creates a pivot at the place the user clicked.
+	4.3.22.Use Case 22: Dragging a Pivot
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9) A pivot point exists somewhere on the relationship between the two objects (see Use Case 21).
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on the pivot point and does not release the click. The system displays the inspector of the relationship on the click, and the cursor then changes to the four-arrow cursor similar to when panning the pane (see Use Case 18).
+The user then moves the mouse to a new position. The system updates the coordinates of the pivot as the mouse is dragged and the two segments on either side of the pivot are dragged along with it.
+The user releases the click. The system places the pivot point at the coordinates where the click was released.
+	4.3.23.Use Case 23: Flip the Direction of a Relationship
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on a relationship. The system opens the inspector with the relationship’s attributes.
+The user clicks the “Flip Line Direction” button in the inspector. The system redraws the relationship using the coordinates of the current relationship, but flips the end of the relationship. Any labels that were on the line are also flipped (see Use Cases 19 and 20).
+	4.3.24.Use Case 24: Change the Type of Relationship in the Inspector
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on a relationship. The system opens the inspector with the relationship’s attributes.
+The user clicks the line type choice box. The system displays the list of possible relationship types as drop-down options under the choice box.
+The user selects a new relationship type. The system recognizes which type of relationship was chosen and changes the current relationship to the relationship selected by the user.
+
+	4.3.25.Use Case 25: Undo Action
+The user performs an action such as adding a class box. The system creates a class box at the desired position (see Use Case 2) and stores the action of adding the class box to an actions stack.
+The user drags the position of the class box to a new location (see Use Case 11). The system updates the position of the class box to be the new dragged position and stores the action on an actions stack.
+The user presses the keyboard shortcut Ctrl + Z to undo the move. The system takes the drag off of the action stack and does its specified undo action to move the class box back to its original position. An action is added to the undo stack.
+The user presses the keyboard shortcut Ctrl + Z a second time. The system takes the add action off the action stack and does its specified undo action to remove the class box from the scene. An action is added to the undo stack.
+The user presses the keyboard shortcut Ctrl + Z a third time. The system does nothing, as there are no actions on the action stack.
+	4.3.26.Use Case 26: Redo Action
+Precondition: There is a move action on the top of the undo stack (see Use Case 22).
+
+The user presses the keyboard shortcut Ctrl + Y. The system takes the action on top of the undo stack and does it. In this case it is a move action so the corresponding object is moved to the coordinates before the undo was performed, and thus a redo action is performed.
+
+	4.3.27.Use Case 27: Copy and Paste
+Preconditions: User has at least one class box on the canvas (see Use Cases 1, 2, or 3).
+
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on the class box on the canvas. The system makes the class box the selected object and displays its inspector
+The user enters the Ctrl + C keyboard shortcut. The system stores the attributes of the selected object.
+The user enters the Ctrl + V keyboard shortcut. The system then creates an exact copy of the selected object with the exception of the origin x and origin y fields and places it in the top left corner of the pane.
+	4.3.28.Use Case 28: Move to back
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Class Box” button in the object builder. The system then sets its internal mode to CLASSBOX.
+The user clicks the pane just to the left of the relationship so the resulting class box will cover part of the relationship. The system creates a class box at the point where the user clicked, and part of the class box is covering the relationship.
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on the class box that was just created. The system sets the class box as its selected object.
+The user clicks the edit menu in the toolbar and selects “Move to Back” from the drop-down options. The system moves the selected object behind the relationship and the relationship is now on top of the class box.
+	4.3.29.Use Case 29: Move to Front
+Preconditions: At least one relationship exists on the pane between two objects.
+(See Use Cases 5, 6, 7, 8, and 9)
+
+The user clicks the “Class Box” button in the object builder. The system then sets its internal mode to CLASSBOX.
+The user clicks the pane just to the left of the relationship so the resulting class box will cover part of the relationship. The system creates a class box at the point where the user clicked, and part of the class box is covering the relationship.
+The user clicks the “Select” button in the object builder. The system then sets its internal mode to SELECT.
+The user clicks on the relationship. The system sets the relationship as its selected object.
+The user clicks the edit menu in the toolbar and selects “Move to Front” from the drop-down options. The system moves relationship in front of the class box and the class box is now behind the relationship.
+
+	4.4.	Other Interfaces
+
+	5.	Non-Functional Requirements
+
+	5.1.	Reliability
+
+	5.2.	Performance
+
+	5.3.	Usability
+
+	5.4.	Portability
+
+	6.	Future Enhancements
+
+We were able to complete all of the goals that we set for ourselves since iteration 2. If we had more time for the project, we would like to implement features that give the user more customizability. This would include features such as changing font color, font size, font style, changing the color of class boxes and lines, easier resizing of objects in the pane such as class boxes, and ability to pick a background color. These are all relatively easy features that could be added that would allow for much more creativity. In addition, we would have like to apply some of these things to the layout of the program, in order to improve the visual appearance. Lastly, one major feature we wish we had time for was a help system that provides simple instructions and references to users who are unfamiliar with UML notation.

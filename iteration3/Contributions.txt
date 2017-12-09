@@ -1,0 +1,43 @@
+Iteration 3
+Quinn Minnich
+5.0 hr - discussing ideas and specifications with group
+0.0 hr - programing and experimenting with Java FX
+2.5 hr - writing graphical tests
+1.0 hr - learning to use Git
+14.0 hr- Implementing undo/redo feature + connector anchor points + save
+22.5 hr total
+
+Torrance Graham
+10.0 hr - Learning/implementing updating dynamic inspector fxml
+7.5 hr - Learning/creating controllers for each fxml file to implement updating dynamic inspector properties
+7.0 hr - Learning/adding UMLactions to the inspector controllers and getting them to work with Undo/Redo
+1.0 hr - Watching Quinn learn to use Git
+2.0 hr - Discussing ideas and specifications with group
+3.0 hr - Adding more fxml code
+1.0 hr - Changing the Specification document for Iteration 3
+31.5 hr - total
+
+Sam Carroll
+3.5 hr - Discussing ideas and specifications with group
+10.0 hr - Implementing and fixing bugs with scrolling
+4.0 hr - Implementing and fixing bugs with export to PDF
+1.0 hr - Implementing pannable pane
+2.5 hr - Writing Specification document for iteration 3
+1.5 hr - Performing graphical tests
+3.0 hr - Adding comments to code
+1.5 hr - Rebasing local branch with Git
+---------------------------------------
+27.0 hr - total
+
+Tommy Russoniello
+3.0 hr - Discussing ideas and specifications with group
+5.0 hr - Writing JUnit tests + preparing final documents
+3.0 hr - fixing bugs
+8.0 hr - implementing different line types
+8.0 hr - implementing line splitting
+1.0 hr - implementing copy/paste, move to front/back + deleting selection
+7.0 hr - updating, expanding and finalizing umlaction package
+8.0 hr - updating, expanding and finalizing all inspector functionality (FXML + controllers)
+---------------------------------------
+43.0 hr - total
+

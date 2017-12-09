@@ -1,0 +1,386 @@
+Iteration 3 Tests:
+
+
+
+Test #:
+Procedure:
+Expected Result:
+Actual Result:
+Test 1
+User goes to point mode, then to select mode, then clicks on canvas.
+
+Inspector Tool clears.
+Passed.
+Test 2
+User goes to point mode, then clicks on canvas.
+A small circle should appear at the location of the click.
+
+Passed.
+Test 3
+User creates two points anywhere on the screen, goes to line mode, clicks on one point, then clicks
+on another point.
+
+A line should appear connecting the points.
+Passed.
+Test 4
+User creates two points anywhere on the screen, goes to line mode, clicks anywhere there is not a
+point, then clicks on a point.
+
+Nothing should happen.
+Passed.
+Test 5
+User creates three points anywhere on the screen, goes to line mode, and clicks on each point
+exactly once, one after another.
+
+A line should appear between the first and second points clicked, but not between the second and
+third points.
+Passed.
+Test 6
+User creates two points anywhere on the screen, goes to select mode, clicks on one point, goes to
+line mode, and clicks on other point.
+
+Inspector Tool updates point properties, and no line is created.
+Passed.
+Test 7
+User collapses inspector, goes to point mode, and creates a point where the inspector used to be.
+
+Point should not appear.
+Passed.
+Test 8
+User enters point mode, creates a point, resizes the window, and then creates another point where
+the window was not before.
+Both points should appear.
+Passed.
+Test 9
+User selects point mode, then collapses object builder and creates attempts to create a point where
+the object builder was.
+Point should not appear.
+Passed.
+Test 10
+User selects point mode and creates three points. The user then clicks on the first point, the
+second point twice, the third point twice, and the first point once.
+This sequence of clicks should make three lines appear with two lines connecting each dot, forming
+the shape of a triangle.
+Passed.
+Test 11
+User creates Point then enables Select mode then clicks on the created point.
+Inspector Tool updates with Point properties.
+Passed.
+
+Test 12
+User creates two points and then adds line between said points, then using select mode selects the
+line.
+Inspector Tool updates with Line properties.
+Passed.
+Test 13
+User clicks Class Box button then clicks on the middle pane.
+Class box is created at designated location.
+Passed.
+Test 14
+User creates class box then click-hold and drags mouse.
+
+Class box is created at current mouse location then dragged to new mouse pointer location.
+
+Passed.
+Test 15
+User creates Object of class Box then click-hold and drags mouse.
+Class box is created at current mouse location then dragged to new mouse pointer location.
+Passed.
+Test 16
+User creates object of Point then click-hold and drags mouse.
+Point is created at current mouse location then dragged to new mouse pointer location.
+Passed.
+Test 17
+User clicks Note button then clicks on the middle pane.
+Note is created at designated location.
+Passed.
+Test 18
+User creates note then click-hold and drags mouse.
+
+Note is created at current mouse location then dragged to new mouse pointer location.
+Passed.
+Test 19
+User creates a note, then using select mode selects the note.
+
+Inspector Tool updates with Note properties.
+
+Passed.
+Test 20
+User creates class box and a point at new location then creates line between them.
+Class box is created at current mouse location then point is created at new mouse location. Line is
+created between the Class Box and point.
+Passed.
+Test 21
+User creates class box and point then creates line between them. The user then click-holds the class
+box and drags mouse.
+Class box and Point are created at designated locations and line is created between them. Class box
+is dragged to new location and the line is removed and replaced with new line between the new
+destinations.
+Passed.
+Test 21
+User creates class box then in select mode click the class box.
+Class box is created at target location and Inspector Tool is updated with properties for Class box.
+Passed.
+Test 22
+User creates a point, then while in delete mode clicks the same point.
+Point is created and then deleted.
+Passed.
+Test 23
+User creates a class box, then while in delete mode clicks the same point.
+
+Class box is created and then deleted.
+
+Passed.
+Test 24
+User creates two points and draws line between them, then while in delete mode clicks the same line.
+Two points are created with a line linking them together, then the line is deleted.
+Passed.
+Test 25
+User creates two points and draws line between them, then while in delete mode clicks one of the
+points.
+
+Both the clicked point and the line should be deleted.
+
+Passed.
+Test 26
+User clicks File > New
+Current project is cleared.
+Passed.
+Test 27
+User creates a class box, a point, connects them with a line, and then calls three undo’s followed
+by three redo’s.
+
+The three undos should return the scene to its previous three states respectively, and then three
+redos should bring them back.
+
+Passed.
+Test 28
+User creates a class box, a point, connects them with a line, and then deletes the class box. The
+user then calls undo followed by redo.
+
+The undo should bring back the class box and the line; redo should delete them again.
+
+Passed.
+Test 29
+User creates a class box, a point, connects them with a line, and then deletes the class box. The
+user then calls undo, and attempts to drag the class box.
+
+The undo should bring back the class box and the line, and when the user drags the class box, the
+line should drag with it.
+
+Passed.
+Test 30
+User creates a point and then selects it in select mode. User then goes to inspector, types in new
+coordinates, and clicks apply.
+
+Point should jump to new coordinates when apply is clicked.
+Passed.
+Test 31
+User creates a note and clicks on it. In the inspector, the user changes the text and position, and
+then clicks apply. The user calls several undo and then several redos.
+
+The note should jump to the given position and have its text modified. The undos should change back
+the attributes in the order they were changed, and the redos should bring them back in reverse order.
+
+Passed.
+Test 32
+User creates a class box and then selects it in select mode. User then goes to inspector, types in
+new coordinates, changes the name, deletes the attributes test, and adds several lines to the methods
+text before clicking apply.
+
+Class box should jump to new coordinates, name should reflect change, attributes should be empty
+(leaving a blank line of space), and methods should increase in height to fit in the additional
+lines, causing the whole class box to get taller.
+
+Passed.
+
+Test 33
+User creates two class boxes and connects them with a line. The user then selects the class box and
+in the inspector adds multiple lines to both the attribute and method text fields before clicking
+apply.
+
+The entire class box should grow in height to accommodate the larger text fields, and the line
+should also move accordingly to continue pointing towards the center of the box.
+
+Passed.
+Test 34
+User creates a class box, changes name text, attribute text, and location before hitting apply. User
+then called three undo’s and three redo’s.
+
+The name, attributes, and position of the class box at all undone one at a time in the reverse order
+that the user started changing them. The three redoes should reverse this process.
+
+Passed.
+
+Test 35
+User creates two class boxes and an aggregation between them. User then changes the type of the
+aggregation to type dependency, changes the text in both end boxes, and reverses the reverse
+direction button all before clicking apply. The user then calls four undo’s followed by 4 redo’s.
+When apply is clicked, the aggregation should change to a dependency type, the text boxes should
+update, and the head of the connector should now be at the other class box. The undos should reverse
+these effects one at a time in the order they were changed, and the redos should bring them all back
+in reverse order.
+Passed.
+
+Test 36
+User creates two class boxes and connects them with a dependency. In line split mode, the user then
+selects that line, and clicks on it.
+
+A small pivot point should appear on the line where the user clicked, essentially splitting the line
+into two parts, and the pivot’s inspector should automatically appear.
+
+Passed.
+Test 37
+User creates two class boxes and connects them with a dependency. In line split mode, the user then
+selects that line, and clicks on it. The user then drags the pivot, before calling two undo’s and
+two redo’s.
+
+A small pivot point should appear on the line where the user clicked and its inspector should
+automatically appear. The drag should move the pivot, which in turn drags the inside ends of the two
+split segments with it. The first undo should bring the pivot and segments back in line, and the
+second undo should remove the pivot. The redo’s should bring these two changes back.
+
+Passed.
+Test 38
+User creates two class boxes and connects them with a dependency. In line split mode, the user then
+selects that line, and clicks on it in two different places. The user then drags both pivots out of
+line, goes to delete mode, and deletes one. The user then calls several undos, followed by several
+redos.
+Two pivots should be created, and they should drag with the mouse. When one is deleted, the two
+inside ends of the lines connecting to it should “snap back” into one line without altering the
+class boxes or the other pivot. Undo should bring back previous states in order, and redo should
+return to them in reverse order.
+
+Passed.
+Test 39
+User creates two class boxes and connects them with a dependency. In line split mode, the user then
+selects that line, and clicks on it in two different places. The user then drags both pivots out of
+line, goes to delete mode, and deletes the dependency. The user then calls undo and redo.
+
+The whole dependency, all pivots, and intermediate segments should be deleted. Undo should bring
+them all back as they were before, and redo should delete them again.
+
+Passed.
+Test 40
+User creates 5 class boxes, a point, a note, and connects the point to each of the class boxes using
+an aggregation, an association, a dependency, a generalization, and a composition respectively. The
+user then removes all text from one class box, adds quotes around all text in another class box,
+puts nothing but multiple blank lines in another class box, changes all text in another class box to
+numbers, and leaves the final class box unchanged. The user then changes the text fields for the
+connectors and the note in a similar manor as the class boxes. Finally, the user saves the scene,
+deletes all objects, and then opens the scene that was saved.
+
+When the scene is saved, no difference should be observed in the scene. Once the project is reloaded,
+all objects should be exactly where they were before, none should be selected, the inspector should
+not be up, and both undo and redo stacks should be cleared.
+
+Passed.
+Test 41
+User builds a scene of two notes and connects two of them with a dependency. The user then adds
+three pivots to the connector, and drags them out of line so that both connectors zigzag. The user
+also changes the text in both connectors to be either blank or numbers. The user then selects the
+dependency connector, changes it to an association, and reverses the direction. The user then calls
+undo twice, followed by two redo’s. Finally, the user selects the generalization connector, changes
+it to a dependency, and reverses the direction before calling two undo’s followed by two redos.
+
+When the user selects the dependency connector, all parts of the connector should highlight. When
+the direction and type are changed, the head of the arrow should be changed to point towards the
+other class box, and all segments should update to those belonging to a generalization. Calling undo
+will undo these changes and calling redo should bring them back.
+
+Mostly passed. The objects all exist but the connector to the class box points to the middle of the
+box instead of to the edge. This is corrected once the class box is moved.
+Test 42
+User builds a scene of two notes and connects two of them with a generalization. The user then adds
+three pivots to the connector, and drags them out of line so that both connectors zigzag. The user
+also changes the text in both connectors to be either blank or numbers. The user then selects the
+generalization connector and reverses the direction. The user then calls undo followed by redo.
+
+When the user selects the generalization connector, all parts of the connector should highlight.
+When the direction and type are changed, the head of the arrow should be changed to point towards
+the other class box. Calling undo will undo these changes and calling redo should bring them back.
+
+Passed.
+Test 43
+User sets up a scene as in test 40 above with the three class boxes, the dependency, the
+generalization, the pivots, and the modified text fields on the connectors. The user then saves the
+scene, clears it, and loads the scene again.
+
+The scene should look just like it did before.
+(Note: I’m not sure it will. When I was testing it, sometimes a class box got minutely shorter for
+some reason…)
+
+Mostly passed, same reasoning as test 41.
+Test 44
+User sets up a scene as in test 43 above with the three class boxes, the dependency, the
+generalization, the pivots, and the modified text fields on the connectors. The user then saves the
+scene, clears it, and loads the scene again. The user then drags the class boxes and all pivots. The
+user then tests deleting pivots and undoing.
+
+The class boxes and pivots should drag with the mouse, and all connectors should update correctly.
+Deleting pivots and undoing should behave as normal.
+Passed.
+Test 45
+User creates a scene of several points, with at least one of the points being off-screen, the user
+then switches to select mode and then right-click drags.
+
+The whole pane with all the points should drag with the mouse at once.
+
+Passed.
+Test 46
+User creates a scene of several points, with at least one of the points being off-screen, and then
+right-click drags.
+
+The pane should not pan, as the user is not in select mode.
+Passed.
+Test 47
+User creates a scene of several points, and connects two of them with an aggregation. The user then
+drags one of those points towards the edge of the screen.
+
+The whole pane with all the other points should move away from the mouse as it approaches the edge
+of the window. The connector should stretch with the dragged point and remain connected.
+
+Passed.
+Test 48
+User creates a scene of several points, and connects two of them with an aggregation. The user then
+drags one of those points towards the top of the screen, before letting go.
+
+The pane should move upward until the scroll bar is at the top. Then, the point being dragged will
+be unable to be dragged off screen in an upward direction.
+
+Passed.
+Test 49
+User creates a scene of several points, and connects two of them with an aggregation. The user then
+drags one of those points towards the left of the screen, before letting go.
+
+The pane should move left until the scroll bar is the farthest left. Then, the point being dragged
+will be unable to be dragged off screen in a leftward direction.
+
+Passed.
+Test 50
+User creates a scene of several points, and connects two of them with an aggregation. The user then
+drags one of those points towards the edge of the screen. The user then saves the scene, clears it,
+and reloads.
+
+The scene should not change when the user saves, and the reload should bring back the whole scene
+exactly as it was, but with the pane’s point of view shifted back to start.
+
+Passed.
+Test 51
+User creates a scene, clicks save, and then clicks cancel.
+
+Nothing should happen and the scene should still function like before.
+Passed.
+Test 52
+User creates a scene, clicks load, and then clicks cancel.
+
+Nothing should happen and the scene should still function like before.
+
+Passed.
+Test 53
+User creates a scene and saves it. The user then modifies the scene, re-saves it on top of the old
+save file, and then reloads the save file.
+
+The loaded save file should have the scene from the most recent save, and nothing else.
+
+Passed.

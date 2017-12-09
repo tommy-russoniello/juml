@@ -60,7 +60,7 @@ public class DeletePivot extends UMLConnectorAction {
 
     postSegment.disconnect();
     postSegment.start = preSegment.start;
-    postSegment.connect();
+    connectToPivots(postSegment);
 
     if ((Line) preSegment.getModel() == relationship.startLine) {
       relationship.startLine = (Line) postSegment.getModel();
@@ -91,10 +91,19 @@ public class DeletePivot extends UMLConnectorAction {
 
     postSegment.disconnect();
     postSegment.start = pivot;
-    postSegment.connect();
+    connectToPivots(postSegment);
 
-    preSegment.connect();
+    connectToPivots(preSegment);
 
     relationship.update(true);
+  }
+
+  public void connectToPivots(Segment s) {
+ 	    if (s.start instanceof Pivot) {
+ 	    	s.start.getConnections().addElement(s);
+ 	    }
+ 	    if (s.stop instanceof Pivot) {
+ 	    	s.stop.getConnections().addElement(s);
+ 	    }
   }
 }

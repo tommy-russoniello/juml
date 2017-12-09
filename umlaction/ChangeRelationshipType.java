@@ -16,31 +16,31 @@ import umlobject.*;
  * @since 0.3
  */
 public class ChangeRelationshipType extends UMLAction {
-	
-	/** 
-	 * The delete old line. 
+
+	/**
+	 * The delete old line.
 	 */
 	DeleteUMLConnector deleteOldLine;
-	
-	/** 
-	 * The add new line. 
+
+	/**
+	 * The add new line.
 	 */
 	AddUMLConnector addNewLine;
-	
-	/** 
-	 * The controller. 
+
+	/**
+	 * The controller.
 	 */
 	Controller controller;
-	
-	/** 
-	 * The old connector. 
+
+	/**
+	 * The old connector.
 	 */
-	UMLObject oldConnector;
-	
-	/** 
-	 * The new connector. 
+	public UMLObject oldConnector;
+
+	/**
+	 * The new connector.
 	 */
-	UMLObject newConnector;
+	public UMLObject newConnector;
 
 	/**
 	 * Instantiates a new change relationship type.

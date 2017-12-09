@@ -21,21 +21,21 @@ import javafx.scene.shape.Line;
  * @since 0.3
  */
 public class SplitLine extends UMLConnectorAction {
-  
-  /** 
-   * The relationship. 
+
+  /**
+   * The relationship.
    */
   Relationship relationship;
-  
-  /** 
-   * The new split segment and the current split segment. 
+
+  /**
+   * The new split segment and the current split segment.
    */
-  Segment newSegment, splitSegment;
-  
-  /** 
-   * The pivot. 
+  public Segment newSegment, splitSegment;
+
+  /**
+   * The pivot.
    */
-  Pivot pivot;
+  public Pivot pivot;
 
   /**
    * Instantiates a new split line.

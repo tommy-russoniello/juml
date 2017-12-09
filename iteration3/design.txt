@@ -1,0 +1,45 @@
+juml (or Java UML), uses the Model-View-Controller design pattern.
+
+The view is primarily implemented in the FXML file “juml.fxml” and partially implemented in the
+individual object FXML files for the inspector ("Point.fxml", "Segment.fxml", "Relationship.fxml",
+"ClassBox.fxml", and "Note.fxml"). The view specifies the style of the scene for the program and
+then builds it. On relevant nodes, the view passes o  received actions to corresponding handlers
+within the controller. With the inspector, the view can also provide a medium by which the
+controller can take in events from the user. Any given objects controller will appear on the right
+side of the scene when an object is selected. Any changes made in the fields can be put into action
+with the "apply changes" button, triggering a particular action specific to that class.
+
+The controller is primarily implemented in the file “Controller.java.” and partially implemented in
+the individual object controller files for the inspector ("PointController.java",
+"SegmentController.java", "RelationshipController.java", "ClassBoxController.java",
+"NoteController.java"). The controller handles actions passed in from the view and interacts with
+the model accordingly. The controller keeps track of the draw mode (currently either “SELECT”,
+“DELETE”, “POINT”, “CLASSBOX”, “ASSOCIATION”, “DEPENDENCY”, “AGGREGATION”, “COMPOSITION”,
+“GENERALIZATION”, “LINESPLIT”, “LINE”, or “NOTE”). When handlers receive events, the controller
+determines the correct course of action depending on the current draw mode. This may include the
+movement, creation, deletion, selection or alteration of nodes.
+Much of the logic in the controller has been abstracted into the "umlaction" package which contains
+many files that each contain an encapsulated action with which actions can be stored and later
+reversed (undo/redo). We call these "action objects" and they all inherit from the base class in
+"UMLAction.java". Extending this is "UMLNodeAction.java" and "UMLConnectorAction.java" and all their
+subsequent classes.
+
+The model is implemented in the file “UMLObject.java” and its subclasses. “UMLObject.java” contains
+the basic instance variables and methods common to all objects that will be added to the scene. The
+file “UMLNode.java” inherits from “UMLObject.java” and adds some extra functionality specific to
+“connectable” nodes (i.e. ClassBoxes, Points, Notes, and Pivots [partially]). The files “Point.java”
+, "Note.java", "Pivot.java" and “ClassBox.java” inherit from this class. "Point" is essentially a
+simple circle class. "Note" is a auto-sizing node class for storing text of any size. "Pivot" is a
+small circle class used as a break/ pivot point in the middle of a "Relationship" (explained later).
+"Pivots" function like any other "UMLNode" except in that they interact only with their parent
+"Relationship" and are not directly selectable apart from dragging and deleting. Also extending
+"UMLObject", is "UMLConnector" in the "UMLConnector.java" file. This class defines the basic
+functionality for the line-based connections between "UMLNodes" including starting/stopping points
+and some basic logic for connecting and disconnecting from those nodes. Extending "UMLConnector"
+are the files "Segment.java" and "Relationship.java". "Segment" is a simple line class, and
+"Relationship" is a generalization of the classes for the 5 types of lines in UML (implemented in
+"Association.java", "Dependency.java", "Aggregation.java", "Composition.java", and
+"Generalization.java"). The primary di erence between the 5 line classes is the shapes on the head
+of the lines, and the subsequent operations and data that go along with them. Most of the
+functionality they have comes from "Relationship" including all of the mathematical processes
+required to maintain the position/angle of all the pieces in the object.

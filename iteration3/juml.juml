@@ -1,0 +1,681 @@
+ClassBox: 2463.0750405690933 995.7495715332032 134.392578125 20 PointController.java
+25 pointUML
+point
+controller
+109 getPoint()
+pointOriginXSetText()
+pointOriginYSetText()
+pointRadiusSetText()
+pointChange()
+loadInspectorInfo()
+ClassBox: 2040.9647172552063 611.584053844105 158.35498046875 24 UMLObjectController.java
+0 
+14 applyChanges()
+ClassBox: 2001.0 1002.0818617375135 172.85302734375 23 ClassBoxController.java
+19 classBox
+controller
+302 getOriginXText()
+getOriginYText()
+setOriginCoordinatesText()
+getClassBox()
+classBoxNameSetText()
+classBoxAttributesSetText()
+classBoxMethodsSetText()
+classBoxOriginXSetText()
+classBoxOriginYSetText()
+updateName()
+updateAttributes()
+updateMethods()
+updateCoordinates()
+applyChanges()
+loadInspectorInfo()
+ClassBox: 1286.0 892.2019744873046 123.779296875 13 ClassBox.java
+55 width
+box
+separator1
+separator2
+name
+attributes
+methods
+171 buildString()
+trim()
+getHeight()
+getWidth()
+getName()
+getAttributes()
+getMethods()
+getAttributesArray()
+getMethodsArray()
+setName()
+setAttributes()
+setMethods()
+setWidth()
+Note: 1528.060984796445 1732.826871282404 110.0 19  umlaction package 
+ClassBox: 2330.3690498664037 408.9658203125 164.505859375 27 RelationshipController.java
+23 relationship
+controller
+180 getRelationship()
+getStartOriginX()
+getStartOriginY()
+getEndOriginX()
+getEndOriginY()
+getStartText()
+getEndText()
+updateStartText()
+updateEndText()
+flipDirection()
+changeLineType()
+ClassBox: 804.9519876813351 2162.979811290395 207.85400390625 32 ChangeRelationshipStartText.java
+39 relationship
+alt
+relationshipController
+0 
+ClassBox: 2469.0750405690933 1198.0942980957032 80.0 10 Point.fxml
+37 pointOriginX
+pointOriginY
+pointRadius
+0 
+Note: 177.0 100.84326171875 174.0 158 juml UML Diagram
+
+ CSCI 420 Software Engineering 
+Fall 2017
+
+by Team Rocket
+-------------------
+Tommy Russoniello
+Quinn Minnich
+Samuel Carroll
+Torrance Graham
+ClassBox: 2553.3690498664037 401.810546875 147.21484375 17 Relationship.fxml
+130 relationshipStartOriginX
+relationshipStartOriginY
+relationshipEndOriginX
+relationshipEndOriginY
+startText
+endText
+relationshipType
+0 
+ClassBox: 1519.4493864265069 1394.9980867143113 97.44921875 14 UMLAction.java
+10 controller
+41 doAction()
+undoAction()
+doInitialAction()
+ClassBox: 393.0 1169.110107310902 114.232421875 17 Relationship.java
+95 group
+shape
+startText
+endText
+startTextVisible
+endTextVisible
+segments
+pivots
+startLine
+endLine
+285 readInPivots()
+buildString()
+reset()
+hideStartText()
+hideEndText()
+hideText()
+showStartText()
+showEndText()
+showText()
+getStartText()
+getEndText()
+setStartText()
+setEndText()
+textVisible()
+startTextVisible()
+endTextVisible()
+updateSegments()
+calcArcTanAngle()
+getSegments()
+getPivots()
+ClassBox: 391.0 771.715576060902 121.08154296875 17 UMLConnector.java
+10 start
+stop
+55 findIndex()
+getStart()
+getStop()
+connect()
+disconnect()
+ClassBox: 1511.9858868113233 44.9658203125 80.0 9 Main.java
+13 window
+layout
+14 main()
+start()
+ClassBox: 1532.9510012488379 2013.8049608265273 160.798828125 23 DeleteUMLConnector.java
+0 
+0 
+ClassBox: 1877.0 417.9658203125 133.6689453125 16 View - juml.fxml
+196 Inspector Object
+Menu Bar
+File Menu
+New Button
+Open Button
+Save Button
+Export Button
+Exit Button
+Edit Menu
+Copy Button
+Paste Button
+Move To Front Button
+Move To Back Button
+Undo Button
+Redo Button
+0 
+ClassBox: 2253.0750405690933 1078.2495715332032 167.49560546875 19 NoteController.java
+15 note
+controller
+159 getNote()
+getOriginXText()
+getOriginYText()
+setOriginCoordinatesText()
+getText()
+getOriginX()
+getOriginY()
+updateText()
+updateCoordinates()
+loadInspectorInfo()
+ClassBox: 1848.4493864265069 1651.3428132768113 128.83203125 18 UMLNodeAction.java
+10 node
+model
+0 
+ClassBox: 1011.5512352698793 2151.03443392667 113.10888671875 14 SplitLine.java
+42 relationship
+newSegment
+splitSegment
+pivot
+17 connectToPivots()
+ClassBox: 103.0 1000.060302623402 83.12890625 12 Segment.java
+4 line
+0 
+ClassBox: 1603.9519876813351 2136.979811290395 206.2607421875 32 ChangeRelationshipDirection.java
+63 deleteOldLine
+addNewLine
+oldConnector
+newConnector
+relationship
+0 
+ClassBox: 677.4248446212825 622.215576060902 148.7001953125 22 Model - UMLObject.java
+15 originX
+originY
+93 move()
+saveAsString()
+update()
+highlight()
+unhighlight()
+getModel()
+getOriginX()
+getOriginY()
+ClassBox: 1712.9510012488379 1845.9602342640273 129.3271484375 18 DeleteUMLNode.java
+17 connectionActions
+0 
+ClassBox: 1196.4493864265069 1656.3428132768113 160.3037109375 23 UMLConnectorAction.java
+26 connector
+model
+start
+stop
+0 
+ClassBox: 2329.0750405690933 614.2495715332032 143.98388671875 22 SegmentController.java
+20 connector
+controller
+100 getSegment()
+getStartOriginX()
+getStartOriginY()
+getEndOriginX()
+getEndOriginY()
+loadInspectorInfo()
+Note: 2111.49412994965 209.07666015625 83.0 14  juml package 
+ClassBox: 1389.9510012488379 2174.8049608265273 145.81201171875 20 AddUMLConnector.java
+0 
+0 
+ClassBox: 1753.5727635493504 1918.8174968372696 132.27880859375 19 ChangeNoteText.java
+32 noteController
+note
+altTextWidth
+0 
+ClassBox: 2268.6179792553075 1831.5247357177748 102.83203125 15 UpdateNote.java
+24 noteController
+move
+text
+0 
+ClassBox: 2260.0750405690933 1268.5942980957032 80.0 9 Note.fxml
+36 originX
+originY
+noteText
+applyButton
+0 
+ClassBox: 2320.5512352698793 1989.8791604891699 123.12548828125 16 MoveUMLNode.java
+63 originalX
+originalY
+movedX
+movedY
+moveAtFirst
+umlNodeController
+0 
+Note: 721.359994866549 342.8265800892223 110.0 19  umlobject package 
+ClassBox: 1770.9510012488379 2058.8049608265273 114.34033203125 15 AddUMLNode.java
+0 
+0 
+ClassBox: 2552.0750405690933 615.5942980957032 128.755859375 12 Segment.fxml
+75 segmentStartOriginX
+segmentStartOriginY
+segmentEndOriginX
+segmentEndOriginY
+0 
+ClassBox: 806.6179792553078 2054.524735717775 148.55419921875 23 UpdateRelationship.java
+40 startText
+endText
+relationshipController
+0 
+ClassBox: 2401.6179792553075 1787.5247357177748 129.771484375 19 UpdateClassBox.java
+47 name
+attributes
+methods
+move
+classBoxController
+0 
+ClassBox: 2339.5727635493504 1675.8174968372696 167.55908203125 23 ChangeClassBoxName.java
+31 classBoxController
+classBox
+alt
+0 
+ClassBox: 1104.0 1005.2019744873046 80.0 10 Point.java
+13 circle
+radius
+23 getRadius()
+setRadius()
+ClassBox: 2003.0 1254.810546875 115.2734375 13 ClassBox.fxml
+91 classBoxName
+classBoxAttributes
+classBoxMethods
+classBoxOriginX
+classBoxOriginY
+applyButton
+0 
+ClassBox: 1450.1237233668899 1598.5348868630163 107.935546875 15 MoveToBack.java
+15 objects
+indexes
+0 
+ClassBox: 221.857177734375 1613.9756237238103 103.71435546875 16 Aggregation.java
+0 
+7 setUp()
+ClassBox: 2145.5727635493504 2011.5069499622696 192.88623046875 29 ChangeClassBoxAttributes.java
+31 classBoxController
+classBox
+alt
+0 
+ClassBox: 711.771240234375 1617.9756237238103 105.54248046875 16 Composition.java
+0 
+7 setUp()
+ClassBox: 772.9519876813353 1958.979811290395 201.31591796875 30 ChangeRelationshipEndText.java
+39 relationship
+alt
+relationshipController
+0 
+ClassBox: 1459.5512352698793 1879.3791604891699 99.07421875 16 DeletePivot.java
+45 relationship
+pivot
+preSegment
+postSegment
+pos
+0 
+ClassBox: 1102.0 769.215576060902 106.85009765625 12 UMLNode.java
+11 connections
+42 getConnections()
+getAnchorX()
+getAnchorY()
+ClassBox: 1172.9519876813351 2152.479811290395 181.4287109375 27 ChangeRelationshipType.java
+50 deleteOldLine
+addNewLine
+oldConnector
+newConnector
+0 
+ClassBox: 846.0 1068.7019744873046 114.232421875 10 Pivot.java
+16 connector
+circle
+16 updateSegments()
+ClassBox: 1593.1237233668899 1597.5348868630163 110.26513671875 16 MoveToFront.java
+15 objects
+indexes
+0 
+ClassBox: 554.281005859375 1619.9756237238103 116.56201171875 19 Generalization.java
+0 
+7 setUp()
+ClassBox: 81.667236328125 1611.9756237238103 99.33447265625 16 Association.java
+0 
+7 setUp()
+ClassBox: 2249.9647172552063 774.584053844105 167.49560546875 22 UMLNodeController.java
+0 
+60 getOriginXText()
+getOriginYText()
+setOriginCoordinatesText()
+ClassBox: 392.790283203125 1617.9756237238103 105.58056640625 15 Dependency.java
+0 
+7 setUp()
+ClassBox: 1513.0 614.005859375 175.8173828125 28 Controller - Controller.java
+121 MODE
+NODES
+CONNECTORS
+SELECTED
+ACTIONS
+UNDONE_ACTIONS
+CLIP_BOARD
+pane
+inspectorObject
+scrollPane
+fileChooser
+window
+scene
+682 setPrimaryStage()
+getPane()
+setPane()
+undo()
+redo()
+reset()
+copy()
+paste()
+modeClick()
+paneClick()
+deleteObjects()
+addObjects()
+getObject()
+getSegment()
+getPivot()
+selectObject()
+deselectObject()
+deselectAll()
+deselectAllNodes()
+deselectAllConnectors()
+refresh()
+getXOffset()
+getYOffset()
+printState()
+menuExitClicked()
+menuNewClicked()
+menuOpenClicked()
+menuSaveClicked()
+printSaveString()
+menuExportClicked()
+menuCopyClicked()
+menuPasteClicked()
+menuDeleteClicked()
+menuMoveToFrontClicked()
+menuMoveToBackClicked()
+menuUndoClicked()
+menuRedoClicked()
+menuSpecificationsClicked()
+saveFile()
+loadPointFXML()
+loadClassBoxFXML()
+loadSegmentFXML()
+loadRelationshipFXML()
+loadNoteFXML()
+ClassBox: 861.0 1220.2019744873046 80.0 9 Note.java
+8 box
+text
+67 buildString()
+getHeight()
+getWidth()
+getText()
+setText()
+setWidth()
+ClassBox: 1937.5727635493504 2025.8174968372696 185.70068359375 26 ChangeClassBoxMethods.java
+31 classBoxController
+classBox
+alt
+0 
+Connectors:
+Generalization: 22 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Association: 2 38 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 54 45 0 0 
+0 0 
+Pivot: 1104.1082710295123 887.5060619562321 EndPivots: 
+
+Generalization: 36 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Generalization: 47 45 0 0 
+0 0 
+Pivot: 1104.1082710295123 886.5060619562321 EndPivots: 
+
+Generalization: 5 1 0 0 
+0 0 
+Pivot: 2189.8556962761404 613.1423762650923 EndPivots: 
+
+Generalization: 51 1 0 0 
+0 0 
+Pivot: 2190.8556962761404 613.1423762650923 EndPivots: 
+
+Generalization: 49 11 0 0 
+0 0 
+Pivot: 393.0 1546.4766548295452 EndPivots: 
+
+Association: 5 9 0 0 
+0 0 
+EndPivots: 
+
+Association: 30 35 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 37 45 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 43 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1916.7876497025902 EndPivots: 
+
+Generalization: 45 21 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 34 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1913.7876497025902 EndPivots: 
+
+Generalization: 42 11 0 0 
+0 0 
+Pivot: 543.0 1563.4766548295452 Pivot: 392.0 1546.4766548295452 EndPivots: 
+
+Association: 45 12 1 1 2
+1 4 0..*
+EndPivots: 
+
+Generalization: 3 45 0 0 
+0 0 
+Pivot: 1104.1082710295123 887.5060619562321 EndPivots: 
+
+Generalization: 35 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Generalization: 18 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1916.7876497025902 EndPivots: 
+
+Association: 14 20 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 48 10 0 0 
+0 0 
+Pivot: 1518.790739293811 1521.5387561035145 EndPivots: 
+
+Generalization: 23 10 0 0 
+0 0 
+Pivot: 1354.790739293811 1543.5387561035145 Pivot: 1517.790739293811 1522.5387561035145 EndPivots: 
+
+Composition: 53 13 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 26 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1914.7876497025902 EndPivots: 
+
+Generalization: 55 17 0 0 
+0 0 
+Pivot: 2035.848317714182 1733.1462132679308 EndPivots: 
+
+Association: 47 11 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 11 12 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 28 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Generalization: 24 1 0 0 
+0 0 
+EndPivots: 
+
+Aggregation: 15 53 0 0 
+0 0 
+EndPivots: 
+
+Association: 14 46 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 41 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Generalization: 32 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Composition: 21 53 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 2 51 0 0 
+0 0 
+Pivot: 2251.1515928675863 906.6974798029119 EndPivots: 
+
+Generalization: 40 11 0 0 
+0 0 
+Pivot: 393.0 1545.4766548295452 EndPivots: 
+
+Composition: 10 53 1 4 0..*
+0 0 
+EndPivots: 
+
+Association: 16 29 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 27 17 0 0 
+0 0 
+Pivot: 2035.848317714182 1734.1462132679308 EndPivots: 
+
+Association: 26 20 0 0 
+0 0 
+EndPivots: 
+
+Association: 30 28 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 19 12 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 20 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1914.7876497025902 EndPivots: 
+
+Generalization: 52 11 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 50 11 0 0 
+0 0 
+Pivot: 194.0 1562.4766548295452 Pivot: 393.0 1545.4766548295452 EndPivots: 
+
+Generalization: 16 51 0 0 
+0 0 
+EndPivots: 
+
+Association: 14 22 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 46 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1915.7876497025902 EndPivots: 
+
+Association: 54 11 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 14 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1915.7876497025902 EndPivots: 
+
+Association: 19 11 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 12 21 0 0 
+0 0 
+EndPivots: 
+
+Association: 12 45 0 0 
+0 0 
+EndPivots: 
+
+Association: 0 7 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 44 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1918.7876497025902 EndPivots: 
+
+Composition: 1 53 1 4 0..*
+0 0 
+EndPivots: 
+
+Generalization: 0 51 0 0 
+0 0 
+Pivot: 2251.1515928675863 906.6974798029119 EndPivots: 
+
+Generalization: 39 10 0 0 
+0 0 
+Pivot: 1518.790739293811 1522.5387561035145 EndPivots: 
+
+Generalization: 17 10 0 0 
+0 0 
+Pivot: 1685.790739293811 1540.5387561035145 Pivot: 1518.790739293811 1521.5387561035145 EndPivots: 
+
+Generalization: 6 23 0 0 
+0 0 
+Pivot: 1196.9900708838552 1915.7876497025902 EndPivots: 
+
+Association: 26 46 0 0 
+0 0 
+EndPivots: 
+
+Generalization: 30 17 0 0 
+0 0 
+Pivot: 2034.848317714182 1733.1462132679308 EndPivots: 
+
+Association: 24 33 0 0 
+0 0 
+EndPivots: 
+

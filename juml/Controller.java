@@ -75,15 +75,15 @@ public class Controller {
 	 */
 	// Draw modes
 	public enum Mode {
-		
+
 		SELECT,
-		
+
 		POINT,
-		
+
 		CLASSBOX,
-		
+
 		DELETE,
-		
+
 		ASSOCIATION,
 
 		DEPENDENCY,
@@ -105,24 +105,24 @@ public class Controller {
 	 * All UMLNodes currently on the pane.
 	 */
 	public Map<Node, UMLNode> NODES = new HashMap<>();
-	
+
 	/**
 	 * All UMLConnectors currently on the pane
 	 */
 	public Map<Node, UMLConnector> CONNECTORS = new HashMap<>();
 
-	/** 
-	 * Main pane that contains all drawn nodes as children. 
+	/**
+	 * Main pane that contains all drawn nodes as children.
 	 */
 	@FXML public Pane pane;
-	
+
 	/**
 	 * Overarching pane that defines the layout for the program.
 	 */
 	@FXML public AnchorPane inspectorObject;
-	
-	/** 
-	 * The scroll pane that allows the pane to be scrolled. 
+
+	/**
+	 * The scroll pane that allows the pane to be scrolled.
 	 */
 	@FXML public ScrollPane scrollPane;
 
@@ -135,35 +135,35 @@ public class Controller {
 	 * Collection of all "selected" UMLNodes
 	 */
 	Deque<UMLObject> SELECTED = new LinkedList<>();
-	
-	/** 
-	 * The file chooser. 
+
+	/**
+	 * The file chooser.
 	 */
 	FileChooser fileChooser = new FileChooser();
 
-	/** 
+	/**
 	 * The stack of actions that have been performed.
 	 */
 	public Stack<UMLAction> ACTIONS = new Stack<>();
-	
-	/** 
-	 * The stack of undone actions. 
+
+	/**
+	 * The stack of undone actions.
 	 */
 	public Stack<UMLAction> UNDONE_ACTIONS = new Stack<>();
 
-	/** 
-	 * The clip board. 
+	/**
+	 * The clip board.
 	 */
 	public Set<String> CLIP_BOARD = new HashSet<>();
 
 
-	/** 
-	 * The window. 
+	/**
+	 * The window.
 	 */
 	Stage window;
-	
-	/** 
-	 * The scene. 
+
+	/**
+	 * The scene.
 	 */
 	Scene scene;
 
@@ -176,7 +176,7 @@ public class Controller {
 	public void setPrimaryStage(Stage primaryStage) {
 		window = primaryStage;
 		scene = window.getScene();
-		
+
 		//Handles keyboard shortcut and performs corresponding action.
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 	      public void handle(KeyEvent event) {
@@ -238,7 +238,7 @@ public class Controller {
 					}
 	      }
 	    });
-		
+
 		//Handles a mouse pressed event and either sets the pane to be pannable, or handles scrolling the pane.
 		scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
 			if(MODE == Mode.SELECT){
@@ -857,7 +857,7 @@ public class Controller {
 	      return returnNode;
 	    }
 
-		/** 
+		/**
 		 * Finds the Segment containing the given Line out of all Segments in given UMLConnector. If
 		 *  none of the given UMLConnector's Segments contain the given Line, returns null.
 		 * @param connector UMLConnector that's Segments will be searched through for containing given
@@ -875,7 +875,7 @@ public class Controller {
 			return null;
 		}
 
-		/** 
+		/**
 		 * Finds the Pivot containing the given Circle out of all Pivots in given UMLConnector. If
 		 *  none of the given UMLConnector's Pivots contain the given Circle, returns null.
 		 * @param connector UMLConnector that's Pivots will be searched through for containing given
@@ -901,18 +901,21 @@ public class Controller {
 		public void selectObject(UMLObject object) {
 			SELECTED.addLast(object);
 			object.highlight();
-			if (object instanceof Segment) {
-				loadSegmentFXML(object);
-			} else if (object instanceof Relationship) {
-				loadRelationshipFXML(object);
-			} else if (object instanceof Point) {
-				loadPointFXML(object);
-			} else if (object instanceof ClassBox) {
-				loadClassBoxFXML(object);
-			} else if (object instanceof Note) {
-				loadNoteFXML(object);
-			} else if (inspectorObject != null) {
-				inspectorObject.getChildren().clear();
+			// if window is null then loading FXML crashes the program (should only happen in tests).
+			if (window != null) {
+				if (object instanceof Segment) {
+					loadSegmentFXML(object);
+				} else if (object instanceof Relationship) {
+					loadRelationshipFXML(object);
+				} else if (object instanceof Point) {
+					loadPointFXML(object);
+				} else if (object instanceof ClassBox) {
+					loadClassBoxFXML(object);
+				} else if (object instanceof Note) {
+					loadNoteFXML(object);
+				} else if (inspectorObject != null) {
+					inspectorObject.getChildren().clear();
+				}
 			}
 		}
 

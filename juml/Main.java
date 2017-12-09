@@ -3,6 +3,7 @@ package juml;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.image.Image;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -18,13 +19,13 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    /** 
+    /**
      * The window.
      */
     Stage window;
-    
-    /** 
-     * The layout. 
+
+    /**
+     * The layout.
      */
     BorderPane layout;
 
